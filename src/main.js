@@ -10,12 +10,25 @@ Vue.config.productionTip = false
 new Vue({
     store,
     router,
+    data: () => ({
+        timer: null,
+    }),
     created() {
-        this.$store.dispatch('getTotals')
-        this.$store.dispatch('getDataFromWorldometers')
-        this.$store.dispatch('getCountData')
-        this.$store.dispatch('getCountDailyData')
-        this.$store.dispatch('getData')
+        this.getAllData()
+        this.timer = setInterval(this.getAllData, 60000)
+    },
+    methods: {
+        getAllData() {
+            console.log('refrescando data');
+            this.$store.dispatch('getTotals')
+            this.$store.dispatch('getDataFromWorldometers')
+            this.$store.dispatch('getCountData')
+            this.$store.dispatch('getCountDailyData')
+            this.$store.dispatch('getData')
+        }
+    },
+    beforeDestroy () {
+        clearInterval(this.timer)
     },
     render: h => h(App)
 }).$mount('#app')
