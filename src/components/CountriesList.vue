@@ -16,7 +16,6 @@
             />
         </div>
 
-
         <template v-for="(country, index) in countryList">
           <div
             :key="index"
@@ -104,10 +103,7 @@ export default {
 
                 if (this.search) {
                     return this.worldometer.filter((item) => {
-                        
-                        let found = item.country.toLowerCase().indexOf(this.search.toLowerCase());
-                        console.log(found)
-                        return (found > 0) ? true : false
+                        return item.country.toLowerCase().includes(this.search.toLowerCase())
                     })
                 }
 

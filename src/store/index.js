@@ -20,76 +20,87 @@ export default new Vuex.Store({
     },
     getters: {
         confirmedByCountry: (state) => (iso) => {
-            let confirmed = state.data.confirmed.locations.find(info => {
-                return info.country_code.match(iso.toUpperCase())
-            })
+            let confirmed = 0
+            let deaths = 0
+            let recovered = 0
 
-            if (iso == 'CN') {
-                let china = state.data.confirmed.locations.filter(info => {
+            if (_.has(state.data, 'confirmed')) {
+                confirmed = state.data.confirmed.locations.find(info => {
                     return info.country_code.match(iso.toUpperCase())
-                })	
-
-                let histories = {};
-                china.forEach((item) => {
-                    _.forEach(item.history, (history, key) => {
-                        let total = 0;
-                        if (_.has(histories, key)) {
-                            total = histories[key];
-                        }
-                        Object.assign(histories, {[key]: total + history});
-                    })
                 })
 
-                confirmed.history = histories
-            }
+                if (iso == 'CN') {
+                    let china = state.data.confirmed.locations.filter(info => {
+                        return info.country_code.match(iso.toUpperCase())
+                    })  
 
+                    let histories = {};
+                    china.forEach((item) => {
+                        _.forEach(item.history, (history, key) => {
+                            let total = 0;
+                            if (_.has(histories, key)) {
+                                total = histories[key];
+                            }
+                            Object.assign(histories, {[key]: total + history});
+                        })
+                    })
+
+                    confirmed.history = histories
+                }
+            }
 
             //Deaths
-            let deaths = state.data.deaths.locations.find(info => {
-                return info.country_code.match(iso.toUpperCase())
-            })
-
-            if (iso == 'CN') {
-                let china = state.data.deaths.locations.filter(info => {
+            if (_.has(state.data, 'deaths')) {
+                deaths = state.data.deaths.locations.find(info => {
                     return info.country_code.match(iso.toUpperCase())
-                })	
-
-                let histories = {};
-                china.forEach((item) => {
-                    _.forEach(item.history, (history, key) => {
-                        let total = 0;
-                        if (_.has(histories, key)) {
-                            total = histories[key];
-                        }
-                        Object.assign(histories, {[key]: total + history});
-                    })
                 })
 
-                deaths.history = histories
+                if (iso == 'CN') {
+                    let china = state.data.deaths.locations.filter(info => {
+                        return info.country_code.match(iso.toUpperCase())
+                    })  
+
+                    let histories = {};
+                    china.forEach((item) => {
+                        _.forEach(item.history, (history, key) => {
+                            let total = 0;
+                            if (_.has(histories, key)) {
+                                total = histories[key];
+                            }
+                            Object.assign(histories, {[key]: total + history});
+                        })
+                    })
+
+                    deaths.history = histories
+                }
             }
+            
+            
 
             //Recovered
-            let recovered = state.data.recovered.locations.find(info => {
-                return info.country_code.match(iso.toUpperCase())
-            })
-
-            if (iso == 'CN') {
-                let china = state.data.recovered.locations.filter(info => {
+            if (_.has(state.data, 'recovered')) {
+                recovered = state.data.recovered.locations.find(info => {
                     return info.country_code.match(iso.toUpperCase())
-                })	
-
-                let histories = {};
-                china.forEach((item) => {
-                    _.forEach(item.history, (history, key) => {
-                        let total = 0;
-                        if (_.has(histories, key)) {
-                            total = histories[key];
-                        }
-                        Object.assign(histories, {[key]: total + history});
-                    })
                 })
 
-                recovered.history = histories
+                if (iso == 'CN') {
+                    let china = state.data.recovered.locations.filter(info => {
+                        return info.country_code.match(iso.toUpperCase())
+                    })  
+
+                    let histories = {};
+                    china.forEach((item) => {
+                        _.forEach(item.history, (history, key) => {
+                            let total = 0;
+                            if (_.has(histories, key)) {
+                                total = histories[key];
+                            }
+                            Object.assign(histories, {[key]: total + history});
+                        })
+                    })
+
+                    recovered.history = histories
+                }
             }
 
             return  {
@@ -113,11 +124,11 @@ export default new Vuex.Store({
             } 
 
             return  {
-                confirmed: (countryWorldometer.confirmed) ? countryWorldometer.confirmed : country.confirmed,
-                deaths: (countryWorldometer.deaths) ? countryWorldometer.deaths : country.deaths,
-                recovered: (countryWorldometer.recovered) ? countryWorldometer.recovered : country.recovered,
-                active: (countryWorldometer.active) ? countryWorldometer.active : country.active,
-                serious: (countryWorldometer.serious) ? countryWorldometer.serious : false,
+                confirmed: _.has(countryWorldometer, 'confirmed') ? countryWorldometer.confirmed : country.confirmed,
+                deaths: _.has(countryWorldometer, 'deaths') ? countryWorldometer.deaths : country.deaths,
+                recovered: _.has(countryWorldometer, 'recovered') ? countryWorldometer.recovered : country.recovered,
+                active: _.has(countryWorldometer, 'active') ? countryWorldometer.active : country.active,
+                serious: _.has(countryWorldometer, 'serious') ? countryWorldometer.serious : false,
             }
         },
 
