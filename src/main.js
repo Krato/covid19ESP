@@ -15,7 +15,7 @@ new Vue({
     }),
     created() {
         this.getAllData()
-        this.timer = setInterval(this.getAllData, 60000)
+        this.timer = setInterval(this.getAllData, 60000 * 5)
     },
     methods: {
         getAllData() {
