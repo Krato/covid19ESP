@@ -9,9 +9,7 @@ h2 {
 h3 {
 	@apply text-lg;
 }
-a {
-	@apply text-blue-600;
-}
+
 
 @tailwind components;
 

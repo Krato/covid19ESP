@@ -1,9 +1,10 @@
 <template>
   <div class="p-4">
+	<links />
     <div class="flex flex-wrap -mx-4 h-screen">
       <div class="flex flex-wrap w-full lg:w-2/3 px-4">
 		<div class="w-full flex flex-wrap justify-center">
-			<logo class="w-3/5 lg:w-1/3 p-0 md:p-4 mb-4 lg:mb-0 text-white" />
+			<logo class="w-2/5 md:w-3/5 lg:w-1/3 p-0 md:p-4 mb-6 lg:mb-0 text-white" />
 			<counter />
 		</div>
         <country-details
@@ -37,9 +38,10 @@ import Counter from '@/components/Counter.vue'
 import CountriesList from '@/components/CountriesList.vue'
 import CountryDetails from '@/components/CountryDetails.vue'
 import Mapa from '@/components/Map.vue'
+import Links from '@/components/Links.vue'
 
-import 'vue-loaders/dist/vue-loaders.css';
-import VueLoaders from 'vue-loaders';
+import 'vue-loaders/dist/vue-loaders.css'
+import VueLoaders from 'vue-loaders'
 Vue.use(VueLoaders);
 
 export default {
@@ -50,7 +52,8 @@ export default {
         'countries-list': CountriesList,
         'country-details': CountryDetails,
         'world-map': Mapa,
-        'logo': Logo
+        'logo': Logo,
+        'links': Links
     },
     data: () => ({
         showChart: true,
