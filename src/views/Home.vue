@@ -43,23 +43,23 @@ import VueLoaders from 'vue-loaders';
 Vue.use(VueLoaders);
 
 export default {
-	name: 'Home',
-	components: {
-		'counter': Counter,
-		// 'countries': Countries,
-		'countries-list': CountriesList,
-		'country-details': CountryDetails,
-		'world-map': Mapa,
-		'logo': Logo
-	},
-	data: () => ({
-		showChart: true,
-		selectedCountry: 'es', 
-	}),
-	methods: {
-		changeCountry(iso) {
-			this.selectedCountry = iso
-		}
-	}
+    name: 'Home',
+    components: {
+        'counter': Counter,
+        // 'countries': Countries,
+        'countries-list': CountriesList,
+        'country-details': CountryDetails,
+        'world-map': Mapa,
+        'logo': Logo
+    },
+    data: () => ({
+        showChart: true,
+        selectedCountry: 'es', 
+    }),
+    methods: {
+        changeCountry(iso) {
+            this.selectedCountry = iso
+        }
+    }
 }
 </script>

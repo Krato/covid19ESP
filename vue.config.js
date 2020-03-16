@@ -1,9 +1,9 @@
 module.exports = {
-  pluginOptions: {
-    svgLoader: {
-      svgo: {
-        plugins: []
-      }
+    pluginOptions: {
+        svgLoader: {
+            svgo: {
+                plugins: []
+            }
+        }
     }
-  }
 }

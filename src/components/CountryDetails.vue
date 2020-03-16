@@ -128,15 +128,15 @@ export default {
                     defaultLocale: 'es',
                 },
                 title: {
-                  text: this.chartTitle,
-                  align: 'left'
+                    text: this.chartTitle,
+                    align: 'left'
                 },
                 colors: ['#FCCF31', '#17ead9', '#f02fc2'],
                 grid: {
                     borderColor: "#40475D",
                 },
                 stroke: {
-                  curve: 'straight'
+                    curve: 'straight'
                 },
                 xaxis: {
                     type: 'datetime',

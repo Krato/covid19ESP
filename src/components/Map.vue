@@ -27,37 +27,37 @@ import am4geodata_worldLow from "@amcharts/amcharts4-geodata/worldHigh"
 import { mapState } from 'vuex'
 
 export default {
-	name: 'Map',
+    name: 'Map',
 
-	props: {
+    props: {
         iso: {
             required: false,
             default: 'all'
         }
     },
 
-	data: () => ({
-		show: false,
-		map: null,
-		mapPolygons: null,
-		mapData: null,
-		clickedCountry: null,
-		historyClicked: null,
-		colors: {
-			low: '#CBD5E0',
-			normal: '#FAF089',
-			high: '#F6AD55',
-			danger: '#E53E3E'
-		},
-	}),
+    data: () => ({
+        show: false,
+        map: null,
+        mapPolygons: null,
+        mapData: null,
+        clickedCountry: null,
+        historyClicked: null,
+        colors: {
+            low: '#CBD5E0',
+            normal: '#FAF089',
+            high: '#F6AD55',
+            danger: '#E53E3E'
+        },
+    }),
 
-	computed:{
-		...mapState({
+    computed:{
+        ...mapState({
             worldometer: state => state.worldometer
         }),
 
         series() {
-			return _.map(this.worldometer, (item) => ({
+            return _.map(this.worldometer, (item) => ({
                 id: item.iso2,
                 name: item.country,
                 value: item.confirmed,
@@ -65,148 +65,148 @@ export default {
                 color: '#e2e2e2'
             }))
         }
-	},
+    },
 
-	watch: {
+    watch: {
 
-		series(value) {
-			if (value) {
-				this.$nextTick(() => {
-					this.createMap()
-				})	
-			}
-		},
+        series(value) {
+            if (value) {
+                this.$nextTick(() => {
+                    this.createMap()
+                })	
+            }
+        },
 
-		iso(value) {
-			if (value && this.mapPolygons) {
-				var countryPoligon = this.mapPolygons.getPolygonById(value);
-				if (countryPoligon) {
-					countryPoligon.dispatchImmediately("hit")
-				}
-			}
-		},
+        iso(value) {
+            if (value && this.mapPolygons) {
+                var countryPoligon = this.mapPolygons.getPolygonById(value);
+                if (countryPoligon) {
+                    countryPoligon.dispatchImmediately("hit")
+                }
+            }
+        },
 
-		mapPolygons(value) {
-			if (value) {
-				setTimeout(() => {
-					_.forEach(this.series, (country) => {
-						let countryPoligon = value.getPolygonById(country.id);
-						if (countryPoligon) {
-							countryPoligon.fill = this.getHeatColor(country.value)
-						}
-					})
+        mapPolygons(value) {
+            if (value) {
+                setTimeout(() => {
+                    _.forEach(this.series, (country) => {
+                        let countryPoligon = value.getPolygonById(country.id);
+                        if (countryPoligon) {
+                            countryPoligon.fill = this.getHeatColor(country.value)
+                        }
+                    })
 
-					this.show = true
-				}, 500)
-			}
-		}
+                    this.show = true
+                }, 500)
+            }
+        }
 
-	},
+    },
 
-	mounted() {
-		// this.$nextTick(() => {
-		// 	this.createMap()	
-		// })
-	},
+    mounted() {
+        // this.$nextTick(() => {
+        // 	this.createMap()	
+        // })
+    },
 
-	beforeDestroy() {
-		if (this.map) {
-			this.map.dispose();
-		}
-	},
+    beforeDestroy() {
+        if (this.map) {
+            this.map.dispose();
+        }
+    },
 
-	methods: {
+    methods: {
 
-		getHeatColor(value) {
+        getHeatColor(value) {
 
-			if (value >= 10000) {
-				return this.colors.danger
-			}
+            if (value >= 10000) {
+                return this.colors.danger
+            }
 
-			if (value >= 6000) {
-				return this.colors.high
-			}
+            if (value >= 6000) {
+                return this.colors.high
+            }
 
-			if (value >= 1000) {
-				return this.colors.normal
-			}
+            if (value >= 1000) {
+                return this.colors.normal
+            }
 
-			return this.colors.low
-		},
+            return this.colors.low
+        },
 
-		async createMap() {
+        async createMap() {
 
-			let map = am4core.create(this.$refs.chartmap, am4maps.MapChart)
+            let map = am4core.create(this.$refs.chartmap, am4maps.MapChart)
 			
-			// Set map definition
-			// map.geodata = am4geodata_worldLow;
-			map.geodata = am4geodata_worldLow
+            // Set map definition
+            // map.geodata = am4geodata_worldLow;
+            map.geodata = am4geodata_worldLow
 
-			map.geodataNames = am4geodata_lang_ES;
+            map.geodataNames = am4geodata_lang_ES;
 
-			// Set projection
-			map.projection = new am4maps.projections.Miller();
+            // Set projection
+            map.projection = new am4maps.projections.Miller();
 
-			// var media = _.meanBy(this.series, (item) => { 
-			// 	return item.value; 
-			// });
+            // var media = _.meanBy(this.series, (item) => { 
+            // 	return item.value; 
+            // });
 
-			// Create map polygon series
-			// this.series.forEach((country) => {
-			// 	let series = map.series.push(new am4maps.MapPolygonSeries());
-			// 	series.name = country.name;
-			// 	series.fill = this.getHeatColor(country.value);
-			// 	series.useGeodata = true;
-			// })
+            // Create map polygon series
+            // this.series.forEach((country) => {
+            // 	let series = map.series.push(new am4maps.MapPolygonSeries());
+            // 	series.name = country.name;
+            // 	series.fill = this.getHeatColor(country.value);
+            // 	series.useGeodata = true;
+            // })
 
-			// The rest of the world.
-			let polygonSeries = map.series.push(new am4maps.MapPolygonSeries());
-			polygonSeries.exclude = ["AQ"];
-			polygonSeries.useGeodata = true
-			polygonSeries.nonScalingStroke = true,
-			polygonSeries.stroke = am4core.color("#27293d"),
-			polygonSeries.strokeWidth = 5,
-			polygonSeries.calculateVisualCenter = true;
+            // The rest of the world.
+            let polygonSeries = map.series.push(new am4maps.MapPolygonSeries());
+            polygonSeries.exclude = ["AQ"];
+            polygonSeries.useGeodata = true
+            polygonSeries.nonScalingStroke = true,
+            polygonSeries.stroke = am4core.color("#27293d"),
+            polygonSeries.strokeWidth = 5,
+            polygonSeries.calculateVisualCenter = true;
 
-			let template = polygonSeries.mapPolygons.template;
-			template.fill = am4core.color("#161625"),
-			template.stroke = am4core.color("#27293d");
+            let template = polygonSeries.mapPolygons.template;
+            template.fill = am4core.color("#161625"),
+            template.stroke = am4core.color("#27293d");
 
-			// template.tooltipText = "{name}: {value.value.formatNumber('#.0')}";
+            // template.tooltipText = "{name}: {value.value.formatNumber('#.0')}";
 
-			polygonSeries.tooltip.label.interactionsEnabled = true;
-			polygonSeries.tooltip.keepTargetHover = true;
+            polygonSeries.tooltip.label.interactionsEnabled = true;
+            polygonSeries.tooltip.keepTargetHover = true;
 
-			template.tooltipText = `[bold]{name}[/]
+            template.tooltipText = `[bold]{name}[/]
 			----
 			Casos confirmados: {value}`;
 
-			template.events.on("hit", (ev) => {
-				if (this.historyClicked) {
-					this.historyClicked.isActive = false;	
-				}
+            template.events.on("hit", (ev) => {
+                if (this.historyClicked) {
+                    this.historyClicked.isActive = false;	
+                }
 
-				ev.target.series.chart.zoomToMapObject(ev.target);
+                ev.target.series.chart.zoomToMapObject(ev.target);
 
-				this.historyClicked = ev.target;
-			});
+                this.historyClicked = ev.target;
+            });
 
-			map.zoomControl = new am4maps.ZoomControl();
+            map.zoomControl = new am4maps.ZoomControl();
 
-			polygonSeries.data = this.series
+            polygonSeries.data = this.series
 
-			this.mapPolygons = polygonSeries;
+            this.mapPolygons = polygonSeries;
 
-			this.map = map
+            this.map = map
 
-			this.setCountriesData()
-		},
+            this.setCountriesData()
+        },
 
-		setCountriesData() {
-			this.$nextTick(() => {
-			})
-		}
-	}
+        setCountriesData() {
+            this.$nextTick(() => {
+            })
+        }
+    }
 }
 </script>
 <style type="text/css">
