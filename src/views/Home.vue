@@ -3,7 +3,7 @@
     <div class="flex flex-wrap -mx-4 h-screen">
       <div class="flex flex-wrap w-full lg:w-2/3 px-4">
 		<div class="w-full flex flex-wrap justify-center">
-			<logo class="w-3/5 lg:w-1/3 p-0 md:p-4 mb-4 lg:mb-0" />
+			<logo class="w-3/5 lg:w-1/3 p-0 md:p-4 mb-4 lg:mb-0 text-white" />
 			<counter />
 		</div>
         <country-details
