@@ -1,0 +1,39 @@
+@tailwind base;
+
+h1 {
+	@apply text-2xl;
+}
+h2 {
+	@apply text-xl;
+}
+h3 {
+	@apply text-lg;
+}
+a {
+	@apply text-blue-600;
+}
+
+@tailwind components;
+
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+
+body {
+	@apply .bg-gray-900 .text-white .font-open;
+}
+
+.list-height {
+	height: calc(100vh - 50px)
+}
+
+.search {
+	@apply .bg-gray-900 .px-4 .rounded-md;
+    flex: 1;
+    /*background: 0 0;*/
+    border: none;
+    color: #7f8197;
+    font-size: 15px;
+    height: 45px;
+}
