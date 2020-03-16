@@ -161,8 +161,7 @@ export default {
                         toggleDataSeries: true
                     },
                     position: 'top',
-                    offsetY: -33,
-                    offsetX: 60
+                    offsetY: 0,
                 },
             }
         },
