@@ -6,7 +6,6 @@
             </vue-loaders>
         </div>
 
-
         <div class="w-full flex flex-wrap items-center text-center" v-if="spain">
             <div class="w-1/2 md:w-1/4">
                 <div class="flex items-center px-2">
@@ -18,7 +17,7 @@
             <div class="w-1/2 md:w-1/4 flex flex-wrap items-center font-bold">
 
                 <div class="flex md:hidden">
-                    <div class="w-full flex items-center">
+                    <div class="w-full flex items-center pr-2">
                         Casos confirmados 
                         <span class="text-yellow-300 text-2xl px-1">
                             <animated-number :duration="1000" :format-value="formatValue" :round="true" :value="spain.confirmed">
@@ -120,7 +119,7 @@ export default {
     computed: {
         ...mapState({
             info: state => state.totals,
-            worldometer: state => state.worldometer
+            // worldometer: state => state.worldometer
         }),
 
         ...mapGetters(['nowByCountry']),

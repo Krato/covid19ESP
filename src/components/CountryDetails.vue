@@ -180,7 +180,7 @@ export default {
                     return parseInt(new Date(key).getTime())
                 })
 
-                if (this.iso != 'CN' && this.latest) {
+                if (this.iso != 'CN' && this.latest != false) {
                     this.$set(confirmed, this.now, this.latest.confirmed)
                 }
 
@@ -240,7 +240,7 @@ export default {
         },
 
         chartTitle() {
-            if (this.latest) {
+            if (this.latest != false) {
                 return this.latest.country + ': Datos del virus por días'  
             }
             
@@ -249,9 +249,10 @@ export default {
 
         isChartReady() {
 
-            if (this.country != false || 
-                this.confirmed != false || 
-                this.deaths != false || 
+            if (this.latest != false &&
+                this.country != false &&
+                this.confirmed != false &&
+                this.deaths != false &&
                 this.recovered != false) {
 
                 return true

@@ -15,13 +15,13 @@ new Vue({
     }),
     created() {
         this.getAllData()
-        this.timer = setInterval(this.getAllData, 60000 * 5)
+        this.timer = setInterval(this.getAllData, 60000 * 3)
     },
     methods: {
         getAllData() {
-            console.log('refrescando data');
             this.$store.dispatch('getTotals')
-            this.$store.dispatch('getDataFromWorldometers')
+            this.$store.dispatch('getSpanishData')
+            // this.$store.dispatch('getDataFromWorldometers')
             this.$store.dispatch('getCountData')
             this.$store.dispatch('getCountDailyData')
             this.$store.dispatch('getData')

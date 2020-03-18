@@ -23,7 +23,7 @@ body {
 }
 
 .list-height {
-	height: calc(100vh - 50px)
+	height: calc(100vh - 180px)
 }
 
 .search {
@@ -35,3 +35,24 @@ body {
     font-size: 15px;
     height: 45px;
 }
+
+/*Animations*/
+/*
+g[role="menuitem"] > circle {
+	animation-duration: 2s;
+	animation-name: pulse;
+	animation-iteration-count: 1;
+}
+
+@keyframes pulse {
+	from {
+		fill-opacity: 0.5;
+		transform: scale(0.3);
+		stroke-opacity: 1;
+	}
+	to {
+		stroke-width: 0;
+		fill-opacity: 1;
+		transform: scale(1);
+	}
+}*/

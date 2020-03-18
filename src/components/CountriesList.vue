@@ -1,10 +1,40 @@
 <template>
-  <div class="h-screen">
+  <div class="h-screen relative">
     <div class="flex flex-wrap justify-center overflow-y-auto rounded-lg bg-gray-800 shadow-lg">
       <div class="w-full flex flex-wrap items-center text-center border-b border-gray-700 p-2">
-        <h2 class="p-2 w-full self-start">
+        <div class="p-2 w-full self-start">
+          <div class="p-2 w-full flex flex-wrap" v-if="totals">
+              <div class="w-1/4 flex flex-wrap items-center p-2">
+                Totales
+              </div>
+              <div class="w-1/4 flex flex-wrap items-center p-2">
+                <div class="w-full text-yellow-300 font-bold">
+                  {{ fixNumber(totals.confirmed) }}
+                </div>
+                <div class="w-full text-sm">
+                  Confirmados
+                </div>
+              </div>
+              <div class="w-1/4 flex flex-wrap items-center p-2">
+                <div class="w-full text-green-500 font-bold">
+                  {{ fixNumber(totals.recovered) }}
+                </div>
+                <div class="w-full text-sm">
+                  Recuperados
+                </div>
+              </div>
+              <div class="w-1/4 flex flex-wrap items-center p-2">
+                <div class="w-full text-red-500 font-bold">
+                  {{ fixNumber(totals.deaths) }}
+                </div>
+                <div class="w-full text-sm">
+                  Muertes
+                </div>
+              </div>
+          </div>
+
           <input type="text" v-model="search" placeholder="Busca por país" class="w-full search border border-gray-700 ">
-        </h2>
+        </div>
       </div>
       <div class="list-height w-full overflow-y-auto">
 
@@ -24,11 +54,9 @@
           >
             <div class="w-1/4 flex flex-wrap items-center p-2">
               <div class="w-full">
-                <country-flag
-                  v-if="country.iso3"
-                  :country="country.iso3"
-                  size="small"
-                />
+                <template v-if="country.iso != 'others'">
+                  <country-flag v-if="country.iso3" :country="country.iso3" size="small" />
+                </template>
               </div>
               <div class="w-full">
                 {{ country.country }}
@@ -77,7 +105,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import _ from 'lodash'
 import CountryFlag from 'vue-country-flag'
 
@@ -93,21 +121,19 @@ export default {
     computed: {
         ...mapState({
             countries: state => state.countries,
-            worldometer: state => state.worldometer,
+            totals: state => state.totals,
         }),
 
-        ...mapGetters(['countriesGrouped']),
-
         countryList() {
-            if (this.worldometer) {
+            if (this.countries) {
 
                 if (this.search) {
-                    return this.worldometer.filter((item) => {
+                    return this.countries.filter((item) => {
                         return item.country.toLowerCase().includes(this.search.toLowerCase())
                     })
                 }
 
-                return this.worldometer
+                return this.countries
             }
 
             return []

@@ -2,8 +2,10 @@ module.exports = {
     pluginOptions: {
         svgLoader: {
             svgo: {
-                plugins: []
-            }
+                plugins: [
+                ]
+            },
+            removeTags: false
         }
     }
 }

@@ -53,11 +53,11 @@ export default {
 
     computed:{
         ...mapState({
-            worldometer: state => state.worldometer
+            countries: state => state.countries
         }),
 
         series() {
-            return _.map(this.worldometer, (item) => ({
+            return _.map(this.countries, (item) => ({
                 id: item.iso2,
                 name: item.country,
                 value: item.confirmed,
