@@ -32,6 +32,7 @@
     "vue-loaders": "^3.3.0",
     "vue-router": "^3.1.5",
     "vue-svg-loader": "^0.12.0",
+    "vue-toastr": "^2.1.2",
     "vuex": "^3.1.2"
   },
   "devDependencies": {

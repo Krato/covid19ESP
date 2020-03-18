@@ -19,7 +19,7 @@
                 <div class="flex md:hidden">
                     <div class="w-full flex items-center pr-2">
                         Casos confirmados 
-                        <span class="text-yellow-300 text-2xl px-1">
+                        <span class="text-yellow-300 text-2xl px-1 pr-2">
                             <animated-number :duration="1000" :format-value="formatValue" :round="true" :value="spain.confirmed">
                             </animated-number>
                         </span>

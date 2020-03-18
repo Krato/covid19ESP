@@ -36,7 +36,22 @@ body {
     height: 45px;
 }
 
+.help-list li{
+	@apply .my-2;
+}
+
 /*Animations*/
+
+.fade-enter-active,
+.fade-leave-active {
+	transition: all 0.6s;
+}
+.fade-enter,
+.fade-leave-to {
+	opacity: 0;
+}
+
+
 /*
 g[role="menuitem"] > circle {
 	animation-duration: 2s;

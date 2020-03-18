@@ -1,6 +1,6 @@
 <template>
     <div class="p-4">
-        <links />
+        
         <div class="flex flex-wrap -mx-4 h-screen">
             <div class="flex flex-wrap w-full lg:w-2/3 px-4">
                 <div class="w-full flex flex-wrap justify-center">
@@ -15,6 +15,8 @@
                 <countries-list @country="changeCountry" class="" />
             </div>
         </div>
+        <links />
+        <help />
     </div>
 </template>
 
@@ -30,10 +32,14 @@ import CountryDetails from '@/components/CountryDetails.vue'
 import Mapa from '@/components/Map.vue'
 import Spain from '@/components/Spain.vue'
 import Links from '@/components/Links.vue'
+import Help from '@/components/Help.vue'
 
 import 'vue-loaders/dist/vue-loaders.css'
 import VueLoaders from 'vue-loaders'
 Vue.use(VueLoaders);
+
+import VueToastr from "vue-toastr";
+Vue.use(VueToastr);
 
 export default {
     name: 'Home',
@@ -45,7 +51,8 @@ export default {
         'spain': Spain,
         'world-map': Mapa,
         'logo': Logo,
-        'links': Links
+        'links': Links,
+        'help': Help
     },
     data: () => ({
         showChart: true,
@@ -55,6 +62,9 @@ export default {
         changeCountry(iso) {
             this.selectedCountry = iso
         }
+    }, 
+    mounted() {
+        // this.$toastr.e("Estamos trabajando para traer mejoras. Puede que los datos no sean válidos. Por favor, refresca en unos minutos.");
     }
 }
 </script>
