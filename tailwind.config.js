@@ -10,6 +10,9 @@ module.exports = {
                 'smoke-200': 'rgba(0, 0, 0, 0.25)',
                 'smoke-100': 'rgba(0, 0, 0, 0.1)',
             },
+            fontSize: {
+                'xxs': '.6rem',
+            },
             fontFamily: {
                 'open': ['Open Sans', 'sans-serif'],
             },

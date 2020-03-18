@@ -1,17 +1,12 @@
 <template>
-  <div class="flex w-full shadow-lg bg-gray-800 rounded-lg h-400 mt-8 py-4">
-    <div
-      v-if="!show"
-      class="w-full h-full flex justify-center items-center"
-    >
-      <vue-loaders
-        name="ball-scale"
-        color="#90CDF4"
-        scale="1.2"
-      />
+    <div class="flex w-full xl:w-1/2 pl-2 xl:pr-4 mb-8 xl:mb-0">
+        <div class="flex w-full h-400  shadow-lg bg-gray-800 rounded-lg p-4">
+            <div v-if="!show" class="w-full h-full flex justify-center items-center">
+                <vue-loaders name="ball-scale" color="#90CDF4" scale="1.2" />
+            </div>
+            <div ref="chartmap" id="chartmap" class="w-full h-full" :class="{'hidden': !show}"/>
+        </div>
     </div>
-    <div ref="chartmap" id="chartmap" class="w-full h-full" :class="{'hidden': !show}"/>
-  </div>
 </template>
 
 <script>

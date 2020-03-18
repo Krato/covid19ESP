@@ -1,5 +1,5 @@
 <template>
-  <div class="hidden md:flex w-full shadow-lg bg-gray-800 rounded-lg h-400 mt-8">
+  <div class="hidden md:flex w-full shadow-lg bg-gray-800 rounded-lg h-400 mt-8 ml-2">
     <div
       v-if="!show"
       class="w-full h-full flex justify-center items-center"

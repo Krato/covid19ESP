@@ -2,10 +2,10 @@
     <Transition name="fade">
         <div
           v-if="showing"
-          class="fixed inset-0 w-full h-screen flex items-center justify-center bg-smoke-800 px-4"
+          class="fixed inset-0 z-50 w-full h-screen flex items-center justify-center bg-smoke-800"
           @click.self="close"
             >
-            <div class="relative max-h-screen w-full max-w-2xl bg-gray-700 shadow-lg rounded-lg p-8 flex">
+            <div class="relative max-h-screen w-full max-w-2xl bg-gray-700 shadow-lg rounded-lg p-4 flex">
                 <button
                     aria-label="close"
                     class="absolute top-0 right-0 text-xl text-gray-500 my-2 mx-4"

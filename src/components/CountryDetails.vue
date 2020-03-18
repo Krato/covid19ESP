@@ -1,23 +1,25 @@
 <template>
-  <div class="flex w-full items-center shadow-lg bg-gray-800 rounded-lg p-4  mt-8">
-    <div class="w-full h-64">
-        <div v-if="!show" class="w-full h-full flex justify-center items-center">
-            <vue-loaders
-                name="ball-scale"
-                color="#90CDF4"
-                scale="1.2"
-            />
+    <div class="flex w-full xl:w-1/2 pl-2">
+        <div class="flex w-full items-center shadow-lg bg-gray-800 rounded-lg p-2">
+            <div class="w-full h-64">
+                <div v-if="!show" class="w-full h-full flex justify-center items-center">
+                    <vue-loaders
+                        name="ball-scale"
+                        color="#90CDF4"
+                        scale="1.2"
+                    />
+                </div>
+                <chart
+                    v-if="show"
+                    width="100%"
+                    height="100%"
+                    type="line"
+                    :options="options"
+                    :series="series"
+                />
+            </div>
         </div>
-        <chart
-            v-if="show"
-            width="100%"
-            height="100%"
-            type="line"
-            :options="options"
-            :series="series"
-        />
     </div>
-  </div>
 </template>
 
 <script>

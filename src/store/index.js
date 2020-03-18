@@ -186,9 +186,9 @@ export default new Vuex.Store({
         },
 
         getTotals() {
-            
+            // https://coronavirus-19-api.herokuapp.com/all
             // https://corona.lmao.ninja/all
-            axios.get('https://coronavirus-19-api.herokuapp.com/all').then(response => {
+            axios.get('https://corona.lmao.ninja/all').then(response => {
                 this.state.totals = {
                     confirmed: response.data.cases,
                     recovered: response.data.recovered,
@@ -240,7 +240,8 @@ export default new Vuex.Store({
 
             
             // https://corona.lmao.ninja/countries
-            axios.get('https://coronavirus-19-api.herokuapp.com/countries').then(response => {
+            // https://coronavirus-19-api.herokuapp.com/countries
+            axios.get('https://corona.lmao.ninja/countries').then(response => {
                 let countries = [];
                 response.data.map(el => {
 

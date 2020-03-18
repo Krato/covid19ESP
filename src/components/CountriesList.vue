@@ -4,31 +4,39 @@
       <div class="w-full flex flex-wrap items-center text-center border-b border-gray-700 p-2">
         <div class="p-2 w-full self-start">
           <div class="p-2 w-full flex flex-wrap" v-if="totals">
-              <div class="w-1/4 flex flex-wrap items-center p-2">
+              <div class="w-1/4 md:w-1/5 flex flex-wrap items-center p-2">
                 Totales
               </div>
-              <div class="w-1/4 flex flex-wrap items-center p-2">
+              <div class="w-1/4 md:w-1/5 flex flex-wrap justify-center items-center p-2">
                 <div class="w-full text-yellow-300 font-bold">
                   {{ fixNumber(totals.confirmed) }}
                 </div>
-                <div class="w-full text-sm">
+                <div class="w-full text-xxs md:text-sm">
                   Confirmados
                 </div>
               </div>
-              <div class="w-1/4 flex flex-wrap items-center p-2">
+              <div class="w-1/4 md:w-1/5 flex flex-wrap justify-center items-center p-2">
                 <div class="w-full text-green-500 font-bold">
                   {{ fixNumber(totals.recovered) }}
                 </div>
-                <div class="w-full text-sm">
+                <div class="w-full text-xxs md:text-sm">
                   Recuperados
                 </div>
               </div>
-              <div class="w-1/4 flex flex-wrap items-center p-2">
+              <div class="w-1/4 md:w-1/5 flex flex-wrap justify-center items-center p-2">
                 <div class="w-full text-red-500 font-bold">
                   {{ fixNumber(totals.deaths) }}
                 </div>
-                <div class="w-full text-sm">
+                <div class="w-full text-xxs md:text-sm">
                   Muertes
+                </div>
+              </div>
+              <div class="hidden md:w-1/5 md:flex flex-wrap justify-center items-center p-2">
+                <div class="w-full text-orange-400 font-bold">
+                  {{ fixNumber(this.critical) }}
+                </div>
+                <div class="w-full text-xxs md:text-sm">
+                  Críticos
                 </div>
               </div>
           </div>
@@ -49,43 +57,52 @@
         <template v-for="(country, index) in countryList">
           <div
             :key="index"
-            class="w-full flex flex-wrap  items-center text-center border-b border-gray-700 cursor-pointer p-2"
+            class="w-full flex flex-wrap  items-center text-center  border-b border-gray-700 cursor-pointer p-2"
             @click="changeCountry(country)"
           >
-            <div class="w-1/4 flex flex-wrap items-center p-2">
+            <div class="w-1/4 md:w-1/5 flex flex-wrap items-center py-2 px-1 md:px-2">
               <div class="w-full">
                 <template v-if="country.iso != 'others'">
                   <country-flag v-if="country.iso3" :country="country.iso3" size="small" />
                 </template>
               </div>
-              <div class="w-full">
+              <div class="w-full text-xs md:text-sm">
                 {{ country.country }}
               </div>
             </div>
-            <div class="w-1/4 flex flex-wrap items-center">
+            <div class="w-1/4 md:w-1/5 flex flex-wrap items-center">
               <div class="w-full text-yellow-300 font-bold">
                 {{ fixNumber(country.confirmed) }}
               </div>
-              <div class="w-full text-sm">
+              <div class="w-full text-xxs md:text-sm">
                 Confirmados
               </div>
             </div>
 
-            <div class="w-1/4 flex flex-wrap items-center">
+            <div class="w-1/4 md:w-1/5 flex flex-wrap items-center">
               <div class="w-full text-green-500 font-bold">
                 {{ fixNumber(country.recovered) }}
               </div>
-              <div class="w-full text-sm">
+              <div class="w-full text-xxs md:text-sm">
                 Recuperados
               </div>
             </div>
 
-            <div class="w-1/4 flex flex-wrap items-center">
+            <div class="w-1/4 md:w-1/5 flex flex-wrap items-center">
               <div class="w-full text-red-500 font-bold">
                 {{ fixNumber(country.deaths) }}
               </div>
-              <div class="w-full text-sm">
+              <div class="w-full text-xs md:text-sm">
                 Muertes
+              </div>
+            </div>
+
+            <div class="hidden md:w-1/5 md:flex flex-wrap items-center">
+              <div class="w-full text-orange-400 font-bold">
+                {{ fixNumber(country.critical) }}
+              </div>
+              <div class="w-full text-xs md:text-sm">
+                Críticos
               </div>
             </div>
 
@@ -137,6 +154,14 @@ export default {
             }
 
             return []
+        },
+
+        critical() {
+            if (this.countryList) {
+                return _.sumBy(this.countryList, 'critical');
+            }
+
+            return 0
         }
     },
     mounted() {

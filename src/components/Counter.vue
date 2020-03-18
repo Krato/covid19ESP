@@ -7,25 +7,14 @@
         </div>
 
         <div class="w-full flex flex-wrap items-center text-center" v-if="spain">
-            <div class="w-1/2 md:w-1/4">
-                <div class="flex items-center px-2">
+            <div class="w-full md:w-1/4">
+                <div class="flex justify-center items-center px-2">
                     <h2 class="text-xl font-bold p-2">
                         Datos en España
                     </h2>
                 </div>
             </div>
-            <div class="w-1/2 md:w-1/4 flex flex-wrap items-center font-bold">
-
-                <div class="flex md:hidden">
-                    <div class="w-full flex items-center pr-2">
-                        Casos confirmados 
-                        <span class="text-yellow-300 text-2xl px-1 pr-2">
-                            <animated-number :duration="1000" :format-value="formatValue" :round="true" :value="spain.confirmed">
-                            </animated-number>
-                        </span>
-                    </div>
-                </div>
-
+            <div class="hidden md:flex w-full md:w-1/4 flex flex-wrap items-center font-bold">
                 <div class="hidden md:flex flex-wrap">
                     <div class="w-full ">
                         Confirmados
@@ -47,6 +36,16 @@
 
 
             <div class="w-full md:w-2/4 flex flex-wrap items-center justify-center">
+
+                <div class="w-full flex md:hidden flex-wrap self-stretch items-center justify-center font-bold p-1" v-if="spain.newCases">
+                    <div class="flex flex-wrap justify-center items-center w-full bg-gray-900 rounded-md p-2">
+                        <div class="text-yellow-300 text-2xl mr-1">
+                            <animated-number :duration="1000" :format-value="formatValue" :round="true" :value="spain.confirmed">
+                            </animated-number>
+                        </div>
+                        casos confirmados
+                    </div>
+                </div>
 
                 <div class="w-full flex md:hidden flex-wrap self-stretch items-center justify-center font-bold p-1" v-if="spain.newCases">
                     <div class="w-full bg-gray-900 rounded-md p-2">

@@ -4,11 +4,15 @@
         <div class="flex flex-wrap -mx-4 h-screen">
             <div class="flex flex-wrap w-full lg:w-2/3 px-4">
                 <div class="w-full flex flex-wrap justify-center">
-                    <logo class="w-2/5 md:w-3/5 lg:w-1/3 p-0 md:p-4 mb-6 lg:mb-0 text-white" />
+                    <div class="w-2/5 md:w-3/5 lg:w-1/3 p-0 md:p-4 mb-6 lg:mb-0 text-white">
+                        <logo class="svg_logo " />
+                    </div>
                     <counter />
                 </div>
-                <spain />
-                <country-details :iso="selectedCountry" v-if="showChart" />
+                <div class="w-full flex flex-wrap mt-8 ">
+                    <spain />
+                    <country-details :iso="selectedCountry" v-if="showChart" />
+                </div>
                 <world-map :iso="selectedCountry" />
             </div>
             <div class="w-full lg:w-1/3 px-4 mt-8 lg:mt-0">
