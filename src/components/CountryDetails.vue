@@ -1,5 +1,5 @@
 <template>
-    <div class="flex w-full xl:w-1/2 pl-2">
+    <div class="flex w-full xl:w-1/2 lg:pl-2">
         <div class="flex w-full items-center shadow-lg bg-gray-800 rounded-lg p-2">
             <div class="w-full h-64">
                 <div v-if="!show" class="w-full h-full flex justify-center items-center">

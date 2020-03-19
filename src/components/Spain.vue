@@ -1,5 +1,5 @@
 <template>
-    <div class="flex w-full xl:w-1/2 pl-2 xl:pr-4 mb-8 xl:mb-0">
+    <div class="flex w-full xl:w-1/2 lg:pl-2 xl:pr-4 mb-8 xl:mb-0">
         <div class="flex w-full h-400  shadow-lg bg-gray-800 rounded-lg p-4">
             <div v-if="!show" class="w-full h-full flex justify-center items-center">
                 <vue-loaders name="ball-scale" color="#90CDF4" scale="1.2" />

@@ -8,12 +8,13 @@
                 Totales
               </div>
               <div class="w-1/4 md:w-1/5 flex flex-wrap justify-center items-center p-2">
-                <div class="w-full text-yellow-300 font-bold">
-                  {{ fixNumber(totals.confirmed) }}
-                </div>
-                <div class="w-full text-xxs md:text-sm">
-                  Confirmados
-                </div>
+                
+                  <div class="w-full text-yellow-300 font-bold">
+                    {{ fixNumber(totals.confirmed) }}
+                  </div>
+                  <div class="w-full text-xxs md:text-sm">
+                    Confirmados
+                  </div>
               </div>
               <div class="w-1/4 md:w-1/5 flex flex-wrap justify-center items-center p-2">
                 <div class="w-full text-green-500 font-bold">
@@ -60,60 +61,54 @@
             class="w-full flex flex-wrap  items-center text-center  border-b border-gray-700 cursor-pointer p-2"
             @click="changeCountry(country)"
           >
-            <div class="w-1/4 md:w-1/5 flex flex-wrap items-center py-2 px-1 md:px-2">
-              <div class="w-full">
-                <template v-if="country.iso != 'others'">
-                  <country-flag v-if="country.iso3" :country="country.iso3" size="small" />
-                </template>
+            <!-- <div class="flex flex-wrap  items-center bg-gray-900 rounded-md py-2"> -->
+              <div class="w-1/4 md:w-1/5 flex flex-wrap items-center py-2 px-1 md:px-2">
+                <div class="w-full">
+                  <template v-if="country.iso != 'others'">
+                    <country-flag v-if="country.iso3" :country="country.iso3" size="small" />
+                  </template>
+                </div>
+                <div class="w-full text-xs md:text-sm">
+                  {{ country.country }}
+                </div>
               </div>
-              <div class="w-full text-xs md:text-sm">
-                {{ country.country }}
+              <div class="w-1/4 md:w-1/5 flex flex-wrap items-center">
+                <div class="w-full text-yellow-300 font-bold">
+                  {{ fixNumber(country.confirmed) }}
+                </div>
+                <div class="w-full text-xxs md:text-sm">
+                  Confirmados
+                </div>
               </div>
-            </div>
-            <div class="w-1/4 md:w-1/5 flex flex-wrap items-center">
-              <div class="w-full text-yellow-300 font-bold">
-                {{ fixNumber(country.confirmed) }}
-              </div>
-              <div class="w-full text-xxs md:text-sm">
-                Confirmados
-              </div>
-            </div>
 
-            <div class="w-1/4 md:w-1/5 flex flex-wrap items-center">
-              <div class="w-full text-green-500 font-bold">
-                {{ fixNumber(country.recovered) }}
+              <div class="w-1/4 md:w-1/5 flex flex-wrap items-center">
+                <div class="w-full text-green-500 font-bold">
+                  {{ fixNumber(country.recovered) }}
+                </div>
+                <div class="w-full text-xxs md:text-sm">
+                  Recuperados
+                </div>
               </div>
-              <div class="w-full text-xxs md:text-sm">
-                Recuperados
-              </div>
-            </div>
 
-            <div class="w-1/4 md:w-1/5 flex flex-wrap items-center">
-              <div class="w-full text-red-500 font-bold">
-                {{ fixNumber(country.deaths) }}
+              <div class="w-1/4 md:w-1/5 flex flex-wrap items-center">
+                <div class="w-full text-red-500 font-bold">
+                  {{ fixNumber(country.deaths) }}
+                </div>
+                <div class="w-full text-xs md:text-sm">
+                  Muertes
+                </div>
               </div>
-              <div class="w-full text-xs md:text-sm">
-                Muertes
-              </div>
-            </div>
 
-            <div class="hidden md:w-1/5 md:flex flex-wrap items-center">
-              <div class="w-full text-orange-400 font-bold">
-                {{ fixNumber(country.critical) }}
+              <div class="hidden md:w-1/5 md:flex flex-wrap items-center">
+                <div class="w-full text-orange-400 font-bold">
+                  {{ fixNumber(country.critical) }}
+                </div>
+                <div class="w-full text-xs md:text-sm">
+                  Críticos
+                </div>
               </div>
-              <div class="w-full text-xs md:text-sm">
-                Críticos
-              </div>
-            </div>
 
-            <!-- <div class="w-1/5 flex flex-wrap items-center">
-                            <div class="w-full text-red-600 font-bold">
-                                {{ fixNumber(country.serious) }}
-                            </div>
-                            <div class="w-full text-sm">
-                                Graves
-                            </div>
-                        </div> -->
+            <!-- </div> -->
           </div>
         </template>
       </div>

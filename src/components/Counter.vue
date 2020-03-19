@@ -37,7 +37,7 @@
 
             <div class="w-full md:w-2/4 flex flex-wrap items-center justify-center">
 
-                <div class="w-full flex md:hidden flex-wrap self-stretch items-center justify-center font-bold p-1" v-if="spain.newCases">
+                <div class="w-full flex md:hidden flex-wrap self-stretch items-center justify-center font-bold p-1">
                     <div class="flex flex-wrap justify-center items-center w-full bg-gray-900 rounded-md p-2">
                         <div class="text-yellow-300 text-2xl mr-1">
                             <animated-number :duration="1000" :format-value="formatValue" :round="true" :value="spain.confirmed">
