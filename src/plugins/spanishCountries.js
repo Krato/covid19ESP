@@ -575,7 +575,7 @@ const spanishCountriesData = [{
     "iso3": "IDN",
     "phone_code": 62
 }, {
-    "spanish": "Inglaterra",
+    "spanish": "Reino Unido",
     "english": "England",
     "iso2": "GB",
     "iso3": "GBR",
