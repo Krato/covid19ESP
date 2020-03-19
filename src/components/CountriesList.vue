@@ -2,29 +2,33 @@
   <div class="h-screen relative">
     <div class="flex flex-wrap justify-center overflow-y-auto rounded-lg bg-gray-800 shadow-lg">
       <div class="w-full flex flex-wrap items-center text-center border-b border-gray-700 p-2">
-        <div class="p-2 w-full self-start">
-          <div class="p-2 w-full flex flex-wrap" v-if="totals">
-              <div class="w-1/4 md:w-1/5 flex flex-wrap items-center p-2">
-                Totales
+        <div class="w-full self-start py-2">
+          <div class="xl:hidden flex justify-center font-bold" v-if="totals">
+            Totales por países
+          </div>
+          <div class="py-2 w-full flex flex-wrap" v-if="totals">
+              <div class="hidden w-1/4 md:w-1/5 xl:flex flex-wrap items-center">
+                <div class="w-full text-center">
+                  Totales
+                </div>
               </div>
-              <div class="w-1/4 md:w-1/5 flex flex-wrap justify-center items-center p-2">
-                
+              <div class="w-1/4 xl:w-1/5 flex flex-wrap justify-center items-center">
                   <div class="w-full text-yellow-300 font-bold">
                     {{ fixNumber(totals.confirmed) }}
                   </div>
                   <div class="w-full text-xxs md:text-sm">
-                    Confirmados
+                    Infectados
                   </div>
               </div>
-              <div class="w-1/4 md:w-1/5 flex flex-wrap justify-center items-center p-2">
+              <div class="w-1/4 xl:w-1/5 flex flex-wrap justify-center items-center">
                 <div class="w-full text-green-500 font-bold">
                   {{ fixNumber(totals.recovered) }}
                 </div>
                 <div class="w-full text-xxs md:text-sm">
-                  Recuperados
+                  Curados
                 </div>
               </div>
-              <div class="w-1/4 md:w-1/5 flex flex-wrap justify-center items-center p-2">
+              <div class="w-1/4 xl:w-1/5 flex flex-wrap justify-center items-center">
                 <div class="w-full text-red-500 font-bold">
                   {{ fixNumber(totals.deaths) }}
                 </div>
@@ -32,7 +36,7 @@
                   Muertes
                 </div>
               </div>
-              <div class="hidden md:w-1/5 md:flex flex-wrap justify-center items-center p-2">
+              <div class="w-1/4 xl:w-1/5 flex flex-wrap justify-center items-center">
                 <div class="w-full text-orange-400 font-bold">
                   {{ fixNumber(this.critical) }}
                 </div>
@@ -58,54 +62,69 @@
         <template v-for="(country, index) in countryList">
           <div
             :key="index"
-            class="w-full flex flex-wrap  items-center text-center  border-b border-gray-700 cursor-pointer p-2"
+            class="country-list w-full flex flex-wrap  items-center text-center  border-b border-gray-700 cursor-pointer p-2"
             @click="changeCountry(country)"
           >
             <!-- <div class="flex flex-wrap  items-center bg-gray-900 rounded-md py-2"> -->
-              <div class="w-1/4 md:w-1/5 flex flex-wrap items-center py-2 px-1 md:px-2">
+              <div class="country-flag w-auto md:w-1/5 flex flex-wrap items-center py-2 px-2 md:px-2">
                 <div class="w-full">
                   <template v-if="country.iso != 'others'">
-                    <country-flag v-if="country.iso3" :country="country.iso3" size="small" />
+                    <div class="hidden xl:block">
+                      <country-flag v-if="country.iso3" :country="country.iso3" size="small" />
+                    </div>
+                    <country-flag class="xl:hidden " v-if="country.iso3" :country="country.iso3" />
                   </template>
                 </div>
-                <div class="w-full text-xs md:text-sm">
+                <div class="w-full text-xs hidden xl:block  md:text-sm">
                   {{ country.country }}
                 </div>
               </div>
-              <div class="w-1/4 md:w-1/5 flex flex-wrap items-center">
-                <div class="w-full text-yellow-300 font-bold">
-                  {{ fixNumber(country.confirmed) }}
-                </div>
-                <div class="w-full text-xxs md:text-sm">
-                  Confirmados
-                </div>
+              <div class="w-auto md:w-1/5 flex flex-wrap items-center">
+                
+                    <div class="w-full text-sm md:text-base text-yellow-300 font-bold">
+                      {{ fixNumber(country.confirmed) }}
+                    </div>
+                    <div class="w-full text-xxs xl:text-sm">
+                      Infectados
+                    </div>
+                
+                
               </div>
 
-              <div class="w-1/4 md:w-1/5 flex flex-wrap items-center">
-                <div class="w-full text-green-500 font-bold">
-                  {{ fixNumber(country.recovered) }}
-                </div>
-                <div class="w-full text-xxs md:text-sm">
-                  Recuperados
-                </div>
+              <div class="w-auto md:w-1/5 flex flex-wrap items-center">
+                
+                    <div class="w-full text-sm md:text-base text-green-500 font-bold">
+                      {{ fixNumber(country.recovered) }}
+                    </div>
+                    <div class="w-full text-xxs xl:text-sm">
+                      Curados
+                    </div>
+                
+                
               </div>
 
-              <div class="w-1/4 md:w-1/5 flex flex-wrap items-center">
-                <div class="w-full text-red-500 font-bold">
-                  {{ fixNumber(country.deaths) }}
-                </div>
-                <div class="w-full text-xs md:text-sm">
-                  Muertes
-                </div>
+              <div class="w-auto md:w-1/5 flex flex-wrap items-center">
+                
+                    <div class="w-full text-sm md:text-base text-red-500 font-bold">
+                      {{ fixNumber(country.deaths) }}
+                    </div>
+                    <div class="w-full text-xxs xl:text-sm">
+                      Muertes
+                    </div>
+                
+                
               </div>
 
-              <div class="hidden md:w-1/5 md:flex flex-wrap items-center">
-                <div class="w-full text-orange-400 font-bold">
-                  {{ fixNumber(country.critical) }}
-                </div>
-                <div class="w-full text-xs md:text-sm">
-                  Críticos
-                </div>
+              <div class="w-auto md:w-1/5 md:flex flex-wrap items-center">
+                
+                    <div class="w-full text-sm md:text-base text-orange-400 font-bold">
+                      {{ fixNumber(country.critical) }}
+                    </div>
+                    <div class="w-full text-xxs xl:text-sm">
+                      Críticos
+                    </div>
+                
+                
               </div>
 
             <!-- </div> -->

@@ -6293,6 +6293,11 @@ open@^6.3.0:
   dependencies:
     is-wsl "^1.1.0"
 
+opencollective-postinstall@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/opencollective-postinstall/-/opencollective-postinstall-2.0.2.tgz#5657f1bede69b6e33a45939b061eb53d3c6c3a89"
+  integrity sha512-pVOEP16TrAO2/fjej1IdOyupJY8KDUM1CvsaScRbw6oddvpQoOfGk4ywha0HKKVAD6RkW4x6Q+tNBwhf3Bgpuw==
+
 opener@^1.5.1:
   version "1.5.1"
   resolved "https://registry.npm.taobao.org/opener/download/opener-1.5.1.tgz#6d2f0e77f1a0af0032aca716c2c1fbb8e7e8abed"
@@ -6683,6 +6688,11 @@ polylabel@^1.0.2:
   integrity sha1-kMEWAvshemW3isIRCsX8sAtlJWA=
   dependencies:
     tinyqueue "^1.1.0"
+
+popper.js@^1.15.0:
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.1.tgz#2a223cb3dc7b6213d740e40372be40de43e65b1b"
+  integrity sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==
 
 portfinder@^1.0.25:
   version "1.0.25"
@@ -9145,6 +9155,14 @@ vue-loaders@^3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/vue-loaders/-/vue-loaders-3.3.0.tgz#dcc5b9011b30f6f058412811ff8977d5650ec64a"
   integrity sha512-r/lb3sOfyqIzO3xlq1tT8oj+PkSa+YEWseFGMzKF/3maIyWLoWxcXO8vjYMfufr5Z7YREnJ1UrpK0NrpPpj7KQ==
+
+vue-popperjs@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/vue-popperjs/-/vue-popperjs-2.3.0.tgz#9cfa052878a3b47b670339ea81e05edcb863200f"
+  integrity sha512-925QEeNjlMtb3eDHl5ZlODJzqnQL0nQPEKpr9aQ3XBg21DyqAdfLgD/At4svsPwFeIkpdF1gvHarENon47L9Cg==
+  dependencies:
+    opencollective-postinstall "^2.0.2"
+    popper.js "^1.15.0"
 
 vue-router@^3.1.5:
   version "3.1.6"

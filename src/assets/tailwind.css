@@ -40,6 +40,22 @@ body {
 	@apply .my-2;
 }
 
+/*.country-flag{
+	flex-grow: 0;
+}
+*/
+
+.country-list > div:not(.country-flag){
+	flex-grow: 1;
+    flex-basis: 0;
+}
+
+
+.top {
+	margin: 0 auto;
+	display: table;
+}
+
 /*Animations*/
 
 .fade-enter-active,

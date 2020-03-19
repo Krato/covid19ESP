@@ -17,7 +17,7 @@
             <div class="hidden md:flex w-full md:w-1/4 flex flex-wrap items-center font-bold">
                 <div class="hidden md:flex flex-wrap">
                     <div class="w-full ">
-                        Confirmados
+                        Infectados
                     </div>
                     <div class="w-full text-yellow-300 text-2xl">
                         <animated-number :duration="1000" :format-value="formatValue" :round="true" :value="spain.confirmed">
@@ -80,7 +80,7 @@
                 </div>
                 <div class="w-1/2 flex flex-wrap self-stretch items-center justify-center font-bold p-1">
                     <div class="w-full bg-gray-900 rounded-md p-2">
-                        <div class="">Recuperados</div>
+                        <div class="">Curados</div>
                         <div class="w-full text-green-500">
                             <animated-number :duration="1000" :format-value="formatValue" :round="true" :value="spain.recovered">
                             </animated-number>
