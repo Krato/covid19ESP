@@ -72,7 +72,9 @@
                     <div class="hidden xl:block">
                       <country-flag v-if="country.iso3" :country="country.iso3" size="small" />
                     </div>
-                    <country-flag class="xl:hidden " v-if="country.iso3" :country="country.iso3" />
+                    <div class="xl:hidden">
+                      <country-flag  v-if="country.iso3" :country="country.iso3" />
+                    </div>
                   </template>
                 </div>
                 <div class="w-full text-xs hidden xl:block  md:text-sm">
