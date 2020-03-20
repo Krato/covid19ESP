@@ -3,9 +3,13 @@ import './plugins/axios'
 import App from './App.vue'
 import store from './store'
 import router from './router'
-import './assets/tailwind.css'
+import '@/assets/tailwind.css'
 
 Vue.config.productionTip = false
+// Vue.config.performance = true
+// 
+import Toasted from 'vue-toasted';
+Vue.use(Toasted)
 
 new Vue({
     store,
@@ -13,9 +17,9 @@ new Vue({
     data: () => ({
         timer: null,
     }),
-    created() {
-        this.getAllData()
-        this.timer = setInterval(this.getAllData, 60000 * 3)
+    async created() {
+        await this.getAllData()
+        this.timer = setInterval(this.getAllData, 60000 * 3) //
     },
     methods: {
         getAllData() {

@@ -188,6 +188,10 @@ export default new Vuex.Store({
         getTotals() {
             // https://coronavirus-19-api.herokuapp.com/all
             // https://corona.lmao.ninja/all
+            
+
+            this.state.totals = false
+
             axios.get('https://corona.lmao.ninja/all').then(response => {
                 this.state.totals = {
                     confirmed: response.data.cases,
@@ -319,6 +323,7 @@ export default new Vuex.Store({
 
         getSpanishData() {
             //https://covid19.isciii.es/resources/ccaa.csv
+            //https://cors-anywhere.herokuapp.com/
             axios.get('https://docs.google.com/spreadsheets/d/e/2PACX-1vTACc2JDaEp3xynHvpI-1Ms2V54hrq1rRPkYmBNhHM2GuCnEi3GU2l1He2aqxYpyW4y61jdmJYHS-Kl/pub?gid=0&single=true&output=csv').then(response => {
                 let data = Papa.parse(response.data, {
                     delimiter: ",",
@@ -333,7 +338,7 @@ export default new Vuex.Store({
                 for (var i = data.length - 1; i >= 0; i--) {
                     datos[i] = {};
                     datos[i]['name'] = data[i][0]
-                    datos[i]['total'] = data[i][1]
+                    datos[i]['total'] = parseInt(data[i][1])
                 }
                 
                 this.state.spain = datos

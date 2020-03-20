@@ -2,7 +2,7 @@
     <div class="p-4">
         
         <div class="flex flex-wrap -mx-4 h-screen">
-            <div class="flex flex-wrap w-full lg:w-2/3 px-4">
+            <div class="flex flex-wrap w-full lg:w-2/3 px-4 content-start">
                 <div class="w-full flex flex-wrap justify-center">
                     <div class="w-2/5 md:w-3/5 lg:w-1/3 p-0 md:p-4 mb-6 lg:mb-0 text-white">
                         <logo class="svg_logo " />
@@ -42,9 +42,6 @@ import 'vue-loaders/dist/vue-loaders.css'
 import VueLoaders from 'vue-loaders'
 Vue.use(VueLoaders);
 
-import VueToastr from "vue-toastr";
-Vue.use(VueToastr);
-
 export default {
     name: 'Home',
     components: {
@@ -68,7 +65,13 @@ export default {
         }
     }, 
     mounted() {
-        // this.$toastr.e("Estamos trabajando para traer mejoras. Puede que los datos no sean válidos. Por favor, refresca en unos minutos.");
+        // this.$toasted.clear()      
+        // this.$toasted.show("<div class='block'>Actualizado Hoy a las 18:20</div>", { 
+        //     theme: "toasted-primary", 
+        //     position: "top-center", 
+        //     duration : 3000
+        // });
+
     }
 }
 </script>

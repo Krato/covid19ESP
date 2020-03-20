@@ -119,15 +119,15 @@ export default {
 
         getHeatColor(value) {
 
-            if (value >= 10000) {
+            if (value >= 15000) {
                 return this.colors.danger
             }
 
-            if (value >= 6000) {
+            if (value >= 10000) {
                 return this.colors.high
             }
 
-            if (value >= 1000) {
+            if (value >= 3000) {
                 return this.colors.normal
             }
 

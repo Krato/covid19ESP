@@ -22,6 +22,51 @@ body {
 	@apply .bg-gray-900 .text-white .font-open;
 }
 
+#chartmap {
+	@apply .h-400	
+}
+
+@screen md {
+	#chartmap {
+		@apply .h-full	
+	}
+}
+.toasted-container {
+	min-width: auto !important;
+}
+
+.toasted-container .toasted {
+	@apply .text-xs !important;
+}
+
+@screen sm {
+	.toasted-container {
+		min-width: auto !important;
+	}
+}
+
+@screen md {
+	.toasted-container .toasted{
+		@apply .text-sm	!important;
+	}
+
+	.toasted-container {
+		min-width: auto !important;
+	}
+}
+
+
+.toasted-container.top-center {
+	top: 0% !important;
+    left: 50% !important;
+    -webkit-transform: translateX(-50%) !important;
+    transform: translateX(-50%) !important;
+}
+
+.toasted .primary, .toasted.toasted-primary{
+	@apply .bg-blue-900 .rounded-lg !important
+}
+
 .list-height {
 	height: calc(100vh - 180px)
 }

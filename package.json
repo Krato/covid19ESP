@@ -24,6 +24,7 @@
     "i18n-iso-countries": "^5.1.0",
     "lodash": "^4.17.15",
     "papaparse": "^5.1.1",
+    "sass": "^1.26.3",
     "serve-static": "^1.14.1",
     "vue": "^2.6.11",
     "vue-apexcharts": "^1.5.2",
@@ -33,7 +34,7 @@
     "vue-popperjs": "^2.3.0",
     "vue-router": "^3.1.5",
     "vue-svg-loader": "^0.12.0",
-    "vue-toastr": "^2.1.2",
+    "vue-toasted": "^1.1.28",
     "vuex": "^3.1.2"
   },
   "devDependencies": {

@@ -118,13 +118,13 @@ export default {
     computed: {
         ...mapState({
             info: state => state.totals,
-            // worldometer: state => state.worldometer
+            countries: state => state.countries
         }),
 
         ...mapGetters(['nowByCountry']),
 
         spain() {
-            if (this.worldometer != false) {
+            if (this.countries != false) {
                 return this.nowByCountry('es')
             }
 
@@ -135,6 +135,21 @@ export default {
     methods: {
         formatValue(value) {
             return new Intl.NumberFormat("es-ES").format(value);
+        }
+    },
+
+    watch: {
+        info(value){
+            if (value) {
+                let last = new Date(this.info.lastUpdate);
+                let hour = last.getHours() + ':' + last.getMinutes()
+                this.$toasted.clear()
+                this.$toasted.show("<div class='block'>Actualizado Hoy a las "+hour+"</div>", { 
+                    theme: "toasted-primary", 
+                    position: "top-center", 
+                    duration : 3000
+                });
+            }
         }
     }
 }

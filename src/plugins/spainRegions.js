@@ -53,9 +53,9 @@ var regions = {
         ]
     },
     "Castilla La Mancha":{
-        "code": "Castilla La Mancha",
-        "long": -3.000033,
-        "lat": 39.500011,
+        "code": "C. La Mancha",
+        "long": -1.858542,
+        "lat": 38.994350,
         "provincias": [
             "Albacete",
             "Ciudad Real",
@@ -193,7 +193,14 @@ var regions = {
     },
 }
 
-export default function getComunity(name) {
+export default function getComunity(name, byKey = false) {
+
+    if (byKey) {
+        if (_.has(regions, name)) {
+            return _.get(regions, name)
+        }      
+    }
+
     return _.find(regions, (comunity) => {
         return comunity.provincias.indexOf(name) > -1
     });
