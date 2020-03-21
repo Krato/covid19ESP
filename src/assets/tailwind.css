@@ -120,11 +120,6 @@ body::-webkit-scrollbar, .list-countries::-webkit-scrollbar {
     flex-basis: 0;
 }
 
-
-// .country-list:hover {
-// }
-
-
 .top {
 	margin: 0 auto;
 	display: table;

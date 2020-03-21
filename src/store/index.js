@@ -10,6 +10,7 @@ import cheerio from 'cheerio'
 import { spanishCountries } from '../plugins/spanishCountries'
 // import csvJSON from '../plugins/csvJSON'
 import Papa from 'papaparse'
+//import dayjs from 'dayjs'
 
 
 export default new Vuex.Store({
@@ -19,7 +20,8 @@ export default new Vuex.Store({
         daily: [],
         countries: [],
         worldometer: [],
-        spain: []
+        spain: [],
+        yesterday: []
     },
     getters: {
         confirmedByCountry: (state) => (iso) => {
@@ -132,47 +134,6 @@ export default new Vuex.Store({
                 newCases: country.todayCases
             }
         },
-
-        // countriesGrouped: (state) => {
-
-        //     let countries = {};
-
-        //     state.countries.forEach(country => {
-
-        //         if (_.isNil(country.iso3)) {
-        //             country.iso3 = 'others'
-        //             country.iso2 = 'others'
-        //             country.countryRegion = 'Others'
-        //         }
-
-
-        //         if (!_.has(countries, country.iso3)) {
-        //             let dataCountry = {
-        //                 iso3: country.iso3,
-        //                 iso2: country.iso2,
-        //                 country: country.countryRegion,
-        //                 confirmed: country.confirmed,
-        //                 recovered: country.recovered,
-        //                 deaths: country.deaths,
-        //                 provinces: []
-        //             }
-
-        //             dataCountry.provinces.push(country)
-        //             Object.assign(countries, {[country.iso3]: dataCountry});
-        //         } else {
-        //             let countryData = countries[country.iso3];
-
-        //             countryData.confirmed += country.confirmed
-        //             countryData.recovered += country.recovered
-        //             countryData.deaths += country.deaths
-
-        //             countryData.provinces.push(country)
-        //             // Object.assign(countryData, 'provinces', country);
-        //         }
-        //     })
-
-        //     return _.sortBy(countries, ['confirmed']).reverse();
-        // },
     },
     mutations: {
     },
@@ -317,7 +278,6 @@ export default new Vuex.Store({
                 })
 
                 this.state.countries = countries
-                
             })
         },
 
@@ -343,6 +303,57 @@ export default new Vuex.Store({
                 
                 this.state.spain = datos
             });
+        },
+
+        getYesterday() {
+            // let dateF = dayjs().subtract(1, 'day')
+
+            
+            // axios.get('https://corona.lmao.ninja/historical').then(response => {
+            //     let data = response.data
+            //     let yesterday = _(data)
+            //         .groupBy('country')
+            //         .map((country, id) => ({
+            //             name: id,
+            //             cases: _.groupBy(country.timeline.cases, '') 
+            //         }))
+
+
+            //     let popllo = _(data)
+            //         .groupBy('country')
+            //         .map((country, id) => ({
+            //             name: id,
+            //             confirmed : _.sumBy(country, item => {
+            //                 return parseInt(_.get(item.timeline.cases, '3/20/20'))
+            //             })
+            //         })).value()
+            //     // console.log(_(data).groupBy('country').value())
+            // }).catch(error => {
+            //     console.log(error)
+            // })
+
+
+
+            // axios.get('https://covid19.mathdro.id/api/daily/'+dateF.format('M-D-YYYY')).then(response => {
+            //     let data = response.data
+            //     let yesterday = _(data)
+            //         .groupBy('countryRegion')
+            //         .map((country, id) => ({
+            //             name: id,
+            //             confirmed: _.sumBy(country, single => parseInt(single.confirmed)),
+            //             recovered: _.sumBy(country, single => parseInt(single.recovered)),
+            //             deaths: _.sumBy(country, single => parseInt(single.deaths)),
+            //         }))
+            //         .value()
+
+
+            //     console.log(_(data).groupBy('countryRegion'))
+            //     console.log(yesterday);
+
+            //     this.state.yesterday = yesterday;
+            // }).catch(error => {
+            //     console.log(error)
+            // });
         },
 
         getDataFromWorldometers() {
