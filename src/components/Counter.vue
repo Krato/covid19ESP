@@ -142,9 +142,12 @@ export default {
         info(value){
             if (value) {
                 let last = new Date(this.info.lastUpdate);
-                let hour = last.getHours() + ':' + last.getMinutes()
+                let hour = ("0" + last.getHours()).slice(-2);
+                let minutes = ("0" + last.getMinutes()).slice(-2);
+
+                let lastTime = hour + ':' + minutes
                 this.$toasted.clear()
-                this.$toasted.show("<div class='block'>Actualizado Hoy a las "+hour+"</div>", { 
+                this.$toasted.show("<div class='block'>Actualizado Hoy a las "+lastTime+"</div>", { 
                     theme: "toasted-primary", 
                     position: "top-center", 
                     duration : 3000

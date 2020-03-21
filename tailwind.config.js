@@ -22,6 +22,9 @@ module.exports = {
                 '500': '500px',
                 '600': '500px'
             },
+            minHeight: {
+                '400': '400px',
+            },
             gridTemplateRows: {
                 '12': 'repeat(12, minmax(0, 1fr))',
             },

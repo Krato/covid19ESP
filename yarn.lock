@@ -9298,6 +9298,11 @@ vue@^2.5.13, vue@^2.6.11:
   resolved "https://registry.npm.taobao.org/vue/download/vue-2.6.11.tgz?cache=0&sync_timestamp=1583528555168&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue%2Fdownload%2Fvue-2.6.11.tgz#76594d877d4b12234406e84e35275c6d514125c5"
   integrity sha1-dllNh31LEiNEBuhONSdcbVFBJcU=
 
+vuescroll@^4.15.0:
+  version "4.15.0"
+  resolved "https://registry.yarnpkg.com/vuescroll/-/vuescroll-4.15.0.tgz#5f26f5cbc3d994771d89ce2be18f89f7391ab28b"
+  integrity sha512-BdAZlO0t54nkVL+iTDJu5ZyA8sL1UZymWHUOVGTacblXezilQGDDzYrYl//OH7wKOMqOMEL4lDqT4Swp5aOrQw==
+
 vuex@^3.1.2:
   version "3.1.3"
   resolved "https://registry.npm.taobao.org/vuex/download/vuex-3.1.3.tgz#f2ad73e3fb73691698b38c93f66e58e267947180"

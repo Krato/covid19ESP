@@ -20,10 +20,40 @@ h3 {
 
 body {
 	@apply .bg-gray-900 .text-white .font-open;
+	-ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar, .list-countries::-webkit-scrollbar {
+	display: none;
+}
+
+
+.list-countries::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.list-countries::-webkit-scrollbar {
+  background-color: transparent;
+}
+
+.list-countries::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.list-countries {
+	-ms-overflow-style: none;
+}
+
+.__bar-is-vertical {
+	left: -2px !important;
+}
+
+.__rail-is-horizontal {
+	display: none !important;
 }
 
 #chartmap {
-	@apply .h-400	
+	@apply .min-h-400	
 }
 
 @screen md {
