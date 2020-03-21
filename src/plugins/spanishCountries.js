@@ -389,7 +389,7 @@ const spanishCountriesData = [{
     "iso3": "ESP",
     "phone_code": 34
 }, {
-    "spanish": "Estados Unidos de América",
+    "spanish": "EE.UU.",
     "english": "United States of America",
     "iso2": "US",
     "iso3": "USA",

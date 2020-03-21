@@ -115,15 +115,14 @@ body::-webkit-scrollbar, .list-countries::-webkit-scrollbar {
 	@apply .my-2;
 }
 
-/*.country-flag{
-	flex-grow: 0;
-}
-*/
-
 .country-list > div:not(.country-flag){
 	flex-grow: 1;
     flex-basis: 0;
 }
+
+
+// .country-list:hover {
+// }
 
 
 .top {

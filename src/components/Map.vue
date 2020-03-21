@@ -1,5 +1,5 @@
 <template>
-  <div class="hidden md:flex w-full shadow-lg bg-gray-800 rounded-lg h-400 mt-8 lg:pl-2">
+  <div class="hidden md:flex w-full shadow-lg bg-gray-800 rounded-lg h-400 mt-8 lg:pl-2 mb-4">
     <div
       v-if="!show"
       class="w-full h-full flex justify-center items-center"
@@ -44,7 +44,9 @@ export default {
         clickedCountry: null,
         historyClicked: null,
         colors: {
-            low: '#CBD5E0',
+            lowest: '#CBD5E0',
+            low: '#90CDF4',
+            lowMiddle: '#FEEBC8',
             normal: '#FAF089',
             high: '#F6AD55',
             danger: '#E53E3E'
@@ -60,7 +62,7 @@ export default {
             return _.map(this.countries, (item) => ({
                 id: item.iso2,
                 name: item.country,
-                value: item.confirmed,
+                value: (item.confirmed != 0) ? item.confirmed : 0,
                 fill: this.getHeatColor(item.confirmed),
                 color: '#e2e2e2'
             }))
@@ -73,7 +75,7 @@ export default {
             if (value) {
                 this.$nextTick(() => {
                     this.createMap()
-                })	
+                })  
             }
         },
 
@@ -105,7 +107,7 @@ export default {
 
     mounted() {
         // this.$nextTick(() => {
-        // 	this.createMap()	
+        //  this.createMap()    
         // })
     },
 
@@ -119,25 +121,33 @@ export default {
 
         getHeatColor(value) {
 
-            if (value >= 15000) {
+            if (value >= 20000) {
                 return this.colors.danger
             }
 
-            if (value >= 10000) {
+            if (value >= 15000) {
                 return this.colors.high
             }
 
-            if (value >= 3000) {
+            if (value >= 5000) {
                 return this.colors.normal
             }
 
-            return this.colors.low
+            if (value >= 2500) {
+                return this.colors.lowMiddle
+            }
+
+            if (value >= 1500) {
+                return this.colors.low
+            }
+
+            return this.colors.lowest
         },
 
         async createMap() {
 
             let map = am4core.create(this.$refs.chartmap, am4maps.MapChart)
-			
+            
             // Set map definition
             // map.geodata = am4geodata_worldLow;
             map.geodata = am4geodata_worldLow
@@ -148,15 +158,15 @@ export default {
             map.projection = new am4maps.projections.Miller();
 
             // var media = _.meanBy(this.series, (item) => { 
-            // 	return item.value; 
+            //  return item.value; 
             // });
 
             // Create map polygon series
             // this.series.forEach((country) => {
-            // 	let series = map.series.push(new am4maps.MapPolygonSeries());
-            // 	series.name = country.name;
-            // 	series.fill = this.getHeatColor(country.value);
-            // 	series.useGeodata = true;
+            //  let series = map.series.push(new am4maps.MapPolygonSeries());
+            //  series.name = country.name;
+            //  series.fill = this.getHeatColor(country.value);
+            //  series.useGeodata = true;
             // })
 
             // The rest of the world.
@@ -178,12 +188,12 @@ export default {
             polygonSeries.tooltip.keepTargetHover = true;
 
             template.tooltipText = `[bold]{name}[/]
-			----
-			Casos confirmados: {value}`;
+            ----
+            Casos confirmados: {value}`;
 
             template.events.on("hit", (ev) => {
                 if (this.historyClicked) {
-                    this.historyClicked.isActive = false;	
+                    this.historyClicked.isActive = false;   
                 }
 
                 ev.target.series.chart.zoomToMapObject(ev.target);
@@ -191,7 +201,19 @@ export default {
                 this.historyClicked = ev.target;
             });
 
-            map.zoomControl = new am4maps.ZoomControl();
+
+            let home = map.chartContainer.createChild(am4core.Button);
+            home.padding(5,5,5,5)
+            home.align = 'right'
+            home.marginRight = 15
+            home.events.on('hit', function() {
+                map.goHome()
+            });
+            home.icon = new am4core.Sprite()
+            home.icon.path = "M16,8 L14,8 L14,16 L10,16 L10,10 L6,10 L6,16 L2,16 L2,8 L0,8 L8,0 L16,8 Z M16,8"
+
+            // map.zoomControl = new am4maps.ZoomControl();
+            map.chartContainer.wheelable = false;
 
             polygonSeries.data = this.series
 
@@ -210,8 +232,8 @@ export default {
 }
 </script>
 <style type="text/css">
-	#chartdiv {
-		width: 100%;
-		height: 98vh;
-	}
+    #chartdiv {
+        width: 100%;
+        height: 98vh;
+    }
 </style>
