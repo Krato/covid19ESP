@@ -1,6 +1,9 @@
 {
   "name": "covid19",
-  "version": "0.1.0",
+  "version": "0.1.33",
+  "engines": {
+    "node": "12.13.x"
+  },
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
