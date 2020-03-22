@@ -284,7 +284,9 @@ export default new Vuex.Store({
         getSpanishData() {
             //https://covid19.isciii.es/resources/ccaa.csv
             //https://cors-anywhere.herokuapp.com/
-            axios.get('https://cors-anywhere.herokuapp.com/https://docs.google.com/spreadsheets/d/e/2PACX-1vTACc2JDaEp3xynHvpI-1Ms2V54hrq1rRPkYmBNhHM2GuCnEi3GU2l1He2aqxYpyW4y61jdmJYHS-Kl/pub?gid=0&single=true&output=csv').then(response => {
+            //https://gistcdn.githack.com/Krato/fed29e746a878586cdb0d14b3d9be97b/raw/9e8b6d33008f4d91669831644a7370abbcdbc484/spain_covid19.csv
+            ////https://cors-anywhere.herokuapp.com/https://docs.google.com/spreadsheets/d/e/2PACX-1vTACc2JDaEp3xynHvpI-1Ms2V54hrq1rRPkYmBNhHM2GuCnEi3GU2l1He2aqxYpyW4y61jdmJYHS-Kl/pub?gid=0&single=true&output=csv
+            axios.get('https://gistcdn.githack.com/Krato/fed29e746a878586cdb0d14b3d9be97b/raw/9e8b6d33008f4d91669831644a7370abbcdbc484/spain_covid19.csv').then(response => {
                 let data = Papa.parse(response.data, {
                     delimiter: ",",
                     newline: "\n"
