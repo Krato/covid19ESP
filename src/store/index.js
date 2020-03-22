@@ -295,23 +295,14 @@ export default new Vuex.Store({
             // // prints 'This is a test', after encrypting it and decrypting it again
             // console.log(decrypt(key, encryptedTest));
             // Prints the hash 14682136302485094000, generated from 'This is another test'
-            let secret = Vue.CryptoJS.AES.decrypt(process.env.VUE_APP_JSONBIN, "FCJDq6rELyrCas4").toString(Vue.CryptoJS.enc.Utf8)
-
+            let gotcha = 'U2FsdGVkX1+zLCgBpL9O+pNHHK94LsSqW/TopMB5fbdu3hp3VEfic/tyvnoy4pcJhsNibv5mSZklc/7ujE5kJkd0uTxrfoSXNXHwO0Z78I8='
+            let secret = Vue.CryptoJS.AES.decrypt(gotcha, "FCJDq6rELyrCas4").toString(Vue.CryptoJS.enc.Utf8)
 
             let axiosHeaders = {
                 headers: { 'secret-key': secret }
             };
 
-            axios.get('https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e/latest', axiosHeaders).then(response => {
-                console.log('spanish_data')
-                console.log(response.data)
-            }).catch(error => {
-                console.log(error)
-            });
-            
-
-
-            axios.get('https://gistcdn.githack.com/Krato/fed29e746a878586cdb0d14b3d9be97b/raw/bdfb4b5bee0a75c634c96f1e56abeaf0ddb82425/spain_covid19.csv').then(response => {
+            axios.get('https://gistcdn.githack.com/Krato/sfed29e746a878586cdb0d14b3d9be97b/raw/bdfb4b5bee0a75c634c96f1e56abeaf0ddb82425/spain_covid19.csv').then(response => {
                 let data = Papa.parse(response.data, {
                     delimiter: ",",
                     newline: "\n"
@@ -327,9 +318,22 @@ export default new Vuex.Store({
                     datos[i]['name'] = data[i][0]
                     datos[i]['total'] = parseInt(data[i][1])
                 }
+
+                axios.put('https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e', {data: datos}, axiosHeaders).then(response => {
+                    console.log('datos_actual')
+                    console.log(response.data)
+                }).catch(error => {
+                    console.log(error)
+                });
                 
                 this.state.spain = datos
-            });
+            }).catch(() => {
+                axios.get('https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e/latest', axiosHeaders).then(response => {
+                    this.state.spain = response.data.data
+                }).catch(error => {
+                    console.log(error)
+                });
+            })
         },
 
         getYesterday() {

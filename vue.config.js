@@ -7,5 +7,13 @@ module.exports = {
             },
             removeTags: false
         }
-    }
+    },
+    configureWebpack: {
+		externals: function (context, request, callback) {
+			if (/xlsx|canvg|pdfmake/.test(request)) {
+			return callback(null, "commonjs " + request);
+			}
+			callback();
+		}
+	}
 }
