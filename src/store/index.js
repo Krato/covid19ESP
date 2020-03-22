@@ -11,6 +11,8 @@ import { spanishCountries } from '../plugins/spanishCountries'
 // import csvJSON from '../plugins/csvJSON'
 import Papa from 'papaparse'
 //import dayjs from 'dayjs'
+import VueCryptojs from 'vue-cryptojs'
+Vue.use(VueCryptojs)
 
 
 export default new Vuex.Store({
@@ -286,6 +288,29 @@ export default new Vuex.Store({
             //https://cors-anywhere.herokuapp.com/
             //https://gistcdn.githack.com/Krato/fed29e746a878586cdb0d14b3d9be97b/raw/9e8b6d33008f4d91669831644a7370abbcdbc484/spain_covid19.csv
             ////https://cors-anywhere.herokuapp.com/https://docs.google.com/spreadsheets/d/e/2PACX-1vTACc2JDaEp3xynHvpI-1Ms2V54hrq1rRPkYmBNhHM2GuCnEi3GU2l1He2aqxYpyW4y61jdmJYHS-Kl/pub?gid=0&single=true&output=csv
+            
+            //https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e
+
+            // const encryptedTest = crypt.encrypt(key, 'This is a test')
+            // // prints 'This is a test', after encrypting it and decrypting it again
+            // console.log(decrypt(key, encryptedTest));
+            // Prints the hash 14682136302485094000, generated from 'This is another test'
+            let secret = Vue.CryptoJS.AES.decrypt(process.env.VUE_APP_JSONBIN, "FCJDq6rELyrCas4").toString(Vue.CryptoJS.enc.Utf8)
+
+
+            let axiosHeaders = {
+                headers: { 'secret-key': secret }
+            };
+
+            axios.get('https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e/latest', axiosHeaders).then(response => {
+                console.log('spanish_data')
+                console.log(response.data)
+            }).catch(error => {
+                console.log(error)
+            });
+            
+
+
             axios.get('https://gistcdn.githack.com/Krato/fed29e746a878586cdb0d14b3d9be97b/raw/bdfb4b5bee0a75c634c96f1e56abeaf0ddb82425/spain_covid19.csv').then(response => {
                 let data = Papa.parse(response.data, {
                     delimiter: ",",
