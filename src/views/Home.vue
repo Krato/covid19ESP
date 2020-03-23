@@ -10,8 +10,10 @@
                     <counter />
                 </div>
                 <div class="w-full flex flex-wrap mt-8 ">
-                    <spain />
-                    <country-details :iso="selectedCountry" v-if="showChart" />
+                    <spain v-on:change-ca="changeCa" class="order-1" />
+                    <country-details class="order-3 lg:order-2" :key="'country_'+selectedCountry" :iso="selectedCountry" v-if="showChart" @country="changeCountry" />
+
+                    <spain-details  class="order-2 lg:order-3" :ca="selectedCA" @community="changeCAByName" />
                 </div>
                 <world-map :iso="selectedCountry" />
             </div>
@@ -35,6 +37,7 @@ import CountriesList from '@/components/CountriesList.vue'
 import CountryDetails from '@/components/CountryDetails.vue'
 import Mapa from '@/components/Map.vue'
 import Spain from '@/components/Spain.vue'
+import SpainDetails from '@/components/SpainDetails.vue'
 import Links from '@/components/Links.vue'
 import Help from '@/components/Help.vue'
 
@@ -50,6 +53,7 @@ export default {
         'countries-list': CountriesList,
         'country-details': CountryDetails,
         'spain': Spain,
+        'spain-details': SpainDetails,
         'world-map': Mapa,
         'logo': Logo,
         'links': Links,
@@ -57,11 +61,22 @@ export default {
     },
     data: () => ({
         showChart: true,
-        selectedCountry: 'es', 
+        selectedCountry: 'ES',
+        selectedCA: 'Madrid'
     }),
     methods: {
         changeCountry(iso) {
             this.selectedCountry = iso
+        },
+        changeCa(ca) {
+            let name = ca.original
+            if (ca.original == 'Castilla La Mancha') {
+                name = 'Castilla-La Mancha'
+            }
+            this.selectedCA = name
+        },
+        changeCAByName(name) {
+            this.selectedCA = name
         }
     }, 
     mounted() {

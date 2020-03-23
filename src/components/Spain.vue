@@ -1,9 +1,12 @@
 <template>
     <div class="flex w-full xl:w-1/2 lg:pl-2 xl:pr-4 mb-8 xl:mb-0">
-        <div class="flex w-full h-full shadow-lg bg-gray-800 rounded-lg p-4 relative">
-            <div class="right-0 top-0 absolute p-2 z-20  text-sm cursor-pointer">
-                <div class="relative">
-                    <div class="shadow-lg bg-gray-900 px-2" v-on:click="changeType">
+        <div class="flex flex-wrap w-full h-full shadow-lg bg-gray-800 rounded-lg relative">
+            <div class="box-header text-sm">
+                <div class="">
+                    Mapa de españa por CCAA
+                </div>
+                <div class="flex self-end cursor-pointer float-right">
+                    <div class="shadow-lg bg-gray-900 py-1 px-2" v-on:click="changeType">
                         <template v-if="type == 'map'">
                             Ver listado
                         </template>
@@ -13,17 +16,19 @@
                     </div>
                 </div>
             </div>
-            <div v-if="!show" class="w-full h-full flex justify-center items-center">
-                <vue-loaders name="ball-scale" color="#90CDF4" scale="1.2" />
+            <div class="box-body">
+                <div v-if="!show" class="w-full h-full flex justify-center items-center">
+                    <vue-loaders name="ball-scale" color="#90CDF4" scale="1.2" />
+                </div>
+                <template v-if="show">
+                    <template v-if="type == 'list'">
+                        <list :rows="spanishData" v-on:change-ca="changeCa"></list>
+                    </template>
+                    <template v-else>
+                        <spain-map :spain="spain"></spain-map>
+                    </template>
+                </template>
             </div>
-            <template v-if="show">
-                <template v-if="type == 'list'">
-                    <list :rows="spanishData"></list>
-                </template>
-                <template v-else>
-                    <spain-map :spain="spain"></spain-map>
-                </template>
-            </template>
         </div>
     </div>
 </template>
@@ -91,6 +96,7 @@ export default {
 
                     provinces.push({
                         name: name,
+                        original: item.name,
                         total: item.total,
                         color: this.getHeatColor(item.confirmed)
                     })
@@ -141,6 +147,10 @@ export default {
 
             return this.colors.low
         },
+
+        changeCa(ca) {
+            this.$emit('change-ca', ca)
+        }
     }
 }
 </script>

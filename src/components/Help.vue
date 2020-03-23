@@ -9,12 +9,23 @@
         </div>
 
         <modal :showing="showModal" @close="showModal = false" ref="ayuda" class="text-xs md:text-sm">
+            <p class="pr-3">
+                Desarrollado por <a href="https://github.com/Krato/covid19ESP">Eric Lagarda</a>. 
+            </p>
+            <p class="my-4">
+                <a href="https://jsonbin.io/">
+                    Powered by JSONBin.io
+                </a>
+            </p>
 
             <p class="pr-3">
                 <strong>Los datos aquí mostrados están sacados de la siguientes fuentes</strong>:<br><br>
             </p>
 
             <ul class="help-list">
+                <li>
+                    Datadista: <a href="https://github.com/datadista/datasets/tree/master/COVID%2019" target="_blank">Enlace</a>
+                </li>
                 <li>
                     Ministerio de Sanidad, Consumo y Bienestar Social: <a href="https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov-China/situacionActual.htm" target="_blank">Enlace</a>
                 </li>

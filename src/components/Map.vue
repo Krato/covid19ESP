@@ -1,5 +1,32 @@
 <template>
-  <div class="hidden md:flex w-full shadow-lg bg-gray-800 rounded-lg h-400 mt-8 lg:pl-2 mb-4">
+    <div class="hidden md:flex w-full lg:pl-2 mt-8 mb-4">
+        <div class="flex flex-wrap w-full shadow-lg bg-gray-800 rounded-lg">
+            <div class="box-header text-sm">
+                <div class="">
+                    Mapa - Casos por países
+                </div>
+            </div>
+
+            <div class="box-body ">
+                <div v-if="!show" class="w-full h-full flex justify-center items-center">
+                    <vue-loaders
+                        name="ball-scale"
+                        color="#90CDF4"
+                        scale="1.2"
+                    />
+                </div>
+                <div class="h-400 w-full">
+                    <div
+                      ref="chartmap"
+                      class="w-full h-full"
+                      :class="{'hidden': !show}"
+                    />
+                </div>
+            </div>
+        </div>
+    </div>
+
+  <!-- <div class="hidden md:flex w-full shadow-lg bg-gray-800 rounded-lg h-400 mt-8 lg:pl-2 mb-4">
     <div
       v-if="!show"
       class="w-full h-full flex justify-center items-center"
@@ -15,7 +42,7 @@
       class="w-full h-full"
       :class="{'hidden': !show}"
     />
-  </div>
+  </div> -->
 </template>
 
 <script>
