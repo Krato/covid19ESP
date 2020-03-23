@@ -6,11 +6,17 @@ Proyecto en español para la realización de un Panel de Control para la visuali
 
 Se ha usado "Español y no Castellano" siguiendo la recomendación de la [RAE](https://es.wikipedia.org/wiki/Controversia_por_el_nombre_del_idioma_espa%C3%B1ol#cite_ref-12)
 
-<img width="1677" alt="Covid19 en Español" src="https://user-images.githubusercontent.com/74367/76736455-be914680-675e-11ea-9603-922e31b3818b.png">
+<img width="1677" alt="Covid19 en España" src="https://user-images.githubusercontent.com/74367/77338547-cfc3ef80-6d2a-11ea-857b-0db9851f6b64.png">
+
+### Partners
+
+* [JSONBIN.io](https://jsonbin.io) - Muchas gracias a JSONBIN.io. Es un servicio online gratuito para almacenar archivos json.
 
 ### APIs utilizadas para la obtención de datos
 
 Datos extraidos de diferentes fuentes:
+
+* [Datadista](https://github.com/datadista/datasets/tree/master/COVID%2019) - Datos de España
 
 * [NovelCov API](https://github.com/NovelCOVID/API) - Api que extrae los datos de worldometers 
 

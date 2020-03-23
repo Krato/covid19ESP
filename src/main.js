@@ -19,7 +19,9 @@ new Vue({
     }),
     async created() {
         await this.getAllData()
-        this.timer = setInterval(this.getAllData, 60000 * 3) //
+        this.timer = setInterval(() => {
+            this.getAllData.then
+        }, 60000 * 3)
     },
     methods: {
         getAllData() {

@@ -1,23 +1,42 @@
 <template>
     <div class="flex w-full xl:w-1/2 lg:pl-2">
-        <div class="flex w-full items-center shadow-lg bg-gray-800 rounded-lg p-2">
-            <div class="w-full h-64">
-                <div v-if="!show" class="w-full h-full flex justify-center items-center">
-                    <vue-loaders
-                        name="ball-scale"
-                        color="#90CDF4"
-                        scale="1.2"
+        <div class="flex flex-wrap w-full shadow-lg bg-gray-800 rounded-lg">
+            <div class="box-header text-sm">
+                <div class="">
+                    {{ chartTitle }}
+                </div>
+                <div class="cursor-pointer" v-if="show">
+                    <div class="relative custom-select">
+                        <select v-model="countrySelected">
+                            <template v-for="ccaa in countries">
+                                <option :value="ccaa.iso2" :key="ccaa.iso2">
+                                    {{ ccaa.country }}
+                                </option>
+                            </template>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="box-body ">
+                <div class="w-full h-64">
+                    <div v-if="!show" class="w-full h-full flex justify-center items-center">
+                        <vue-loaders
+                            name="ball-scale"
+                            color="#90CDF4"
+                            scale="1.2"
+                        />
+                    </div>
+                    <chart
+                        v-if="show"
+                        :key="'country_chart_'+iso"
+                        width="100%"
+                        height="100%"
+                        type="line"
+                        :options="options"
+                        :series="series"
                     />
                 </div>
-                <chart
-                    v-if="show"
-                    :key="'country_chart_'+iso"
-                    width="100%"
-                    height="100%"
-                    type="line"
-                    :options="options"
-                    :series="series"
-                />
             </div>
         </div>
     </div>
@@ -45,16 +64,26 @@ export default {
     },
     data: () => ({
         show: false,
-        now: parseInt(Date.now())
+        now: parseInt(Date.now()),
     }),
     computed: {
         ...mapState({
             info: state => state.data,
             totals: state => state.totals,
-            daily: state => state.daily
+            daily: state => state.daily,
+            countries: state => state.countries,
         }),
 
         ...mapGetters(['confirmedByCountry', 'nowByCountry']),
+
+        countrySelected: {
+            get() {
+                return this.iso
+            },
+            set(val) {
+                this.$emit('country', val)
+            }
+        },
 
         country() {
             if (this.info) {
@@ -98,7 +127,7 @@ export default {
 
                 return [
                     {
-                        name: 'Confirmados',
+                        name: 'Infectados',
                         data: _.sortBy(confirmed, 'x')
                     },
                     {
@@ -130,10 +159,10 @@ export default {
                     locales: [es],
                     defaultLocale: 'es',
                 },
-                title: {
-                    text: this.chartTitle,
-                    align: 'left'
-                },
+                // title: {
+                //     text: this.chartTitle,
+                //     align: 'left'
+                // },
                 colors: ['#FCCF31', '#17ead9', '#f02fc2'],
                 grid: {
                     borderColor: "#40475D",
@@ -164,7 +193,7 @@ export default {
                         toggleDataSeries: true
                     },
                     position: 'top',
-                    offsetY: 0,
+                    offsetY: -5,
                 },
             }
         },
@@ -243,11 +272,7 @@ export default {
         },
 
         chartTitle() {
-            if (this.latest != false) {
-                return this.latest.country + ': Datos del virus por días'  
-            }
-            
-            return 'Totales: Datos del virus por días'
+            return 'Datos del virus por país'
         },
 
         isChartReady() {
@@ -267,19 +292,30 @@ export default {
 
     watch: {
 
+        info: {
+            immediate: true,
+            handler (value) {
+                if (value == null) {
+                    this.show = false 
+                }
+            }
+        },
+
         isChartReady(value) {
             if (value) {
                 this.showChartFn()
             }
         },
 
-        iso(value) {
-            this.show = false
-            if (value) {
-                this.showChartFn()
+        iso: {
+            immediate: true,
+            handler (value) {
+                if (value) {
+                    this.countrySelected = value
+                    this.showChartFn()
+                }
             }
         }
-
     },
 
     mounted() {
@@ -287,11 +323,13 @@ export default {
     },
     methods: {
         showChartFn() {
-            this.$nextTick(() => {
-                setTimeout(() => {
-                    this.show = true
-                }, 500)
-            })
+            if (this.info != null) {
+                this.$nextTick(() => {
+                    setTimeout(() => {
+                        this.show = true
+                    }, 500)
+                })
+            }
         }
     }
 }

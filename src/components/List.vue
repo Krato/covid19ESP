@@ -5,7 +5,7 @@
                 <div class="flex flex-wrap" v-if="show">
                     <template v-for="(item, index) in rows">
                         <div  :key="index" class="w-1/3 md:w-1/4 p-2">
-                            <div class="bg-gray-900 cursor-pointer p-2 text-xxs md:text-xs">   
+                            <div class="bg-gray-900 cursor-pointer p-2 text-xxs md:text-xs" v-on:click="getCAData(item)">   
                                 <div class="w-auto flex flex-wrap items-center">
                                     <div class="w-full">
                                         {{ item.name }}
@@ -54,6 +54,10 @@ export default {
     methods: {
         emitEventList(item) {
             console.log(item)
+        },
+
+        getCAData(ca) {
+            this.$emit('change-ca', ca)
         }
     }
 }
