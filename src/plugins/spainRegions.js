@@ -46,8 +46,8 @@ var regions = {
     },
     "Cantabria":{
         "code": "Cantabria",
-        "long": -5.86112,
-        "lat": 43.36662,
+        "long": -4.238410,
+        "lat": 43.163933,
         "provincias": [
             "Cantabria"
         ]
