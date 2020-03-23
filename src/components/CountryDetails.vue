@@ -11,6 +11,7 @@
                 </div>
                 <chart
                     v-if="show"
+                    :key="'country_chart_'+iso"
                     width="100%"
                     height="100%"
                     type="line"
