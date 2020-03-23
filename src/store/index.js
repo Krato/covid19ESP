@@ -302,7 +302,7 @@ export default new Vuex.Store({
                 headers: { 'secret-key': secret }
             };
 
-            axios.get('https://gistcdn.githack.com/Krato/fed29e746a878586cdb0d14b3d9be97b/raw/bdfb4b5bee0a75c634c96f1e56abeaf0ddb82425/spain_covid19.csv').then(response => {
+            axios.get('https://gistcdn.githack.com/Krato/fed29e746a878586cdb0d14b3d9be97b/raw/spain_covid19.csv').then(response => {
                 let data = Papa.parse(response.data, {
                     delimiter: ",",
                     newline: "\n"
@@ -319,10 +319,10 @@ export default new Vuex.Store({
                     datos[i]['total'] = parseInt(data[i][1])
                 }
 
-                axios.put('https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e', {data: datos}, axiosHeaders).then(() => {
-                }).catch(error => {
-                    console.log(error)
-                });
+                // axios.put('https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e', {data: datos}, axiosHeaders).then(() => {
+                // }).catch(error => {
+                //     console.log(error)
+                // });
                 
                 this.state.spain = datos
             }).catch(() => {
