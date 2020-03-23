@@ -14,6 +14,8 @@ import Papa from 'papaparse'
 import VueCryptojs from 'vue-cryptojs'
 Vue.use(VueCryptojs)
 
+import countapi from 'countapi-js';
+
 
 export default new Vuex.Store({
     state: {
@@ -291,43 +293,64 @@ export default new Vuex.Store({
             ////https://cors-anywhere.herokuapp.com/https://docs.google.com/spreadsheets/d/e/2PACX-1vTACc2JDaEp3xynHvpI-1Ms2V54hrq1rRPkYmBNhHM2GuCnEi3GU2l1He2aqxYpyW4y61jdmJYHS-Kl/pub?gid=0&single=true&output=csv
             
             //https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e
-            let gotcha = 'U2FsdGVkX1+zLCgBpL9O+pNHHK94LsSqW/TopMB5fbdu3hp3VEfic/tyvnoy4pcJhsNibv5mSZklc/7ujE5kJkd0uTxrfoSXNXHwO0Z78I8='
+            let gotcha = 'U2FsdGVkX19nTPOTksKGw8JGYiMmWrrANkHUgv0ay9Ha0c5xWL123qf9X5MJBzH90rrwCLe14QoBE7yOeBhc9tUYrluWGGIgZ5XTDvaPpNM='
             let secret = Vue.CryptoJS.AES.decrypt(gotcha, "FCJDq6rELyrCas4").toString(Vue.CryptoJS.enc.Utf8)
 
             let axiosHeaders = {
                 headers: { 'secret-key': secret }
             };
 
-            axios.get('https://cors-anywhere.herokuapp.com/https://docs.google.com/spreadsheets/d/e/2PACX-1vTACc2JDaEp3xynHvpI-1Ms2V54hrq1rRPkYmBNhHM2GuCnEi3GU2l1He2aqxYpyW4y61jdmJYHS-Kl/pub?gid=0&single=true&output=csv').then(response => {
-                let data = Papa.parse(response.data, {
-                    delimiter: ",",
-                    newline: "\n"
-                }).data;
-                
-                data = _.toArray(data)
-                data.shift()
-                data.pop()
+            countapi.hit('api-spain').then((result) => {
 
-                let datos = []
-                for (var i = data.length - 1; i >= 0; i--) {
-                    datos[i] = {};
-                    datos[i]['name'] = data[i][0]
-                    datos[i]['total'] = parseInt(data[i][1])
-                }
+                if (result.value % 2 == 0) {
 
-                // axios.put('https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e', {data: datos}, axiosHeaders).then(() => {
-                // }).catch(error => {
-                //     console.log(error)
-                // });
-                
-                this.state.spain = datos
-            }).catch(() => {
-                axios.get('https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e/latest', axiosHeaders).then(response => {
-                    this.state.spain = response.data.data
-                }).catch(error => {
-                    console.log(error)
-                });
-            })
+                    axios.get('https://cors-anywhere.herokuapp.com/https://docs.google.com/spreadsheets/d/e/2PACX-1vTACc2JDaEp3xynHvpI-1Ms2V54hrq1rRPkYmBNhHM2GuCnEi3GU2l1He2aqxYpyW4y61jdmJYHS-Kl/pub?gid=0&single=true&output=csv').then(response => {
+                        let data = Papa.parse(response.data, {
+                            delimiter: ",",
+                            newline: "\n"
+                        }).data;
+                        
+                        data = _.toArray(data)
+                        data.shift()
+                        data.pop()
+
+                        let datos = []
+                        for (var i = data.length - 1; i >= 0; i--) {
+                            datos[i] = {};
+                            datos[i]['name'] = data[i][0]
+                            datos[i]['total'] = parseInt(data[i][1])
+                        }
+
+                        if (result.value % 6 == 0) {
+                            axios.put('https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e', {data: datos}, axiosHeaders).then(() => {
+                            }).catch(error => {
+                                console.log(error)
+                            });
+                        }
+
+                        
+                        
+                        this.state.spain = datos
+                    }).catch(() => {
+                        axios.get('https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e/latest', axiosHeaders).then(response => {
+                            this.state.spain = response.data.data
+                        }).catch(error => {
+                            console.log(error)
+                        });
+                    })
+
+
+                } else {
+                    axios.get('https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e/latest', axiosHeaders).then(response => {
+                        this.state.spain = response.data.data
+                    }).catch(error => {
+                        console.log(error)
+                    });
+                } 
+
+            });
+
+            
         },
 
         getYesterday() {

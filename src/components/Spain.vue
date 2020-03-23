@@ -108,23 +108,23 @@ export default {
 
     watch: {
 
-        // series(value) {
-        //     if (value) {
-        //         this.$nextTick(() => {
-        //             this.createMap()
-        //         })	
-        //     }
-        // },
+        spain(value) {
+            if (value) {
+                this.$nextTick(() => {
+                    this.show = true   
+                })	
+            }
+        },
 
 
     },
 
     mounted() {
-        this.$nextTick(() => {
-            setTimeout(() => {
-                this.show = true    
-            }, 500)
-        })
+        // this.$nextTick(() => {
+        //     setTimeout(() => {
+        //         this.show = true    
+        //     }, 500)
+        // })
     },
 
     methods: {

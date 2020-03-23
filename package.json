@@ -23,6 +23,7 @@
     "apexcharts": "^3.16.1",
     "cheerio": "^1.0.0-rc.3",
     "core-js": "^3.6.4",
+    "countapi-js": "^1.0.1",
     "dayjs": "^1.8.23",
     "express": "^4.17.1",
     "i18n-iso-countries": "^5.1.0",
