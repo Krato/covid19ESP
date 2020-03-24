@@ -359,22 +359,35 @@ export default new Vuex.Store({
                 headers: { 'secret-key': secret }
             };
 
-            axios.get('https://cors-anywhere.herokuapp.com/https://api.chollx.es/coronavirus/ca').then(response => {
-                let ccaa = response.data
-                ccaa.pop()
-                this.state.spain = ccaa
+            countapi.hit('api-spain').then((result) => {
 
-                axios.put('https://api.jsonbin.io/b/5e79e3ccf14dd14dd2909c5d', {data: ccaa}, axiosHeaders).then(() => {
-                }).catch(error => {
-                    console.log(error)
-                });
-            }).catch(() => {
-                axios.get('https://api.jsonbin.io/b/5e79e3ccf14dd14dd2909c5d/latest', axiosHeaders).then(response => {
-                    this.state.spain = response.data.data
-                }).catch(error => {
-                    console.log(error)
-                });
-            });
+                if (result.value % 10 == 0) {
+                    axios.get('https://cors-anywhere.herokuapp.com/https://api.chollx.es/coronavirus/ca').then(response => {
+                        let ccaa = response.data
+                        ccaa.pop()
+                        this.state.spain = ccaa
+
+                        axios.put('https://api.jsonbin.io/b/5e79e3ccf14dd14dd2909c5d', {data: ccaa}, axiosHeaders).then(() => {
+                        }).catch(error => {
+                            console.log(error)
+                        });
+                    }).catch(() => {
+                        axios.get('https://api.jsonbin.io/b/5e79e3ccf14dd14dd2909c5d/latest', axiosHeaders).then(response => {
+                            this.state.spain = response.data.data
+                        }).catch(error => {
+                            console.log(error)
+                        });
+                    });
+                } else {
+                    axios.get('https://api.jsonbin.io/b/5e79e3ccf14dd14dd2909c5d/latest', axiosHeaders).then(response => {
+                        this.state.spain = response.data.data
+                    }).catch(error => {
+                        console.log(error)
+                    });
+                }
+            })
+
+           
         },
 
         getYesterday() {

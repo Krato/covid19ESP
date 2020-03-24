@@ -393,7 +393,7 @@ export default {
                         if (i == 1) {
                             caInfo[headers[i]] = ca[i]
                         } else {
-                            let fecha = dayjs(headers[i], "DD/MM/YYYY")
+                            let fecha = dayjs(headers[i], "YYYY-MM-DD")
                             caInfo[fecha.valueOf()] = parseInt(ca[i])
                         }
                     }
@@ -424,7 +424,7 @@ export default {
                         if (i == 1) {
                             caInfo[headers[i]] = ca[i]
                         } else {
-                            let fecha = dayjs(headers[i], "DD/MM/YYYY")
+                            let fecha = dayjs(headers[i], "YYYY-MM-DD")
                             caInfo[fecha.valueOf()] = parseInt(ca[i])
                         }
                     }
@@ -455,7 +455,7 @@ export default {
                         if (i == 1) {
                             caInfo[headers[i]] = ca[i]
                         } else {
-                            let fecha = dayjs(headers[i], "DD/MM/YYYY")
+                            let fecha = dayjs(headers[i], "YYYY-MM-DD")
                             caInfo[fecha.valueOf()] = parseInt(ca[i])
                         }
                     }
@@ -486,7 +486,7 @@ export default {
                         if (i == 1) {
                             caInfo[headers[i]] = ca[i]
                         } else {
-                            let fecha = dayjs(headers[i], "DD/MM/YYYY")
+                            let fecha = dayjs(headers[i], "YYYY-MM-DD")
                             caInfo[fecha.valueOf()] = parseInt(ca[i])
                         }
                     }
@@ -502,17 +502,19 @@ export default {
         },
 
         overrideLastDay(data, key) {
-            let ccaa = _.find(this.spain, {ccaa: this.ca})
-            if (ccaa) {
-                let lastDay = _.find(data, {x: this.now})
-                if (lastDay) {
-                    lastDay.y = ccaa[key]
-                } else {
-                    data.push({
-                        x: this.now,
-                        y: ccaa[key]
-                    })
-                }
+            if (this.spain) {
+                let ccaa = _.find(this.spain, {ccaa: this.ca})
+                if (ccaa) {
+                    let lastDay = _.find(data, {x: this.now})
+                    if (lastDay) {
+                        lastDay.y = ccaa[key]
+                    } else {
+                        data.push({
+                            x: this.now,
+                            y: ccaa[key]
+                        })
+                    }
+                } 
             }
         }
     }
