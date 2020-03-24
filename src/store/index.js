@@ -351,12 +351,29 @@ export default new Vuex.Store({
         },
 
         getSpanishData() {
-            axios.get('https://api.chollx.es/coronavirus/ca').then(response => {
+
+            let gotcha = 'U2FsdGVkX19nTPOTksKGw8JGYiMmWrrANkHUgv0ay9Ha0c5xWL123qf9X5MJBzH90rrwCLe14QoBE7yOeBhc9tUYrluWGGIgZ5XTDvaPpNM='
+            let secret = Vue.CryptoJS.AES.decrypt(gotcha, "FCJDq6rELyrCas4").toString(Vue.CryptoJS.enc.Utf8)
+
+            let axiosHeaders = {
+                headers: { 'secret-key': secret }
+            };
+
+            axios.get('https://cors-anywhere.herokuapp.com/https://api.chollx.es/coronavirus/ca').then(response => {
                 let ccaa = response.data
                 ccaa.pop()
                 this.state.spain = ccaa
-            }).catch(error => {
-                console.log(error)
+
+                axios.put('https://api.jsonbin.io/b/5e79e3ccf14dd14dd2909c5d', {data: ccaa}, axiosHeaders).then(() => {
+                }).catch(error => {
+                    console.log(error)
+                });
+            }).catch(() => {
+                axios.get('https://api.jsonbin.io/b/5e79e3ccf14dd14dd2909c5d/latest', axiosHeaders).then(response => {
+                    this.state.spain = response.data.data
+                }).catch(error => {
+                    console.log(error)
+                });
             });
         },
 
