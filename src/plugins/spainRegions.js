@@ -17,8 +17,8 @@ var regions = {
         ],
     },
 
-    "Aragon": {
-        "code": "Aragon",
+    "Aragón": {
+        "code": "Aragón",
         "long": -1.0,
         "lat": 41.0,
         "provincias": [
@@ -124,8 +124,8 @@ var regions = {
         ]
     },
     
-    "Galícia":{
-        "code": "Galícia",
+    "Galicia":{
+        "code": "Galicia",
         "long": -7.86621,
         "lat": 42.75508,
         "provincias": [
@@ -189,6 +189,15 @@ var regions = {
         "lat": 42.4650,
         "provincias": [
             "La Rioja",
+        ]
+    },
+
+    "Asturias":{
+        "code": "Asturias",
+        "long": -5.951843,
+        "lat": 43.363129,
+        "provincias": [
+            "Asturias",
         ]
     },
 }
