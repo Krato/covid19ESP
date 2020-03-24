@@ -284,6 +284,12 @@ export default new Vuex.Store({
                 })
 
                 this.state.countries = countries
+            }).catch(() => {
+                this.$toasted.error("<div class='block'>Estamos teniendo algunos problemas al obtener los datos. Pronto estará solucionado.</div>", { 
+                    theme: "bubble", 
+                    position: "top-center", 
+                    duration : 5000
+                })
             })
         },
 
@@ -362,7 +368,7 @@ export default new Vuex.Store({
             countapi.hit('api-spain').then((result) => {
 
                 if (result.value % 10 == 0) {
-                    axios.get('https://cors-anywhere.herokuapp.com/https://api.chollx.es/coronavirus/ca').then(response => {
+                    axios.get('https://cors-anywhere.herokuapp.com/https://api.chollx.es/coronavirus/ca', {}, { timeout: 2000 }).then(response => {
                         let ccaa = response.data
                         ccaa.pop()
                         this.state.spain = ccaa
