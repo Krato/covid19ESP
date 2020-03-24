@@ -47,6 +47,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import _ from 'lodash'
 import axios from 'axios'
 
@@ -80,6 +82,7 @@ export default {
         recovered: [],
         critical: [],
         seriesData: [],
+        now: parseInt(Date.now()),
         options: {
             chart: {
                 id: 'by_ccaa',
@@ -134,9 +137,13 @@ export default {
                 position: 'top',
                 offsetY: -5,
             },
-        }
+        },
     }),
     computed: {
+
+        ...mapState({
+            spain: state => state.spain
+        }),
 
         caSelected: {
             get() {
@@ -173,6 +180,8 @@ export default {
                     })
                 });
                 confirmed.shift()
+
+                this.overrideLastDay(confirmed, 'casos_totales')
 
                 series.push({
                     name: 'Infectados',
@@ -242,6 +251,8 @@ export default {
                     }
                 }
 
+                this.overrideLastDay(deaths, 'fallecidos')
+
                 series.push({
                     name: 'Muertes',
                     data: _.sortBy(deaths, 'x')
@@ -275,6 +286,8 @@ export default {
                         }
                     }
                 }
+
+                this.overrideLastDay(critical, 'casos_graves')
 
                 series.push({
                     name: 'Críticos',
@@ -329,17 +342,20 @@ export default {
     },
 
     created() {
-        //Casos
-        this.getConfirmed()
-        this.getDeaths()
-        this.getRecovered()
-        this.getCritical()
+        this.getSpainInfo()
     },
     beforeDestroy() {
         
     },
 
     methods: {
+
+        getSpainInfo() {
+            this.getConfirmed()
+            this.getDeaths()
+            this.getRecovered()
+            this.getCritical()
+        },
 
         createChartsOptions() {
             // this.options = {...this.options, ...{
@@ -483,6 +499,21 @@ export default {
             }).catch(error => {
                 console.log(error)
             });
+        },
+
+        overrideLastDay(data, key) {
+            let ccaa = _.find(this.spain, {ccaa: this.ca})
+            if (ccaa) {
+                let lastDay = _.find(data, {x: this.now})
+                if (lastDay) {
+                    lastDay.y = ccaa[key]
+                } else {
+                    data.push({
+                        x: this.now,
+                        y: ccaa[key]
+                    })
+                }
+            }
         }
     }
 }

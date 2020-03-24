@@ -77,9 +77,9 @@ export default {
 
         series() {
             return _.map(this.spain, (item) => ({
-                name: item.name,
-                value: item.confirmed,
-                color: this.getHeatColor(item.confirmed)
+                name: item.ccaa,
+                value: item.casos_totales,
+                color: this.getHeatColor(item.casos_totales)
             }))
         },
 
@@ -87,18 +87,18 @@ export default {
             let provinces = []
             if (this.spain) {
                 this.spain.forEach((item) => {
-                    let comunity = spainRegions(item.name, true)
+                    let comunity = spainRegions(item.ccaa, true)
 
-                    let name = item.name
+                    let name = item.ccaa
                     if (comunity) {
                         name = comunity.code  
                     }
 
                     provinces.push({
                         name: name,
-                        original: item.name,
-                        total: item.total,
-                        color: this.getHeatColor(item.confirmed)
+                        original: item.ccaa,
+                        total: item.casos_totales,
+                        color: this.getHeatColor(item.casos_totales)
                     })
                 })
             }

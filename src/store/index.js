@@ -287,7 +287,7 @@ export default new Vuex.Store({
             })
         },
 
-        getSpanishData() {
+        getSpanishDataOld() {
             //https://covid19.isciii.es/resources/ccaa.csv
             //https://gistcdn.githack.com/Krato/fed29e746a878586cdb0d14b3d9be97b/raw/spain_covid19.csv
             ////https://cors-anywhere.herokuapp.com/https://docs.google.com/spreadsheets/d/e/2PACX-1vTACc2JDaEp3xynHvpI-1Ms2V54hrq1rRPkYmBNhHM2GuCnEi3GU2l1He2aqxYpyW4y61jdmJYHS-Kl/pub?gid=0&single=true&output=csv
@@ -347,10 +347,17 @@ export default new Vuex.Store({
                         console.log(error)
                     });
                 } 
+            });  
+        },
 
+        getSpanishData() {
+            axios.get('https://cors-anywhere.herokuapp.com/https://api.chollx.es/coronavirus/ca').then(response => {
+                let ccaa = response.data
+                ccaa.pop()
+                this.state.spain = ccaa
+            }).catch(error => {
+                console.log(error)
             });
-
-            
         },
 
         getYesterday() {

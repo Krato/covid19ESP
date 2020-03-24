@@ -52,15 +52,15 @@ export default {
                     for (let i = 0; i < tempProvinces.length; i++) {
                         let item = tempProvinces[i];
                         if (_.has(item, 'title')) {
-                            let comunity = spainRegions(provincia.name, true)
+                            let comunity = spainRegions(provincia.ccaa, true)
                             if (comunity) {
                                 provinces.push({
                                     id: item.id,
                                     title: comunity.code,
                                     lat: comunity.lat,
                                     long: comunity.long,
-                                    value: provincia.total,
-                                    color: this.getHeatColor(provincia.total)
+                                    value: provincia.casos_totales,
+                                    color: this.getHeatColor(provincia.casos_totales)
                                 })
                                 break;
                             }
