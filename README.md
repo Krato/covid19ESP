@@ -18,6 +18,8 @@ Datos extraidos de diferentes fuentes:
 
 * [Datadista](https://github.com/datadista/datasets/tree/master/COVID%2019) - Datos de España
 
+* [Covid-19-Spain-API](https://github.com/michydev/Covid-19-Spain-API) - Api para consultar los últimos registros de España
+
 * [NovelCov API](https://github.com/NovelCOVID/API) - Api que extrae los datos de worldometers 
 
 * [coronavirus-tracker (API)](https://coronavirus-tracker-api.herokuapp.com) - Api que extrae los datos del CSSEGISandData
