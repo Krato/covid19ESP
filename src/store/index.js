@@ -351,7 +351,7 @@ export default new Vuex.Store({
         },
 
         getSpanishData() {
-            axios.get('https://cors-anywhere.herokuapp.com/https://api.chollx.es/coronavirus/ca').then(response => {
+            axios.get('https://api.chollx.es/coronavirus/ca').then(response => {
                 let ccaa = response.data
                 ccaa.pop()
                 this.state.spain = ccaa
