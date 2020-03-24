@@ -16,7 +16,6 @@ Vue.use(VueAnalytics, {
     id: 'UA-161741906-1',
     router,
     debug: {
-        enabled: process.env.NODE_ENV === 'development',
         sendHitTask: process.env.NODE_ENV === 'production'
     }
 })

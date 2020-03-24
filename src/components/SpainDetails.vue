@@ -82,7 +82,7 @@ export default {
         recovered: [],
         critical: [],
         seriesData: [],
-        now: parseInt(Date.now()),
+        now: null,
         options: {
             chart: {
                 id: 'by_ccaa',
@@ -108,8 +108,8 @@ export default {
                 borderColor: "#40475D",
             },
             stroke: {
-                width: 3,
-                curve: 'smooth'
+                curve: 'smooth',
+                width: 3
             },
             xaxis: {
                 type: 'datetime',
@@ -338,7 +338,11 @@ export default {
     },
 
     mounted() {
-        //
+        let now = new Date()
+        let day = now.getDate()
+        let month = now.getMonth()
+        let year = now.getFullYear()
+        this.now = dayjs(new Date(year, month, day))
     },
 
     created() {
@@ -409,7 +413,8 @@ export default {
         },
 
         getDeaths() {
-            let apiDeaths = 'https://rawcdn.githack.com/datadista/datasets/ed4f4841efc0f013acf214fb55000b68a123b584/COVID 19/ccaa_covid19_fallecidos.csv';
+            // let apiDeaths = 'https://rawcdn.githack.com/datadista/datasets/ed4f4841efc0f013acf214fb55000b68a123b584/COVID 19/ccaa_covid19_fallecidos.csv';
+            let apiDeaths = 'https://raw.githubusercontent.com/datadista/datasets/master/COVID%2019/ccaa_covid19_fallecidos.csv'
             axios.get(apiDeaths).then(response => {
                 let data = Papa.parse(response.data, {
                     delimiter: ",",
@@ -440,7 +445,8 @@ export default {
         },
 
         getRecovered() {
-            let apiRecovered = 'https://rawcdn.githack.com/datadista/datasets/49626914a9cc62ac864767bee6ea24023830e908/COVID 19/ccaa_covid19_altas.csv';
+            // let apiRecovered = 'https://rawcdn.githack.com/datadista/datasets/49626914a9cc62ac864767bee6ea24023830e908/COVID 19/ccaa_covid19_altas.csv';
+            let apiRecovered = 'https://raw.githubusercontent.com/datadista/datasets/master/COVID%2019/ccaa_covid19_altas.csv'
             axios.get(apiRecovered).then(response => {
                 let data = Papa.parse(response.data, {
                     delimiter: ",",
@@ -471,7 +477,8 @@ export default {
         },
 
         getCritical() {
-            let apiCritical = 'https://rawcdn.githack.com/datadista/datasets/49626914a9cc62ac864767bee6ea24023830e908/COVID 19/ccaa_covid19_uci.csv';
+            // let apiCritical = 'https://rawcdn.githack.com/datadista/datasets/49626914a9cc62ac864767bee6ea24023830e908/COVID 19/ccaa_covid19_uci.csv';
+            let apiCritical = 'https://raw.githubusercontent.com/datadista/datasets/master/COVID%2019/ccaa_covid19_uci.csv'
             axios.get(apiCritical).then(response => {
                 let data = Papa.parse(response.data, {
                     delimiter: ",",
@@ -505,12 +512,13 @@ export default {
             if (this.spain) {
                 let ccaa = _.find(this.spain, {ccaa: this.ca})
                 if (ccaa) {
-                    let lastDay = _.find(data, {x: this.now})
+                    let lastDay = _.find(data, {x: this.now.valueOf()})
+
                     if (lastDay) {
                         lastDay.y = ccaa[key]
                     } else {
                         data.push({
-                            x: this.now,
+                            x: this.now.valueOf(),
                             y: ccaa[key]
                         })
                     }

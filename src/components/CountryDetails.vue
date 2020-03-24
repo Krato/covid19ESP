@@ -163,12 +163,13 @@ export default {
                 //     text: this.chartTitle,
                 //     align: 'left'
                 // },
-                colors: ['#FCCF31', '#17ead9', '#f02fc2'],
+                colors: ['#FAF089', '#48BB78', '#F56565'],
                 grid: {
                     borderColor: "#40475D",
                 },
                 stroke: {
-                    curve: 'straight'
+                    curve: 'straight',
+                    width: 3
                 },
                 xaxis: {
                     type: 'datetime',
