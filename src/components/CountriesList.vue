@@ -65,14 +65,17 @@
               @click="changeCountry(country)"
             >
               <!-- <div class="flex flex-wrap  items-center bg-gray-900 rounded-md py-2"> -->
-                <div class="country-flag w-auto md:w-1/5 flex flex-wrap items-center py-2 px-2 md:px-2">
+                <div class="country-flag w-auto md:w-1/5 flex flex-wrap items-center">
                   <div class="w-full">
+                    <!-- <template v-if="country.iso3 == 'cruise'">
+                        <cruise></cruise>
+                    </template> -->
                     <template v-if="country.iso != 'others'">
-                      <div class="hidden xl:block">
-                        <country-flag v-if="country.iso3" :country="country.iso3" size="small" />
+                      <div class="hidden xl:block" v-if="country.iso3 != null">
+                        <country-flag :test="country" :country="country.iso3" size="small" />
                       </div>
-                      <div class="xl:hidden">
-                        <country-flag  v-if="country.iso3" :country="country.iso3" />
+                      <div class="xl:hidden" v-if="country.iso3 != null">
+                        <country-flag :test="country" :country="country.iso3" />
                       </div>
                     </template>
                   </div>
@@ -142,12 +145,14 @@ import { mapState } from 'vuex'
 import _ from 'lodash'
 import CountryFlag from 'vue-country-flag'
 import vuescroll from 'vuescroll';
+// import Cruise from "@/assets/cruise.svg";
 
 export default {
     name: 'CountriesList',
     components: {
         CountryFlag,
-        vuescroll
+        vuescroll,
+        // Cruise
     },
     data: () => ({
         search: null,
@@ -214,7 +219,7 @@ export default {
             if (_.has(country, 'iso2')) {
                 this.$emit('country', country.iso2)    
             }
-        }
+        },
     },
 
     watch: {

@@ -6,7 +6,7 @@
                     Mapa de españa por CCAA
                 </div>
                 <div class="flex self-end cursor-pointer float-right">
-                    <div class="shadow-lg bg-gray-900 py-1 px-2" v-on:click="changeType">
+                    <div class="shadow-lg bg-gray-900 py-1 px-2 cursor-pointer" v-on:click="changeType">
                         <template v-if="type == 'map'">
                             Ver listado
                         </template>

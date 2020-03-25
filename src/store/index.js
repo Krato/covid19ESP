@@ -265,6 +265,16 @@ export default new Vuex.Store({
                         iso3 = 'ALL';
                     }
 
+                    // if (countryName == 'Channel Islands') {
+                    //     iso3 = 'GBR';
+                    //     iso2 = 'GB';
+                    // }
+
+                    // if (countryName == 'Diamond Princess') {
+                    //     iso3 = 'cruise';
+                    //     console.log(iso3)
+                    // }
+
                     let countryTranslated = spanishCountries(iso3);
                     if (countryTranslated) {
                         countryName = countryTranslated.spanish
@@ -333,8 +343,6 @@ export default new Vuex.Store({
                                 console.log(error)
                             });
                         }
-
-                        
                         
                         this.state.spain = datos
                     }).catch(() => {
@@ -505,6 +513,16 @@ export default new Vuex.Store({
                     if (countryName == 'UAE') {
                         iso3 = 'ARE';
                         iso2 = 'AE';
+                    }
+
+                    if (countryName == 'Czechia') {
+                        iso3 = 'CZE';
+                        iso2 = 'CZ';
+                    }
+
+                    if (countryName == 'Channel Islands') {
+                        iso3 = 'GBR';
+                        iso2 = 'GB';
                     }
 
                     if (countryName == 'Total') {

@@ -62,7 +62,7 @@ export default {
     data: () => ({
         showChart: true,
         selectedCountry: 'ES',
-        selectedCA: 'Madrid'
+        selectedCA: 'Total'
     }),
     methods: {
         changeCountry(iso) {

@@ -79,9 +79,9 @@ export default {
         async createMap() {
 
             var minBulletSize = 5;
-            var maxBulletSize = 15;
+            var maxBulletSize = 20;
             var min = 20;
-            var max = 1000;
+            var max = 2000;
 
             // it's better to use circle square to show difference between values, not a radius
             var maxSquare = maxBulletSize * maxBulletSize * 2 * Math.PI;
@@ -168,15 +168,15 @@ export default {
         },
 
         getHeatColor(value) {
-            if (value >= 2000) {
+            if (value >= 4000) {
                 return this.colors.danger
             }
 
-            if (value >= 1000) {
+            if (value >= 2000) {
                 return this.colors.high
             }
 
-            if (value >= 500) {
+            if (value >= 900) {
                 return this.colors.normal
             }
 

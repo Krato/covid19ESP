@@ -2,9 +2,20 @@
     <div class="flex w-full lg:pl-2 lg:mt-8 mb-8 lg:mb-0">
         <div class="flex flex-wrap w-full items-center shadow-lg bg-gray-800 rounded-lg">
 
-            <div class="box-header text-sm">
-                <div class="">
-                    Estadísticas de días por CCAA
+            <div class="box-header flex-wrap justify-around text-sm">
+                <div class=" flex flex-wrap items-center">
+                    <div class="left">
+                        Estadísticas díarias por CCAA
+                    </div>
+
+                    <div class="shadow-lg bg-gray-900 py-1 px-2 ml-2 md:ml-8 cursor-pointer" v-on:click="changeType">
+                        <template v-if="type == 'daily'">
+                            Ver acumulativo
+                        </template>
+                        <template v-else>
+                            Ver casos diarios
+                        </template>
+                    </div>
                 </div>
                 <div class="flex self-end cursor-pointer float-right">
                     <div class="text-sm cursor-pointer" v-if="show">
@@ -12,7 +23,12 @@
                             <select v-model="caSelected">
                                 <template v-for="ccaa in communities">
                                     <option :value="ccaa.CCAA" :key="ccaa.CCAA">
-                                        {{ ccaa.CCAA }}
+                                        <template v-if="ccaa.CCAA == 'Total'">
+                                            Todas las CCAA
+                                        </template>
+                                        <template v-else>
+                                            {{ ccaa.CCAA }}
+                                        </template>
                                     </option>
                                 </template>
                             </select>
@@ -31,7 +47,7 @@
                     </div>
 
                     <chart
-                        v-if="show"
+                        v-if="show && type == 'summation'"
                         :key="'chart_'+ca"
                         ref="ca_chart"
                         width="100%"
@@ -40,6 +56,17 @@
                         :options="options"
                         :series="series"
                     />
+
+                    <chart
+                        v-if="show && type == 'daily'"
+                        :key="'chart_daily_'+ca"
+                        ref="ca_chart_daily"
+                        width="100%"
+                        height="100%"
+                        type="area"
+                        :options="options"
+                        :series="seriesByDay"
+                    />
                 </div>
             </div>
         </div>
@@ -47,7 +74,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 import _ from 'lodash'
 import axios from 'axios'
@@ -76,12 +103,14 @@ export default {
     },
     data: () => ({
         show: false,
+        type: 'summation',
         chart: null,
         confirmed: [],
         deaths: [],
         recovered: [],
         critical: [],
         seriesData: [],
+        totalsSpain: false,
         now: null,
         options: {
             chart: {
@@ -142,8 +171,19 @@ export default {
     computed: {
 
         ...mapState({
-            spain: state => state.spain
+            spain: state => state.spain,
+            countries: state => state.countries
         }),
+
+        ...mapGetters(['nowByCountry']),
+
+        lastSpain() {
+            if (this.countries != false) {
+                return this.nowByCountry('es')
+            }
+
+            return false
+        },
 
         caSelected: {
             get() {
@@ -161,6 +201,21 @@ export default {
             return communities
         },
 
+        // getDropdown() {
+
+        //     if (this.communities) {
+        //         let lastDay = _.transform(this.communities, (item, value) => {
+        //             item[value.CCAA] = { 
+        //                 total: value[this.now.valueOf()]
+        //             }
+        //         });
+                
+        //         lastDay = _.sortBy(lastDay, 'total')
+        //     }
+
+        //     return false
+        // },
+
         series() {
 
             let caConfirmed = _.find(this.confirmed, {'CCAA': this.ca})
@@ -169,6 +224,7 @@ export default {
             let caCritical = _.find(this.critical, {'CCAA': this.ca})
             let series = []
             let confirmed = []
+
             if (this.ca && caConfirmed) {
 
                 //Confirmed
@@ -181,7 +237,7 @@ export default {
                 });
                 confirmed.shift()
 
-                this.overrideLastDay(confirmed, 'casos_totales')
+                this.overrideLastDay(confirmed, 'casos_totales', 'confirmed')
 
                 series.push({
                     name: 'Infectados',
@@ -215,6 +271,163 @@ export default {
                             }
                         }
                     }
+                }
+
+                // this.overrideLastDay(recovered, 'nothing', 'recovered')
+
+                series.push({
+                    name: 'Recuperados',
+                    data: _.sortBy(recovered, 'x')
+                })
+            }
+
+            if (this.ca && caDeaths) {
+                //Deaths
+                let deaths = []
+                _.forOwn(caDeaths, function(value, key) { 
+                    deaths.push({
+                        x: parseInt(key),
+                        y: parseInt(value)
+                    })
+                });
+                deaths.shift()
+
+                if (confirmed.length > 0) {
+                    let oldValue = 0;
+                    for (let i = 0; i < confirmed.length; i++) {
+                        if (!_.find(deaths, {x: confirmed[i].x})) {
+                            deaths.push({
+                                x: confirmed[i].x,
+                                y: oldValue
+                            })
+                        } else {
+                            let found = _.find(deaths, {x: confirmed[i].x})
+                            if (found) {
+                                oldValue = found.y
+                            }
+                        }
+                    }
+                }
+
+                this.overrideLastDay(deaths, 'fallecidos', 'deaths')
+
+                series.push({
+                    name: 'Muertes',
+                    data: _.sortBy(deaths, 'x')
+                })
+            }
+
+            if (this.ca && caCritical) {
+                //Critical
+                let critical = []
+                _.forOwn(caCritical, function(value, key) { 
+                    critical.push({
+                        x: parseInt(key),
+                        y: parseInt(value)
+                    })
+                });
+                critical.shift()
+
+                if (confirmed.length > 0) {
+                    let oldValue = 0;
+                    for (let i = 0; i < confirmed.length; i++) {
+                        if (!_.find(critical, {x: confirmed[i].x})) {
+                            critical.push({
+                                x: confirmed[i].x,
+                                y: oldValue
+                            })
+                        } else {
+                            let found = _.find(critical, {x: confirmed[i].x})
+                            if (found) {
+                                oldValue = found.y
+                            }
+                        }
+                    }
+                }
+
+                this.overrideLastDay(critical, 'casos_graves', 'serious')
+
+                series.push({
+                    name: 'Críticos',
+                    data: _.sortBy(critical, 'x')
+                })
+            }
+
+            return series
+        },
+
+        seriesByDay() {
+
+            let caConfirmed = _.find(this.confirmed, {'CCAA': this.ca})
+            let caRecovered = _.find(this.recovered, {'CCAA': this.ca})
+            let caDeaths = _.find(this.deaths, {'CCAA': this.ca})
+            let caCritical = _.find(this.critical, {'CCAA': this.ca})
+            
+            let series = []
+            let confirmed = []
+            if (this.ca && caConfirmed) {
+
+                //Confirmed
+                
+                _.forOwn(caConfirmed, function(value, key) { 
+                    confirmed.push({
+                        x: parseInt(key),
+                        y: parseInt(value)
+                    })
+                });
+                confirmed.shift()
+
+                confirmed = _.sortBy(confirmed, 'x')
+
+                let lastValue = 0;
+                for (let i = 0; i < confirmed.length; i++) {
+                    confirmed[i].y = (confirmed[i].y - lastValue)
+                    lastValue += confirmed[i].y
+                }
+
+                // this.overrideLastDay(confirmed, 'casos_totales')
+
+                series.push({
+                    name: 'Infectados',
+                    data: confirmed
+                })
+            }
+
+            if (this.ca && caRecovered) {
+                //Recovered
+                let recovered = []
+                _.forOwn(caRecovered, function(value, key) { 
+                    recovered.push({
+                        x: parseInt(key),
+                        y: parseInt(value)
+                    })
+                });
+                recovered.shift()
+
+                if (confirmed.length > 0) {
+                    let oldValue = 0;
+                    for (let i = 0; i < confirmed.length; i++) {
+                        if (!_.find(recovered, {x: confirmed[i].x})) {
+                            recovered.push({
+                                x: confirmed[i].x,
+                                y: oldValue
+                            })
+                        } else {
+                            let found = _.find(recovered, {x: confirmed[i].x})
+                            if (found) {
+                                oldValue = found.y
+                            }
+                        }
+                    }
+                }
+
+                recovered = _.sortBy(recovered, 'x')
+
+                let lastValue = 0;
+                for (let e = 0; e < recovered.length; e++) {
+                    let value = (recovered[e].y - lastValue)
+                    recovered[e].y = (value < 0) ? 0 : value
+                    lastValue += recovered[e].y
                 }
 
                 series.push({
@@ -251,11 +464,18 @@ export default {
                     }
                 }
 
-                this.overrideLastDay(deaths, 'fallecidos')
+                deaths = _.sortBy(deaths, 'x')
+                let lastValue = 0;
+                for (let d = 0; d < deaths.length; d++) {
+                    deaths[d].y = (deaths[d].y - lastValue)
+                    lastValue += deaths[d].y
+                }
+
+                // this.overrideLastDay(deaths, 'fallecidos')
 
                 series.push({
                     name: 'Muertes',
-                    data: _.sortBy(deaths, 'x')
+                    data: deaths
                 })
             }
 
@@ -287,7 +507,15 @@ export default {
                     }
                 }
 
-                this.overrideLastDay(critical, 'casos_graves')
+                //orden
+                critical = _.sortBy(critical, 'x')
+
+                let lastValue = 0;
+                for (let y = 0; y < critical.length; y++) {
+                    let value = (critical[y].y - lastValue)
+                    critical[y].y = (value < 0) ? 0 : value
+                    lastValue += critical[y].y
+                }
 
                 series.push({
                     name: 'Críticos',
@@ -361,6 +589,14 @@ export default {
             this.getCritical()
         },
 
+        changeType() {
+            if (this.type == 'summation') {
+                this.type = 'daily'
+            } else {
+                this.type = 'summation'
+            }
+        },
+
         createChartsOptions() {
             // this.options = {...this.options, ...{
             //     title: {
@@ -390,7 +626,7 @@ export default {
                 }).data
 
                 let headers = data.shift()
-                data.pop()
+                // data.pop()
                 let cases = _.map(data, (ca) => {
                     let caInfo = [] 
                     for (var i = 1; i < headers.length; i++) {
@@ -422,7 +658,7 @@ export default {
                 }).data
 
                 let headers = data.shift()
-                data.pop()
+                // data.pop()
                 let cases = _.map(data, (ca) => {
                     let caInfo = [] 
                     for (var i = 1; i < headers.length; i++) {
@@ -454,7 +690,7 @@ export default {
                 }).data
 
                 let headers = data.shift()
-                data.pop()
+                // data.pop()
                 let cases = _.map(data, (ca) => {
                     let caInfo = [] 
                     for (var i = 1; i < headers.length; i++) {
@@ -486,7 +722,7 @@ export default {
                 }).data
 
                 let headers = data.shift()
-                data.pop()
+                // data.pop()
                 let cases = _.map(data, (ca) => {
                     let caInfo = [] 
                     for (var i = 1; i < headers.length; i++) {
@@ -508,8 +744,36 @@ export default {
             });
         },
 
-        overrideLastDay(data, key) {
-            if (this.spain) {
+        getLastSpainFromIscii() {
+            let gotcha = 'U2FsdGVkX19nTPOTksKGw8JGYiMmWrrANkHUgv0ay9Ha0c5xWL123qf9X5MJBzH90rrwCLe14QoBE7yOeBhc9tUYrluWGGIgZ5XTDvaPpNM='
+            let secret = this.CryptoJS.AES.decrypt(gotcha, "FCJDq6rELyrCas4").toString(this.CryptoJS.enc.Utf8)
+
+            let axiosHeaders = {
+                headers: { 'secret-key': secret }
+            };
+
+            axios.get('https://api.jsonbin.io/b/5e7bcd9a862c46101abe0e59/latest', axiosHeaders).then(response => {
+                this.totalsSpain = response.data.data
+            }).catch(error => {
+                console.log(error)
+            });
+        },
+
+        overrideLastDay(data, key, keySpain) {
+
+            if (this.ca == 'Total') {
+                if (this.lastSpain) {
+                    let lastDay = _.find(data, {x: this.now.valueOf()})
+                    if (lastDay) {
+                        lastDay.y = this.lastSpain[keySpain]
+                    } else {
+                        data.push({
+                            x: this.now.valueOf(),
+                            y: this.lastSpain[keySpain]
+                        })
+                    }
+                } 
+            } else if (this.spain) {
                 let ccaa = _.find(this.spain, {ccaa: this.ca})
                 if (ccaa) {
                     let lastDay = _.find(data, {x: this.now.valueOf()})
@@ -522,7 +786,7 @@ export default {
                             y: ccaa[key]
                         })
                     }
-                } 
+                }
             }
         }
     }
