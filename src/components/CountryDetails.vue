@@ -316,6 +316,12 @@ export default {
             }
         },
 
+        series(value) {
+            if (value) {
+                this.showChartFn()
+            }
+        },
+
         iso: {
             immediate: true,
             handler (value) {

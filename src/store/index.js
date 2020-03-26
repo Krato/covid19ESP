@@ -261,6 +261,21 @@ export default new Vuex.Store({
                         iso2 = 'AE';
                     }
 
+                    if (countryName == 'Macedonia, the former Yugoslav Republic of') {
+                        iso3 = 'MKD';
+                        iso2 = 'MK';
+                    }
+
+                    if (countryName == 'Venezuela, Bolivarian Republic of') {
+                        iso3 = 'VEN';
+                        iso2 = 'VE';
+                    }
+
+                    if (countryName == 'Czechia') {
+                        iso3 = 'CZE';
+                        iso2 = 'CZ';
+                    }
+
                     if (countryName == 'Total') {
                         iso3 = 'ALL';
                     }
