@@ -120,20 +120,20 @@ export default {
                     y: value
                 }))
 
-                let recovered = _.map(this.recovered, (value, key) => ({
-                    x: parseInt(key),
-                    y: value
-                }))
+                // let recovered = _.map(this.recovered, (value, key) => ({
+                //     x: parseInt(key),
+                //     y: value
+                // }))
 
                 return [
                     {
                         name: 'Infectados',
                         data: _.sortBy(confirmed, 'x')
                     },
-                    {
-                        name: 'Recuperados',
-                        data: _.sortBy(recovered, 'x')
-                    },
+                    // {
+                    //     name: 'Recuperados',
+                    //     data: _.sortBy(recovered, 'x')
+                    // },
                     {
                         name: 'Muertes',
                         data: _.sortBy(deaths, 'x')
@@ -253,20 +253,28 @@ export default {
                 let data;
 
                 if (this.iso == 'all') {
-                    data = this.country.deaths
+                    data = this.country.recovered
                 } else {
-                    data = this.country.recovered.history
+                    if (_.has(this.country.recovered, 'history')) {
+                        data = this.country.recovered.history    
+                    }
                 }
 
-                let recovered =  _.mapKeys(data, (value, key) => {
-                    return parseInt(new Date(key).getTime())
-                });
+                if (data) {
+                    let recovered =  _.mapKeys(data, (value, key) => {
+                        return parseInt(new Date(key).getTime())
+                    });
 
-                if (this.iso != 'CN') {
-                    this.$set(recovered, this.now, this.latest.recovered)
+                    if (this.iso != 'CN') {
+                        this.$set(recovered, this.now, this.latest.recovered)
+                    }
+
+                    return recovered
                 }
 
-                return recovered
+                return []
+
+                
             }
 
             return false

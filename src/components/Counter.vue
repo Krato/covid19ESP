@@ -214,19 +214,22 @@ export default {
                         this.confirmed = value.casos
 
                         this.active = value.casos - value.recuperados - value.defunciones
+
+
+                        if (value.recuperados && (value.recuperados) > this.recovered ) {
+                            this.recovered = value.recuperados
+                        }
+                        if (value.defunciones && (value.defunciones) > this.deaths ) {
+                            this.deaths = value.defunciones
+                        }
+                        // if (value.hospitalizados && (value.hospitalizados) > this.critical ) {
+                        //     this.critical = value.hospitalizados
+                        // }
+                        if (value.casos24h && (value.casos24h) > this.todayCases ) {
+                            this.todayCases = value.casos24h
+                        }
                     }
-                    if (value.recuperados && (value.recuperados) > this.recovered ) {
-                        this.recovered = value.recuperados
-                    }
-                    if (value.defunciones && (value.defunciones) > this.deaths ) {
-                        this.deaths = value.defunciones
-                    }
-                    if (value.hospitalizados && (value.hospitalizados) > this.critical ) {
-                        this.critical = value.hospitalizados
-                    }
-                    if (value.casos24h && (value.casos24h) > this.todayCases ) {
-                        this.todayCases = value.casos24h
-                    }
+                    
                 }
             }
         },
