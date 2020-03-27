@@ -79,9 +79,9 @@ export default {
         async createMap() {
 
             var minBulletSize = 5;
-            var maxBulletSize = 20;
+            var maxBulletSize =17;
             var min = 20;
-            var max = 2000;
+            var max = 3000;
 
             // it's better to use circle square to show difference between values, not a radius
             var maxSquare = maxBulletSize * maxBulletSize * 2 * Math.PI;

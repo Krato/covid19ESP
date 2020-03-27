@@ -109,8 +109,7 @@ body::-webkit-scrollbar, .list-countries::-webkit-scrollbar {
 }
 
 .search {
-	@apply .bg-gray-900 .px-4 .rounded-md;
-    flex: 1;
+	@apply .bg-gray-900 .rounded-md .flex-auto;
     /*background: 0 0;*/
     border: none;
     color: #7f8197;
@@ -169,6 +168,24 @@ body::-webkit-scrollbar, .list-countries::-webkit-scrollbar {
     outline: none;
 }
 
+.v-dropdown-container, .sm-caller-container, .sm-default-btn, .sm-opened {
+	@apply .bg-gray-900 !important;
+	@apply .text-gray-500 .border-0;
+}
+
+.sm-default-btn:hover, .sm-default-btn.sm-opened {
+	@apply .text-gray-500 .border-0;
+	box-shadow: none;
+}
+
+.sm-removeall-button {
+	display: none;
+}
+
+ul.sm-results>li.sm-over {
+	@apply .bg-gray-800 !important;
+	color: inherit;
+}
 
 /*
 g[role="menuitem"] > circle {

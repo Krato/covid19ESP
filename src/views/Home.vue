@@ -11,9 +11,9 @@
                 </div>
                 <div class="w-full flex flex-wrap mt-8 ">
                     <spain v-on:change-ca="changeCa" class="order-1" />
-                    <country-details class="order-3 lg:order-2" :key="'country_'+selectedCountry" :iso="selectedCountry" v-if="showChart" @country="changeCountry" />
+                    <country-details class="order-3 xl:order-2" :key="'country_'+selectedCountry" :iso="selectedCountry" v-if="showChart" @country="changeCountry" />
 
-                    <spain-details  class="order-2 lg:order-3" :ca="selectedCA" @community="changeCAByName" />
+                    <spain-details  class="order-2 xl:order-3" :ca="selectedCA" @community="changeCAByName" />
                 </div>
                 <world-map :iso="selectedCountry" />
             </div>

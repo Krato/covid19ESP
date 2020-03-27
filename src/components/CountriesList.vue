@@ -36,17 +36,51 @@
                   Muertes
                 </div>
               </div>
-              <div class="w-1/4 xl:w-1/5 flex flex-wrap justify-center items-center">
-                <div class="w-full text-orange-400 font-bold">
+              <div class="w-1/4 xl:w-1/5 flex flex-wrap justify-center text-left items-center">
+
+                    <div class="w-full text-xxs  md:text-xs text-yellow-300 font-bold whitespace-no-wrap">
+                        + {{ fixNumber(todayCasesTotal) }} casos
+                    </div>
+
+                    <div class="w-full text-xxs  md:text-xs  text-red-500 font-bold whitespace-no-wrap">
+                        + {{ fixNumber(todayDeathsTotal) }} muertes
+                    </div>
+
+
+                <!-- <div class="w-full text-orange-400 font-bold">
                   {{ fixNumber(this.critical) }}
                 </div>
                 <div class="w-full text-xxs md:text-sm">
                   Críticos
-                </div>
+                </div> -->
               </div>
           </div>
 
-          <input type="text" v-model="search" placeholder="Busca por país" class="w-full search border border-gray-700 ">
+            <div class="w-full flex justify-around items-center bg-gray-900 border-gray-700">
+                <div class="w-full flex justify-around px-4 items-center">
+                    <input type="text" v-model="search" placeholder="Busca por país" class="flex-grow w-full search  ">
+
+                    <div class="flex-grow bg-gray-900 text-sm text-right">
+                        <v-selectmenu v-model="order" ref="order" :data="menuOrder" align="right" :title="false" :query="false" type="advanced">
+                            <button type="button" class="whitespace-no-wrap">
+                                <template v-if="order != 'none'">
+                                    Ordenado por 
+                                </template>
+                                <span :class="getClassMenu(order)"> 
+                                    {{ menuTexto[order] }}
+                                </span>
+                            </button>
+                            <template #row="{ row }">
+                                <span :class="row.color" v-html="row.name"></span>
+                            </template>
+                        </v-selectmenu>
+
+                    </div>
+                </div>
+                
+                
+            </div>
+          
         </div>
       </div>
       <div class="list-height w-full">
@@ -119,14 +153,25 @@
                   
                 </div>
 
-                <div class="w-auto md:w-1/5 md:flex flex-wrap items-center">
+                <div class="w-auto md:w-1/5 md:flex flex-wrap items-center text-left">
+
+                    <div class="w-full text-xxs text-yellow-300 font-bold whitespace-no-wrap">
+                        + {{ fixNumber(country.todayCases) }} casos
+                    </div>
+
+                    <div class="w-full text-xxs  text-red-500 font-bold whitespace-no-wrap">
+                        + {{ fixNumber(country.todayDeaths) }} muertes
+                    </div>
+                    <!-- <div class="w-full text-xxs xl:text-sm">
+                    Críticos
+                    </div> -->
                   
-                      <div class="w-full text-sm md:text-base text-orange-400 font-bold">
+                      <!-- <div class="w-full text-sm md:text-base text-orange-400 font-bold">
                         {{ fixNumber(country.critical) }}
                       </div>
                       <div class="w-full text-xxs xl:text-sm">
                         Críticos
-                      </div>
+                      </div> -->
                   
                   
                 </div>
@@ -141,11 +186,16 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapState } from 'vuex'
 import _ from 'lodash'
 import CountryFlag from 'vue-country-flag'
-import vuescroll from 'vuescroll';
-// import Cruise from "@/assets/cruise.svg";
+import vuescroll from 'vuescroll'
+import vSelectMenu from 'v-selectmenu'
+
+Vue.use(vSelectMenu, {
+    language: 'es'
+})
 
 export default {
     name: 'CountriesList',
@@ -157,23 +207,50 @@ export default {
     data: () => ({
         search: null,
         show: false,
+        order: 'confirmed',
+        menuOrder: [
+            // { id: 'none', name: 'Orden por defecto', color: 'text-gray-400'},
+            { id: 'confirmed', name: 'Infectados', color: 'text-yellow-300'},
+            { id: 'recovered', name: 'Recuperados', color: 'text-green-500'},
+            { id: 'deaths', name: 'Muertes', color: 'text-red-500'},
+            { id: 'todayCases', name: 'Infectados hoy', color: 'text-yellow-300'},
+            { id: 'todayDeaths', name: 'Muertes hoy', color: 'text-red-500'},
+            // { id: 'critical', name: 'Críticos', color: 'text-orange-400'},
+        ],
+        menuTexto: {
+            'none': 'Ordernar por',
+            'confirmed': 'Infectados',
+            'recovered': 'Recuperados',
+            'deaths': 'Muertes',
+            'todayCases': 'Infectados/Hoy',
+            'todayDeaths': 'Muertes/Hoy',
+            'critical': 'Críticos',
+        },
+        menuColor: {
+            'confirmed': 'text-yellow-300',
+            'recovered': 'text-green-500',
+            'deaths': 'text-red-500',
+            'todayCases': 'text-yellow-300',
+            'todayDeaths': 'text-red-500',
+            'critical': 'text-orange-400',
+        },
         scrollOptions: {
             scrollPanel: {
                 scrollingX: false,
                 easing: 'easeInQuad'
             },
             rail: {
-                gutterOfSide: '5px',
+                gutterOfSide: '2px',
                 background: '#1a202c',
-                keepShow: true,
+                keepShow: false,
                 opacity: 0.5,
-                size: '12px',
+                size: '8px',
             },
             bar: {
-                onlyShowBarOnScroll: false,
+                onlyShowBarOnScroll: true,
                 background: '#718096',
-                size: '16px',
-                keepShow: true,
+                size: '6px',
+                keepShow: false,
                 opacity: 1,
             }
         }
@@ -193,7 +270,7 @@ export default {
                     })
                 }
 
-                return _.sortBy(this.countries, 'confirmed').reverse();
+                return _.sortBy(this.countries, this.order).reverse();
             }
 
             return []
@@ -205,10 +282,26 @@ export default {
             }
 
             return 0
+        },
+
+        todayCasesTotal() {
+            if (this.countryList) {
+                return _.sumBy(this.countryList, 'todayCases');
+            }
+
+            return 0
+        },
+
+        todayDeathsTotal() {
+            if (this.countryList) {
+                return _.sumBy(this.countryList, 'todayDeaths');
+            }
+
+            return 0
         }
     },
     mounted() {
-        //
+        this.$refs.order.i18n.advanced_default = "Ordenar por";
     },
     methods: {
         fixNumber(value) {
@@ -220,6 +313,12 @@ export default {
                 this.$emit('country', country.iso2)    
             }
         },
+
+        getClassMenu(order) {
+            if (order) {
+                return this.menuColor[order]
+            }
+        }
     },
 
     watch: {
