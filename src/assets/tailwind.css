@@ -167,7 +167,7 @@ body::-webkit-scrollbar, .list-countries::-webkit-scrollbar {
 .custom-select select:focus {
     outline: none;
 }
-
+/* purgecss start ignore */
 .v-dropdown-container, .sm-caller-container, .sm-default-btn, .sm-opened {
 	@apply .bg-gray-900 !important;
 	@apply .text-gray-500 .border-0;
@@ -186,6 +186,7 @@ ul.sm-results>li.sm-over {
 	@apply .bg-gray-800 !important;
 	color: inherit;
 }
+/* purgecss end ignore */
 
 /*
 g[role="menuitem"] > circle {
