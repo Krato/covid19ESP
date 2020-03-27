@@ -92,7 +92,7 @@ body::-webkit-scrollbar, .list-countries::-webkit-scrollbar {
 	}
 }
 
-
+/* purgecss start ignore */
 .toasted-container.top-center {
 	top: 0% !important;
     left: 50% !important;
@@ -103,6 +103,7 @@ body::-webkit-scrollbar, .list-countries::-webkit-scrollbar {
 .toasted .primary, .toasted.toasted-primary{
 	@apply .bg-blue-900 .rounded-lg !important
 }
+/* purgecss end ignore */
 
 .list-height {
 	height: calc(100vh - 180px)
