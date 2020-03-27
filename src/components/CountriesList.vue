@@ -193,7 +193,7 @@ export default {
                     })
                 }
 
-                return this.countries
+                return _.sortBy(this.countries, 'confirmed').reverse();
             }
 
             return []
