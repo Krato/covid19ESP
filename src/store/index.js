@@ -300,11 +300,15 @@ export default new Vuex.Store({
                         iso3: iso3,
                         country: countryName,
                         confirmed: el.cases,
+                        active: el.active,
                         critical: el.critical,
                         deaths: el.deaths,
                         recovered: el.recovered,
                         todayCases: el.todayCases,
                         todayDeaths: el.todayDeaths,
+                        flag: el.countryInfo.flag,
+                        casesPerOneMillion: el.casesPerOneMillion,
+                        deathsPerOneMillion: el.deathsPerOneMillion
                     })
                 })
 

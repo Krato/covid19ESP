@@ -9347,6 +9347,11 @@ vue-toasted@^1.1.28:
   resolved "https://registry.yarnpkg.com/vue-toasted/-/vue-toasted-1.1.28.tgz#dbabb83acc89f7a9e8765815e491d79f0dc65c26"
   integrity sha512-UUzr5LX51UbbiROSGZ49GOgSzFxaMHK6L00JV8fir/CYNJCpIIvNZ5YmS4Qc8Y2+Z/4VVYRpeQL2UO0G800Raw==
 
+vue2-hover-intent@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/vue2-hover-intent/-/vue2-hover-intent-1.0.3.tgz#6691cba0dc02eb6d092d09238420685992074a70"
+  integrity sha512-vdrKNbP8JX4WWufZbvsfbTQF8hc7yMKVTu8E/UPePmGuXlLZzMbRUXmN8qplnAbre1v1eAOY30XvokarSKsx3w==
+
 vue@^2.5.13, vue@^2.6.11:
   version "2.6.11"
   resolved "https://registry.npm.taobao.org/vue/download/vue-2.6.11.tgz?cache=0&sync_timestamp=1583528555168&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvue%2Fdownload%2Fvue-2.6.11.tgz#76594d877d4b12234406e84e35275c6d514125c5"

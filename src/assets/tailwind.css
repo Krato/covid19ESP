@@ -183,11 +183,40 @@ body::-webkit-scrollbar, .list-countries::-webkit-scrollbar {
 	display: none;
 }
 
-ul.sm-results>li.sm-over {
-	@apply .bg-gray-800 !important;
-	color: inherit;
-}
+
+
 /* purgecss end ignore */
+.more-info {
+	transition: width 0.3s ease-in-out;
+}
+
+/*.block-info {
+	@apply .hidden;
+}
+*/
+
+
+.country-list.show-extra .more-info {
+	@apply .w-full .p-2;
+}
+
+/*.country-list.show-extra .more-info .block-info{
+	@apply .flex;
+}*/
+
+.country-list.show-extra .more-info .block-info:nth-child(1){
+	transition: all .5s ease;	
+	animation-delay: 0.2s;
+}
+
+.country-list.show-extra .more-info .block-info:nth-child(2){
+	transition: all 1s ease;	
+	animation-delay: 0.3s;
+}
+.country-list.show-extra .more-info .block-info:nth-child(2){
+	transition: all 1s ease;	
+	animation-delay: 0.4s;
+}
 
 /*
 g[role="menuitem"] > circle {
