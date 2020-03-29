@@ -69,6 +69,8 @@
                                 <span :class="getClassMenu(order)"> 
                                     {{ menuTexto[order] }}
                                 </span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="fill-current text-gray-300 inline align-middle" width="8" height="8" viewBox="0 0 24 24"><path d="M0 7.33l2.829-2.83 9.175 9.339 9.167-9.339 2.829 2.83-11.996 12.17z"/></svg>
+                                <!-- <img src="@/assets/select-arrows.png"> -->
                             </button>
                             <template #row="{ row }">
                                 <span :class="row.color" v-html="row.name"></span>
@@ -92,93 +94,9 @@
             />
         </div>
         <vue-scroll :ops="scrollOptions">
-          <template v-for="(country, index) in countryList">
-            <div
-              :key="index"
-              class="country-list w-full flex flex-wrap  items-center text-center  border-b border-gray-700 cursor-pointer p-2"
-              @click="changeCountry(country)"
-            >
-              <!-- <div class="flex flex-wrap  items-center bg-gray-900 rounded-md py-2"> -->
-                <div class="country-flag w-auto md:w-1/5 flex flex-wrap items-center">
-                  <div class="w-full">
-                    <!-- <template v-if="country.iso3 == 'cruise'">
-                        <cruise></cruise>
-                    </template> -->
-                    <template v-if="country.iso != 'others'">
-                      <div class="hidden xl:block" v-if="country.iso3 != null">
-                        <country-flag :test="country" :country="country.iso3" size="small" />
-                      </div>
-                      <div class="xl:hidden" v-if="country.iso3 != null">
-                        <country-flag :test="country" :country="country.iso3" />
-                      </div>
-                    </template>
-                  </div>
-                  <div class="w-full text-xs hidden xl:block  md:text-sm">
-                    {{ country.country }}
-                  </div>
-                </div>
-                <div class="w-auto md:w-1/5 flex flex-wrap items-center">
-                  
-                      <div class="w-full text-sm md:text-base text-yellow-300 font-bold">
-                        {{ fixNumber(country.confirmed) }}
-                      </div>
-                      <div class="w-full text-xxs xl:text-sm">
-                        Infectados
-                      </div>
-                  
-                  
-                </div>
-
-                <div class="w-auto md:w-1/5 flex flex-wrap items-center">
-                  
-                      <div class="w-full text-sm md:text-base text-green-500 font-bold">
-                        {{ fixNumber(country.recovered) }}
-                      </div>
-                      <div class="w-full text-xxs xl:text-sm">
-                        Curados
-                      </div>
-                  
-                  
-                </div>
-
-                <div class="w-auto md:w-1/5 flex flex-wrap items-center">
-                  
-                      <div class="w-full text-sm md:text-base text-red-500 font-bold">
-                        {{ fixNumber(country.deaths) }}
-                      </div>
-                      <div class="w-full text-xxs xl:text-sm">
-                        Muertes
-                      </div>
-                  
-                  
-                </div>
-
-                <div class="w-auto md:w-1/5 md:flex flex-wrap items-center text-left">
-
-                    <div class="w-full text-xxs text-yellow-300 font-bold whitespace-no-wrap">
-                        + {{ fixNumber(country.todayCases) }} casos
-                    </div>
-
-                    <div class="w-full text-xxs  text-red-500 font-bold whitespace-no-wrap">
-                        + {{ fixNumber(country.todayDeaths) }} muertes
-                    </div>
-                    <!-- <div class="w-full text-xxs xl:text-sm">
-                    Críticos
-                    </div> -->
-                  
-                      <!-- <div class="w-full text-sm md:text-base text-orange-400 font-bold">
-                        {{ fixNumber(country.critical) }}
-                      </div>
-                      <div class="w-full text-xxs xl:text-sm">
-                        Críticos
-                      </div> -->
-                  
-                  
-                </div>
-
-              <!-- </div> -->
-            </div>
-          </template>
+            <template v-for="(country, index) in countryList">
+                <country-row :key="'country_'+index" :country="country" :index="index" v-on:change="changeCountry" />
+            </template>
         </vue-scroll>
       </div>
     </div>
@@ -189,9 +107,10 @@
 import Vue from 'vue'
 import { mapState } from 'vuex'
 import { has, sortBy, sumBy } from 'lodash'
-import CountryFlag from 'vue-country-flag'
 import VueScroll from 'vuescroll'
 import vSelectMenu from 'v-selectmenu'
+import CountryRow from './CountryRow'
+
 
 Vue.use(vSelectMenu, {
     language: 'es'
@@ -200,7 +119,7 @@ Vue.use(vSelectMenu, {
 export default {
     name: 'CountriesList',
     components: {
-        CountryFlag,
+        CountryRow,
         VueScroll,
     },
     data() {
@@ -317,7 +236,8 @@ export default {
             if (order) {
                 return this.menuColor[order]
             }
-        }
+        },
+
     },
 
     watch: {
@@ -331,6 +251,9 @@ export default {
 </script>
 
 
-<style scoped>
-
+<style>
+ul.sm-results>li.sm-over {
+    background: #2D3748 !important;
+    color: inherit;
+}
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <Transition name="fade">
+    <transition name="fade">
         <div
           v-if="showing"
           class="fixed inset-0 z-50 w-full h-screen flex items-center justify-center bg-smoke-800"
@@ -18,7 +18,7 @@
                 </div>
             </div>
         </div>
-    </Transition>
+    </transition>
 </template>
 
 <script>
