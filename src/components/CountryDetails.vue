@@ -44,28 +44,26 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
-import _ from 'lodash'
-import VueApexCharts from 'vue-apexcharts'
-var es = require("apexcharts/dist/locales/es.json")
-import 'vue-loaders/dist/vue-loaders.css';
-import VueLoaders from 'vue-loaders';
+import { has, map, mapKeys, sortBy } from 'lodash'
+import Chart from 'vue-apexcharts'
+import es from "apexcharts/dist/locales/es.json"
 
 export default {
     name: 'CountryCharts',
     components: {
-        'chart': VueApexCharts,
-        'vue-loaders': VueLoaders.component
+        Chart
     },
     props: {
         iso: {
-            required: false,
             default: 'all'
         }
     },
-    data: () => ({
-        show: false,
-        now: parseInt(Date.now()),
-    }),
+    data() {
+        return {
+            now: parseInt(Date.now()),
+            show: false,
+        }
+    },
     computed: {
         ...mapState({
             info: state => state.data,
@@ -110,33 +108,24 @@ export default {
         series() {
 
             if (this.country && this.confirmed && this.deaths && this.recovered) {
-                let confirmed = _.map(this.confirmed, (value, key) => ({
+                let confirmed = map(this.confirmed, (value, key) => ({
                     x: parseInt(key),
                     y: value
                 }))
 
-                let deaths = _.map(this.deaths, (value, key) => ({
+                let deaths = map(this.deaths, (value, key) => ({
                     x: parseInt(key),
                     y: value
                 }))
-
-                // let recovered = _.map(this.recovered, (value, key) => ({
-                //     x: parseInt(key),
-                //     y: value
-                // }))
 
                 return [
                     {
                         name: 'Infectados',
-                        data: _.sortBy(confirmed, 'x')
+                        data: sortBy(confirmed, 'x')
                     },
-                    // {
-                    //     name: 'Recuperados',
-                    //     data: _.sortBy(recovered, 'x')
-                    // },
                     {
                         name: 'Muertes',
-                        data: _.sortBy(deaths, 'x')
+                        data: sortBy(deaths, 'x')
                     }
                 ]
             } 
@@ -209,7 +198,7 @@ export default {
                     data = this.country.confirmed.history
                 }
 
-                let confirmed = _.mapKeys(data, (value, key) => {
+                let confirmed = mapKeys(data, (value, key) => {
                     return parseInt(new Date(key).getTime())
                 })
 
@@ -233,7 +222,7 @@ export default {
                     data = this.country.deaths.history
                 }
 
-                let deaths = _.mapKeys(data, (value, key) => {
+                let deaths = mapKeys(data, (value, key) => {
                     return parseInt(new Date(key).getTime())
                 })
 
@@ -255,13 +244,13 @@ export default {
                 if (this.iso == 'all') {
                     data = this.country.recovered
                 } else {
-                    if (_.has(this.country.recovered, 'history')) {
+                    if (has(this.country.recovered, 'history')) {
                         data = this.country.recovered.history    
                     }
                 }
 
                 if (data) {
-                    let recovered =  _.mapKeys(data, (value, key) => {
+                    let recovered =  mapKeys(data, (value, key) => {
                         return parseInt(new Date(key).getTime())
                     });
 

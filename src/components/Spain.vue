@@ -34,9 +34,7 @@
 </template>
 
 <script>
-import _ from 'lodash'
-
-// import spain from "../plugins/spain.js"
+import { map, sortBy } from 'lodash'
 import { mapState } from 'vuex'
 
 
@@ -46,37 +44,35 @@ import spainRegions from '../plugins/spainRegions.js'
 
 export default {
     name: 'Spain',
-
     components: {
         List,
         SpainMap
     },
-
     props: {
         iso: {
+            type: String,
             required: false,
             default: 'all'
         }
     },
+    data() {
+        return {
 
-    data: () => ({
-        show: false,
-        type: 'map',
-        colors: {
-            low: '#FEFCBF',
-            normal: '#FAF089',
-            high: '#ED8936',
-            danger: '#E53E3E'
-        },
-    }),
-
+            show: false,
+            type: 'map',
+            colors: {
+                low: '#FEFCBF',
+                normal: '#FAF089',
+                high: '#ED8936',
+                danger: '#E53E3E'
+            }
+        }
+    },
     computed:{
-        ...mapState({
-            spain: state => state.spain
-        }),
+        ...mapState(['spain']),
 
         series() {
-            return _.map(this.spain, (item) => ({
+            return map(this.spain, (item) => ({
                 name: item.ccaa,
                 value: item.casos_totales,
                 color: this.getHeatColor(item.casos_totales)
@@ -87,11 +83,11 @@ export default {
             let provinces = []
             if (this.spain) {
                 this.spain.forEach((item) => {
-                    let comunity = spainRegions(item.ccaa, true)
+                    let community = spainRegions(item.ccaa, true)
 
                     let name = item.ccaa
-                    if (comunity) {
-                        name = comunity.code  
+                    if (community) {
+                        name = community.code  
                     }
 
                     provinces.push({
@@ -102,31 +98,16 @@ export default {
                     })
                 })
             }
-            return _.sortBy(provinces, 'total').reverse();
+            return sortBy(provinces, 'total').reverse();
         }
     },
-
     watch: {
-
         spain(value) {
-            if (value) {
-                this.$nextTick(() => {
-                    this.show = true   
-                })	
-            }
+            this.$nextTick(() => {
+                this.show = !!value   
+            });
         },
-
-
     },
-
-    mounted() {
-        // this.$nextTick(() => {
-        //     setTimeout(() => {
-        //         this.show = true    
-        //     }, 500)
-        // })
-    },
-
     methods: {
         changeType() {
             this.type = (this.type == 'map') ? 'list' : 'map'
@@ -154,6 +135,7 @@ export default {
     }
 }
 </script>
+
 <style scoped>
     .map {
       min-height: 500px;

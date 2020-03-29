@@ -1,32 +1,40 @@
 import Vue from 'vue'
+import VueAnalytics from 'vue-analytics';
+import VueCryptoJs from 'vue-cryptojs'
+import VueLoaders from 'vue-loaders';
+import VueToasted from 'vue-toasted'
+
 import './plugins/axios'
-import App from './App.vue'
 import store from './store'
 import router from './router'
 import '@/assets/tailwind.css'
+import 'vue-loaders/dist/vue-loaders.css'
+
+import App from './App.vue'
 
 Vue.config.productionTip = false
-// Vue.config.performance = true
-// 
-import Toasted from 'vue-toasted';
-Vue.use(Toasted)
 
-import VueAnalytics from 'vue-analytics'
 Vue.use(VueAnalytics, {
     id: 'UA-161741906-1',
     router,
     debug: {
         sendHitTask: process.env.NODE_ENV === 'production'
     }
-})
+});
+
+Vue.use(VueCryptoJs)
+Vue.use(VueLoaders);
+Vue.use(VueToasted)
 
 
 new Vue({
     store,
     router,
-    data: () => ({
-        timer: null,
-    }),
+    data() {
+        return {
+            timer: null,
+        }
+    },
     async created() {
         await this.getAllData()
         this.timer = setInterval(() => {

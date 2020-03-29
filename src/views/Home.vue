@@ -27,43 +27,39 @@
 </template>
 
 <script>
-import Vue from 'vue'
 
 import Logo from "@/assets/logo.svg";
 
-import Counter from '@/components/Counter.vue'
-// import Countries from '@/components/Countries.vue'
+import Counter from '@/components/Counter.vue';
 import CountriesList from '@/components/CountriesList.vue'
 import CountryDetails from '@/components/CountryDetails.vue'
-import Mapa from '@/components/Map.vue'
+import Help from '@/components/Help.vue'
+import Links from '@/components/Links.vue'
 import Spain from '@/components/Spain.vue'
 import SpainDetails from '@/components/SpainDetails.vue'
-import Links from '@/components/Links.vue'
-import Help from '@/components/Help.vue'
+import WorldMap from '@/components/Map.vue'
 
-import 'vue-loaders/dist/vue-loaders.css'
-import VueLoaders from 'vue-loaders'
-Vue.use(VueLoaders);
 
 export default {
     name: 'Home',
     components: {
-        'counter': Counter,
-        // 'countries': Countries,
-        'countries-list': CountriesList,
-        'country-details': CountryDetails,
-        'spain': Spain,
-        'spain-details': SpainDetails,
-        'world-map': Mapa,
-        'logo': Logo,
-        'links': Links,
-        'help': Help
+        Counter,
+        CountriesList,
+        CountryDetails,
+        Spain,
+        SpainDetails,
+        WorldMap,
+        Logo,
+        Links,
+        Help
     },
-    data: () => ({
-        showChart: true,
-        selectedCountry: 'ES',
-        selectedCA: 'Total'
-    }),
+    data() {
+        return {
+            showChart: true,
+            selectedCountry: 'ES',
+            selectedCA: 'Total'
+        }
+    },
     methods: {
         changeCountry(iso) {
             this.selectedCountry = iso
@@ -78,15 +74,6 @@ export default {
         changeCAByName(name) {
             this.selectedCA = name
         }
-    }, 
-    mounted() {
-        // this.$toasted.clear()      
-        // this.$toasted.show("<div class='block'>Actualizado Hoy a las 18:20</div>", { 
-        //     theme: "toasted-primary", 
-        //     position: "top-center", 
-        //     duration : 3000
-        // });
-
     }
 }
 </script>

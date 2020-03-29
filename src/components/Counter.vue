@@ -33,8 +33,6 @@
             </div>
 
 
-
-
             <div class="w-full md:w-2/4 flex flex-wrap items-center justify-center">
 
                 <div class="w-full flex md:hidden flex-wrap self-stretch items-center justify-center font-bold p-1">
@@ -106,31 +104,30 @@
 <script>
 
 import { mapState, mapGetters } from 'vuex'
-import axios from 'axios'
+import { toArray, transform, zipObject } from 'lodash'
+import AnimatedNumber from "animated-number-vue"
+import axios from '@/plugins/axios'
 import countapi from 'countapi-js'
 import Papa from 'papaparse'
-import AnimatedNumber from "animated-number-vue"
-import _ from 'lodash'
 
 export default {
     name: 'Counter',
-
     components: {
         AnimatedNumber
     },
-
-    data: () => ({
-        show: false,
-        totals: false,
-        confirmed: 0,
-        active: 0,
-        recovered: 0,
-        deaths: 0, 
-        critical: 0,
-        todayCases: 0,
-        todayDeaths: 0
-    }),
-
+    data() {
+        return {
+            active: 0,
+            confirmed: 0,
+            critical: 0,
+            deaths: 0, 
+            recovered: 0,
+            show: false,
+            todayCases: 0,
+            todayDeaths: 0,
+            totals: false,
+        }
+    },
     computed: {
         ...mapState({
             info: state => state.totals,
@@ -147,34 +144,66 @@ export default {
             return false
         },
     },
+    created()
+    {
+        let gotcha = 'U2FsdGVkX19nTPOTksKGw8JGYiMmWrrANkHUgv0ay9Ha0c5xWL123qf9X5MJBzH90rrwCLe14QoBE7yOeBhc9tUYrluWGGIgZ5XTDvaPpNM='
+        let secret = this.CryptoJS.AES.decrypt(gotcha, "FCJDq6rELyrCas4").toString(this.CryptoJS.enc.Utf8)
 
+        let axiosHeaders = {
+            headers: { 'secret-key': secret }
+        };
+
+        countapi.hit('api-total-spain').then((result) => {
+            if (result.value % 100 == 0) {
+                axios.get('https://cors-anywhere.herokuapp.com/https://covid19.isciii.es/resources/data.csv', {}, { timeout: 2000 }).then(response => {
+                    
+                    let totals = this.parseDataFromCsv(response.data)
+                    
+                    if (totals) {
+
+                        this.totals = totals
+
+                        axios.put('https://api.jsonbin.io/b/5e7bcd9a862c46101abe0e59', {data: totals}, axiosHeaders).then(() => {
+                        });
+                    }
+                }).catch(() => {
+                    axios.get('https://api.jsonbin.io/b/5e7bcd9a862c46101abe0e59/latest', axiosHeaders).then(response => {
+                        this.totals = response.data.data
+                    });
+                });
+            } else {
+                axios.get('https://api.jsonbin.io/b/5e7bcd9a862c46101abe0e59/latest', axiosHeaders).then(response => {
+                    this.totals = response.data.data
+                });
+            }
+        })
+    },
+    
     methods: {
         formatValue(value) {
             return new Intl.NumberFormat("es-ES").format(value);
         },
-
         parseDataFromCsv(csv) {
             let data = Papa.parse(csv, {
                 delimiter: ",",
                 newline: "\n"
             }).data;
             
-            data = _.toArray(data)
+            data = toArray(data)
             if (data.length > 2) {
                 let datos = []
-                let obj = _.zipObject( data[0], data[1] );
+                let obj = zipObject( data[0], data[1] );
 
-                datos = _.transform(obj, (data, value, key) => {
+                datos = transform(obj, (data, value, key) => {
                     data[key.trim().toLowerCase()] = value 
                 });
 
                 return datos
             }
-
+            
             return false
         }
     },
-
     watch: {
         info(value){
             if (value) {
@@ -191,11 +220,10 @@ export default {
                 });
             }
         },
-
         spain: {
             immediate: true,
             handler (value) {
-                if (value != false) {
+                if (value) {
                     this.confirmed = value.confirmed
                     this.active = value.active
                     this.recovered = value.recovered
@@ -205,11 +233,10 @@ export default {
                 }
             }
         },
-
         totals: {
             immediate: true,
             handler (value) {
-                if (value != false) {
+                if (value) {
                     if (value.casos && (value.casos) > this.confirmed ) {
                         this.confirmed = value.casos
 
@@ -229,51 +256,11 @@ export default {
                             this.todayCases = value.casos24h
                         }
                     }
-                    
                 }
             }
         },
     },
 
-    created()
-    {
-        let gotcha = 'U2FsdGVkX19nTPOTksKGw8JGYiMmWrrANkHUgv0ay9Ha0c5xWL123qf9X5MJBzH90rrwCLe14QoBE7yOeBhc9tUYrluWGGIgZ5XTDvaPpNM='
-        let secret = this.CryptoJS.AES.decrypt(gotcha, "FCJDq6rELyrCas4").toString(this.CryptoJS.enc.Utf8)
-
-        let axiosHeaders = {
-            headers: { 'secret-key': secret }
-        };
-
-        countapi.hit('api-total-spain').then((result) => {
-            if (result.value % 100 == 0) {
-                axios.get('https://cors-anywhere.herokuapp.com/https://covid19.isciii.es/resources/data.csv', {}, { timeout: 2000 }).then(response => {
-                    
-                    let totals = this.parseDataFromCsv(response.data)
-                    
-                    if (totals != false) {
-
-                        this.totals = totals
-
-                        axios.put('https://api.jsonbin.io/b/5e7bcd9a862c46101abe0e59', {data: totals}, axiosHeaders).then(() => {
-                        }).catch(error => {
-                            console.log(error)
-                        });
-                    }
-                }).catch(() => {
-                    axios.get('https://api.jsonbin.io/b/5e7bcd9a862c46101abe0e59/latest', axiosHeaders).then(response => {
-                        this.totals = response.data.data
-                    }).catch(error => {
-                        console.log(error)
-                    });
-                });
-            } else {
-                axios.get('https://api.jsonbin.io/b/5e7bcd9a862c46101abe0e59/latest', axiosHeaders).then(response => {
-                    this.totals = response.data.data
-                }).catch(error => {
-                    console.log(error)
-                });
-            }
-        })
-    }
+    
 }
 </script>

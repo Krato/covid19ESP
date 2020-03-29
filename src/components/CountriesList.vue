@@ -91,7 +91,7 @@
                 scale="1.2"
             />
         </div>
-        <vuescroll :ops="scrollOptions">
+        <vue-scroll :ops="scrollOptions">
           <template v-for="(country, index) in countryList">
             <div
               :key="index"
@@ -179,7 +179,7 @@
               <!-- </div> -->
             </div>
           </template>
-        </vuescroll>
+        </vue-scroll>
       </div>
     </div>
   </div>
@@ -188,9 +188,9 @@
 <script>
 import Vue from 'vue'
 import { mapState } from 'vuex'
-import _ from 'lodash'
+import { has, sortBy, sumBy } from 'lodash'
 import CountryFlag from 'vue-country-flag'
-import vuescroll from 'vuescroll'
+import VueScroll from 'vuescroll'
 import vSelectMenu from 'v-selectmenu'
 
 Vue.use(vSelectMenu, {
@@ -201,65 +201,64 @@ export default {
     name: 'CountriesList',
     components: {
         CountryFlag,
-        vuescroll,
-        // Cruise
+        VueScroll,
     },
-    data: () => ({
-        search: null,
-        show: false,
-        order: 'confirmed',
-        menuOrder: [
+    data() {
+        return {
+
+            search: null,
+            show: false,
+            order: 'confirmed',
+            menuOrder: [
             // { id: 'none', name: 'Orden por defecto', color: 'text-gray-400'},
-            { id: 'confirmed', name: 'Infectados', color: 'text-yellow-300'},
-            { id: 'recovered', name: 'Recuperados', color: 'text-green-500'},
-            { id: 'deaths', name: 'Muertes', color: 'text-red-500'},
-            { id: 'todayCases', name: 'Infectados hoy', color: 'text-yellow-300'},
-            { id: 'todayDeaths', name: 'Muertes hoy', color: 'text-red-500'},
+                { id: 'confirmed', name: 'Infectados', color: 'text-yellow-300'},
+                { id: 'recovered', name: 'Recuperados', color: 'text-green-500'},
+                { id: 'deaths', name: 'Muertes', color: 'text-red-500'},
+                { id: 'todayCases', name: 'Infectados hoy', color: 'text-yellow-300'},
+                { id: 'todayDeaths', name: 'Muertes hoy', color: 'text-red-500'},
             // { id: 'critical', name: 'Críticos', color: 'text-orange-400'},
-        ],
-        menuTexto: {
-            'none': 'Ordernar por',
-            'confirmed': 'Infectados',
-            'recovered': 'Recuperados',
-            'deaths': 'Muertes',
-            'todayCases': 'Infectados/Hoy',
-            'todayDeaths': 'Muertes/Hoy',
-            'critical': 'Críticos',
-        },
-        menuColor: {
-            'confirmed': 'text-yellow-300',
-            'recovered': 'text-green-500',
-            'deaths': 'text-red-500',
-            'todayCases': 'text-yellow-300',
-            'todayDeaths': 'text-red-500',
-            'critical': 'text-orange-400',
-        },
-        scrollOptions: {
-            scrollPanel: {
-                scrollingX: false,
-                easing: 'easeInQuad'
+            ],
+            menuTexto: {
+                'none': 'Ordernar por',
+                'confirmed': 'Infectados',
+                'recovered': 'Recuperados',
+                'deaths': 'Muertes',
+                'todayCases': 'Infectados/Hoy',
+                'todayDeaths': 'Muertes/Hoy',
+                'critical': 'Críticos',
             },
-            rail: {
-                gutterOfSide: '2px',
-                background: '#1a202c',
-                keepShow: false,
-                opacity: 0.5,
-                size: '8px',
+            menuColor: {
+                'confirmed': 'text-yellow-300',
+                'recovered': 'text-green-500',
+                'deaths': 'text-red-500',
+                'todayCases': 'text-yellow-300',
+                'todayDeaths': 'text-red-500',
+                'critical': 'text-orange-400',
             },
-            bar: {
-                onlyShowBarOnScroll: true,
-                background: '#718096',
-                size: '6px',
-                keepShow: false,
-                opacity: 1,
+            scrollOptions: {
+                scrollPanel: {
+                    scrollingX: false,
+                    easing: 'easeInQuad'
+                },
+                rail: {
+                    gutterOfSide: '2px',
+                    background: '#1a202c',
+                    keepShow: false,
+                    opacity: 0.5,
+                    size: '8px',
+                },
+                bar: {
+                    onlyShowBarOnScroll: true,
+                    background: '#718096',
+                    size: '6px',
+                    keepShow: false,
+                    opacity: 1,
+                }
             }
         }
-    }),
+    },
     computed: {
-        ...mapState({
-            countries: state => state.countries,
-            totals: state => state.totals,
-        }),
+        ...mapState(['countries', 'totals']),
 
         countryList() {
             if (this.countries) {
@@ -270,7 +269,7 @@ export default {
                     })
                 }
 
-                return _.sortBy(this.countries, this.order).reverse();
+                return sortBy(this.countries, this.order).reverse();
             }
 
             return []
@@ -278,7 +277,7 @@ export default {
 
         critical() {
             if (this.countryList) {
-                return _.sumBy(this.countryList, 'critical');
+                return sumBy(this.countryList, 'critical');
             }
 
             return 0
@@ -286,7 +285,7 @@ export default {
 
         todayCasesTotal() {
             if (this.countryList) {
-                return _.sumBy(this.countryList, 'todayCases');
+                return sumBy(this.countryList, 'todayCases');
             }
 
             return 0
@@ -294,7 +293,7 @@ export default {
 
         todayDeathsTotal() {
             if (this.countryList) {
-                return _.sumBy(this.countryList, 'todayDeaths');
+                return sumBy(this.countryList, 'todayDeaths');
             }
 
             return 0
@@ -309,7 +308,7 @@ export default {
         },
 
         changeCountry(country) {
-            if (_.has(country, 'iso2')) {
+            if (has(country, 'iso2')) {
                 this.$emit('country', country.iso2)    
             }
         },

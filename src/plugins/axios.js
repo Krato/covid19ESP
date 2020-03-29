@@ -35,28 +35,12 @@ _axios.interceptors.response.use(
     },
     function(error) {
     // Do something with response error
+        console.error(error)
         return Promise.reject(error);
     }
 );
 
-Plugin.install = function(Vue, options) {
-    Vue.axios = _axios;
-    window.axios = _axios;
-    window.axios_options = options
-    Object.defineProperties(Vue.prototype, {
-        axios: {
-            get() {
-                return _axios;
-            }
-        },
-        $axios: {
-            get() {
-                return _axios;
-            }
-        },
-    });
-};
 
-Vue.use(Plugin)
+Vue.prototype.$http = _axios;
 
-export default Plugin;
+export default _axios;

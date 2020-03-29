@@ -34,65 +34,62 @@
 </template>
 
 <script>
-import 'vue-good-table/dist/vue-good-table.css'
-import { VueGoodTable } from 'vue-good-table'
 
+import 'vue-good-table/dist/vue-good-table.css'
 import { mapState } from 'vuex'
+import { VueGoodTable } from 'vue-good-table'
 
 export default {
     name: 'Countries',
     components: {
         VueGoodTable
     },
-    data: () => ({
-        raw: {},
-        columns: [
-            {
-                label: 'País',
-                field: 'countryRegion',
-                type: 'string',
-                filterOptions: {
-                    enabled: true,
-                    filterValue: "",
-                    placeholder: 'Filtra por Pais',
+    data() {
+        return {
+            raw: {},
+            columns: [
+                {
+                    label: 'País',
+                    field: 'countryRegion',
+                    type: 'string',
+                    filterOptions: {
+                        enabled: true,
+                        filterValue: "",
+                        placeholder: 'Filtra por Pais',
+                    },
                 },
-            },
-            {
-                label: 'Provincia',
-                field: 'provinceState',
-                type: 'string',
-                filterOptions: {
-                    enabled: true,
-                    filterValue: "",
-                    placeholder: 'Filtra por Provincia',
+                {
+                    label: 'Provincia',
+                    field: 'provinceState',
+                    type: 'string',
+                    filterOptions: {
+                        enabled: true,
+                        filterValue: "",
+                        placeholder: 'Filtra por Provincia',
+                    },
                 },
-            },
-            {
-                label: 'Confirmados',
-                field: 'confirmed',
-                type: 'number',
-            },
-            {
-                label: 'Muertes',
-                field: 'deaths',
-                type: 'number',
-            },
-            {
-                label: 'Recuperados',
-                field: 'recovered',
-                type: 'number',
-            },
-        ]
-    }),
-
+                {
+                    label: 'Confirmados',
+                    field: 'confirmed',
+                    type: 'number',
+                },
+                {
+                    label: 'Muertes',
+                    field: 'deaths',
+                    type: 'number',
+                },
+                {
+                    label: 'Recuperados',
+                    field: 'recovered',
+                    type: 'number',
+                },
+            ]
+        }
+    },
     computed: {
         ...mapState({
             countries: state => state.countries
         }),
-    },
-
-    mounted() {
-        //
     },
     methods: {
         onRowClick(params) {

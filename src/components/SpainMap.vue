@@ -2,7 +2,7 @@
     <div ref="chartmap" id="chartmap" class="w-full " />
 </template>
 <script>
-import _ from 'lodash'
+import { has } from 'lodash'
 require('amcharts3/amcharts/amcharts.js')
 require('ammap3/ammap/ammap')
 require('ammap3/ammap/maps/js/spainProvincesHigh.js')
@@ -20,20 +20,22 @@ export default {
         }
     },
 
-    data: () => ({
-        map: null,
-        mapData: null,
-        clickedCountry: null,
-        historyClicked: null,
-        colors: {
-            low: '#FEFCBF',
-            normal: '#FAF089',
-            high: '#ED8936',
-            danger: '#E53E3E'
-        },
-        mapImages: [],
-        latlong: []
-    }),
+    data() {
+        return {
+            map: null,
+            mapData: null,
+            clickedCountry: null,
+            historyClicked: null,
+            colors: {
+                low: '#FEFCBF',
+                normal: '#FAF089',
+                high: '#ED8936',
+                danger: '#E53E3E'
+            },
+            mapImages: [],
+            latlong: []
+        }
+    },
 
     mounted() {
         setTimeout(() => {
@@ -51,14 +53,14 @@ export default {
                 this.spain.forEach((provincia) => {
                     for (let i = 0; i < tempProvinces.length; i++) {
                         let item = tempProvinces[i];
-                        if (_.has(item, 'title')) {
-                            let comunity = spainRegions(provincia.ccaa, true)
-                            if (comunity) {
+                        if (has(item, 'title')) {
+                            let community = spainRegions(provincia.ccaa, true)
+                            if (community) {
                                 provinces.push({
                                     id: item.id,
-                                    title: comunity.code,
-                                    lat: comunity.lat,
-                                    long: comunity.long,
+                                    title: community.code,
+                                    lat: community.lat,
+                                    long: community.long,
                                     value: provincia.casos_totales,
                                     color: this.getHeatColor(provincia.casos_totales)
                                 })
@@ -147,8 +149,8 @@ export default {
                                 return
                             }
                             var area = e.mapObject;
-                            var comunity = spainRegions(area.title)
-                            let found = this.getCounter(comunity.code)
+                            var community = spainRegions(area.title)
+                            let found = this.getCounter(community.code)
                             console.log(found)
                         }
                     },
@@ -159,8 +161,8 @@ export default {
                                 return
                             }
                             var area = e.mapObject;
-                            var comunity = spainRegions(area.title)
-                            this.getCounter(comunity.code)
+                            var community = spainRegions(area.title)
+                            this.getCounter(community.code)
                         }
                     }
                 ]
@@ -183,9 +185,9 @@ export default {
             return this.colors.low
         },
 
-        getCounter(comunity) {
+        getCounter(community) {
             return this.spain.find(info => {
-                return info.name == comunity
+                return info.name == community
             })
         }
     },

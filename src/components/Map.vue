@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import _ from 'lodash'
+import { forEach, map } from 'lodash'
 import * as am4core from "@amcharts/amcharts4/core"
 import * as am4maps from "@amcharts/amcharts4/maps"
 import am4geodata_lang_ES from "@amcharts/amcharts4-geodata/lang/ES"
@@ -63,33 +63,33 @@ export default {
         }
     },
 
-    data: () => ({
-        show: false,
-        map: null,
-        mapPolygons: null,
-        mapData: null,
-        clickedCountry: null,
-        historyClicked: null,
-        colors: {
-            lowest: '#CBD5E0',
-            low: '#90CDF4',
-            lowMiddle: '#FEEBC8',
-            normal: '#FAF089',
-            high: '#F6AD55',
-            danger: '#E53E3E'
-        },
-    }),
+    data() {
+        return {
+            show: false,
+            map: null,
+            mapPolygons: null,
+            mapData: null,
+            clickedCountry: null,
+            historyClicked: null,
+            colors: {
+                lowest: '#CBD5E0',
+                low: '#90CDF4',
+                lowMiddle: '#FEEBC8',
+                normal: '#FAF089',
+                high: '#F6AD55',
+                danger: '#E53E3E'
+            }
+        }
+    },
 
     computed:{
-        ...mapState({
-            countries: state => state.countries
-        }),
+        ...mapState(['countries']),
 
         series() {
-            return _.map(this.countries, (item) => ({
+            return map(this.countries, (item) => ({
                 id: item.iso2,
                 name: item.country,
-                value: (item.confirmed != 0) ? item.confirmed : 0,
+                value: item.confirmed ? item.confirmed : 0,
                 fill: this.getHeatColor(item.confirmed),
                 color: '#e2e2e2'
             }))
@@ -118,7 +118,7 @@ export default {
         mapPolygons(value) {
             if (value) {
                 setTimeout(() => {
-                    _.forEach(this.series, (country) => {
+                    forEach(this.series, (country) => {
                         let countryPoligon = value.getPolygonById(country.id);
                         if (countryPoligon) {
                             countryPoligon.fill = this.getHeatColor(country.value)
@@ -130,12 +130,6 @@ export default {
             }
         }
 
-    },
-
-    mounted() {
-        // this.$nextTick(() => {
-        //  this.createMap()    
-        // })
     },
 
     beforeDestroy() {
@@ -184,7 +178,7 @@ export default {
             // Set projection
             map.projection = new am4maps.projections.Miller();
 
-            // var media = _.meanBy(this.series, (item) => { 
+            // var media = meanBy(this.series, (item) => { 
             //  return item.value; 
             // });
 
@@ -248,13 +242,8 @@ export default {
 
             this.map = map
 
-            this.setCountriesData()
         },
 
-        setCountriesData() {
-            this.$nextTick(() => {
-            })
-        }
     }
 }
 </script>

@@ -86,11 +86,13 @@ import Modal from './Modal'
 export default {
     name: 'Help',
     components: {
-        'modal': Modal
+        Modal
     },
-    data: () => ({
-        showModal: false
-    }), 
+    data() {
+        return {
+            showModal: false
+        }
+    }, 
 
     methods: {
         showHelp() {

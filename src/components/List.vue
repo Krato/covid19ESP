@@ -41,9 +41,11 @@ export default {
         }
     },
 
-    data: () => ({
-        show: false
-    }),
+    data() {
+        return {
+            show: false
+        }
+    },
 
     mounted() {
         setTimeout(() => {

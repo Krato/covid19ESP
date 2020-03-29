@@ -40,32 +40,32 @@
                 <div class="w-full h-64">
                     <div v-if="!show" class="w-full h-full flex justify-center items-center">
                         <vue-loaders
-                            name="ball-scale"
                             color="#90CDF4"
+                            name="ball-scale"
                             scale="1.2"
                         />
                     </div>
 
                     <chart
-                        v-if="show && type == 'summation'"
                         :key="'chart_'+ca"
-                        ref="ca_chart"
-                        width="100%"
-                        height="100%"
-                        type="area"
                         :options="options"
                         :series="series"
+                        height="100%"
+                        ref="ca_chart"
+                        type="area"
+                        v-if="show && type == 'summation'"
+                        width="100%"
                     />
 
                     <chart
-                        v-if="show && type == 'daily'"
                         :key="'chart_daily_'+ca"
-                        ref="ca_chart_daily"
-                        width="100%"
-                        height="100%"
-                        type="area"
                         :options="options"
                         :series="seriesByDay"
+                        height="100%"
+                        ref="ca_chart_daily"
+                        type="area"
+                        v-if="show && type == 'daily'"
+                        width="100%"
                     />
                 </div>
             </div>
@@ -76,8 +76,8 @@
 <script>
 import { mapState, mapGetters } from 'vuex'
 
-import _ from 'lodash'
-import axios from 'axios'
+import { find, forOwn, map, sortBy } from 'lodash'
+import axios from '@/plugins/axios'
 
 import VueApexCharts from 'vue-apexcharts'
 var es = require("apexcharts/dist/locales/es.json")
@@ -98,91 +98,86 @@ export default {
     props: {
         ca: {
             required: false,
-            default: 'all'
+            default: 'all',
+            type: String,
         }
     },
-    data: () => ({
-        show: false,
-        type: 'summation',
-        chart: null,
-        confirmed: [],
-        deaths: [],
-        recovered: [],
-        critical: [],
-        seriesData: [],
-        totalsSpain: false,
-        now: null,
-        options: {
-            chart: {
-                id: 'by_ccaa',
-                width: 'auto',
-                height: '100%',
-                foreColor: '#fff',
-                toolbar: {
-                    show: false
+    data() {
+        return {
+
+            chart: null,
+            confirmed: [],
+            critical: [],
+            deaths: [],
+            now: null,
+            options: {
+                chart: {
+                    id: 'by_ccaa',
+                    width: 'auto',
+                    height: '100%',
+                    foreColor: '#fff',
+                    toolbar: {
+                        show: false
+                    },
+                    locales: [es],
+                    defaultLocale: 'es',
                 },
-                locales: [es],
-                defaultLocale: 'es',
-            },
-            title: {
-                text: '',
-                align: 'left',
-            },
-            // subtitle: {
-            //     text: 'Última actualización a las: 1511',
-            //     align: 'left'
-            // },
-            colors: ['#FAF089', '#48BB78', '#F56565', '#F6AD55'],
-            grid: {
-                borderColor: "#40475D",
-            },
-            stroke: {
-                curve: 'smooth',
-                width: 3
-            },
-            xaxis: {
-                type: 'datetime',
-            },
-            tooltip: {
-                theme: 'dark',
-                shared: true,
-                x: {
-                    formatter: (title) => new Date(title).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }),
-                    title: {
+                title: {
+                    text: '',
+                    align: 'left',
+                },
+                // subtitle: {
+                //     text: 'Última actualización a las: 1511',
+                //     align: 'left'
+                // },
+                colors: ['#FAF089', '#48BB78', '#F56565', '#F6AD55'],
+                grid: {
+                    borderColor: "#40475D",
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 3
+                },
+                xaxis: {
+                    type: 'datetime',
+                },
+                tooltip: {
+                    theme: 'dark',
+                    shared: true,
+                    x: {
                         formatter: (title) => new Date(title).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }),
+                        title: {
+                            formatter: (title) => new Date(title).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }),
+                        }
                     }
-                }
-            },
-            dataLabels: {
-                enabled: false
-            },
-            legend: {
-                show: true,
-                floating: true,
-                horizontalAlign: 'right',
-                onItemClick: {
-                    toggleDataSeries: true
                 },
-                position: 'top',
-                offsetY: -5,
+                dataLabels: {
+                    enabled: false
+                },
+                legend: {
+                    show: true,
+                    floating: true,
+                    horizontalAlign: 'right',
+                    onItemClick: {
+                        toggleDataSeries: true
+                    },
+                    position: 'top',
+                    offsetY: -5,
+                },
             },
-        },
-    }),
+            recovered: [],
+            seriesData: [],
+            show: false,
+            totalsSpain: false,
+            type: 'summation',
+        }
+    },
     computed: {
-
-        ...mapState({
-            spain: state => state.spain,
-            countries: state => state.countries
-        }),
-
+        ...mapState(['spain', 'countries']),
         ...mapGetters(['nowByCountry']),
 
         lastSpain() {
-            if (this.countries != false) {
-                return this.nowByCountry('es')
-            }
-
-            return false
+            return this.countries && this.nowByCountry('es');
         },
 
         caSelected: {
@@ -201,27 +196,13 @@ export default {
             return communities
         },
 
-        // getDropdown() {
-
-        //     if (this.communities) {
-        //         let lastDay = _.transform(this.communities, (item, value) => {
-        //             item[value.CCAA] = { 
-        //                 total: value[this.now.valueOf()]
-        //             }
-        //         });
-                
-        //         lastDay = _.sortBy(lastDay, 'total')
-        //     }
-
-        //     return false
-        // },
 
         series() {
 
-            let caConfirmed = _.find(this.confirmed, {'CCAA': this.ca})
-            let caDeaths = _.find(this.deaths, {'CCAA': this.ca})
-            let caRecovered = _.find(this.recovered, {'CCAA': this.ca})
-            let caCritical = _.find(this.critical, {'CCAA': this.ca})
+            let caConfirmed = find(this.confirmed, {'CCAA': this.ca})
+            let caDeaths = find(this.deaths, {'CCAA': this.ca})
+            let caRecovered = find(this.recovered, {'CCAA': this.ca})
+            let caCritical = find(this.critical, {'CCAA': this.ca})
             let series = []
             let confirmed = []
 
@@ -229,7 +210,7 @@ export default {
 
                 //Confirmed
                 
-                _.forOwn(caConfirmed, function(value, key) { 
+                forOwn(caConfirmed, function(value, key) { 
                     confirmed.push({
                         x: parseInt(key),
                         y: parseInt(value)
@@ -248,7 +229,7 @@ export default {
             if (this.ca && caRecovered) {
                 //Recovered
                 let recovered = []
-                _.forOwn(caRecovered, function(value, key) { 
+                forOwn(caRecovered, function(value, key) { 
                     recovered.push({
                         x: parseInt(key),
                         y: parseInt(value)
@@ -259,13 +240,13 @@ export default {
                 if (confirmed.length > 0) {
                     let oldValue = 0;
                     for (let i = 0; i < confirmed.length; i++) {
-                        if (!_.find(recovered, {x: confirmed[i].x})) {
+                        if (!find(recovered, {x: confirmed[i].x})) {
                             recovered.push({
                                 x: confirmed[i].x,
                                 y: oldValue
                             })
                         } else {
-                            let found = _.find(recovered, {x: confirmed[i].x})
+                            let found = find(recovered, {x: confirmed[i].x})
                             if (found) {
                                 oldValue = found.y
                             }
@@ -277,14 +258,14 @@ export default {
 
                 series.push({
                     name: 'Recuperados',
-                    data: _.sortBy(recovered, 'x')
+                    data: sortBy(recovered, 'x')
                 })
             }
 
             if (this.ca && caDeaths) {
                 //Deaths
                 let deaths = []
-                _.forOwn(caDeaths, function(value, key) { 
+                forOwn(caDeaths, function(value, key) { 
                     deaths.push({
                         x: parseInt(key),
                         y: parseInt(value)
@@ -295,13 +276,13 @@ export default {
                 if (confirmed.length > 0) {
                     let oldValue = 0;
                     for (let i = 0; i < confirmed.length; i++) {
-                        if (!_.find(deaths, {x: confirmed[i].x})) {
+                        if (!find(deaths, {x: confirmed[i].x})) {
                             deaths.push({
                                 x: confirmed[i].x,
                                 y: oldValue
                             })
                         } else {
-                            let found = _.find(deaths, {x: confirmed[i].x})
+                            let found = find(deaths, {x: confirmed[i].x})
                             if (found) {
                                 oldValue = found.y
                             }
@@ -313,14 +294,14 @@ export default {
 
                 series.push({
                     name: 'Muertes',
-                    data: _.sortBy(deaths, 'x')
+                    data: sortBy(deaths, 'x')
                 })
             }
 
             if (this.ca && caCritical) {
                 //Critical
                 let critical = []
-                _.forOwn(caCritical, function(value, key) { 
+                forOwn(caCritical, function(value, key) { 
                     critical.push({
                         x: parseInt(key),
                         y: parseInt(value)
@@ -331,13 +312,13 @@ export default {
                 if (confirmed.length > 0) {
                     let oldValue = 0;
                     for (let i = 0; i < confirmed.length; i++) {
-                        if (!_.find(critical, {x: confirmed[i].x})) {
+                        if (!find(critical, {x: confirmed[i].x})) {
                             critical.push({
                                 x: confirmed[i].x,
                                 y: oldValue
                             })
                         } else {
-                            let found = _.find(critical, {x: confirmed[i].x})
+                            let found = find(critical, {x: confirmed[i].x})
                             if (found) {
                                 oldValue = found.y
                             }
@@ -349,7 +330,7 @@ export default {
 
                 series.push({
                     name: 'Críticos',
-                    data: _.sortBy(critical, 'x')
+                    data: sortBy(critical, 'x')
                 })
             }
 
@@ -358,10 +339,10 @@ export default {
 
         seriesByDay() {
 
-            let caConfirmed = _.find(this.confirmed, {'CCAA': this.ca})
-            let caRecovered = _.find(this.recovered, {'CCAA': this.ca})
-            let caDeaths = _.find(this.deaths, {'CCAA': this.ca})
-            let caCritical = _.find(this.critical, {'CCAA': this.ca})
+            let caConfirmed = find(this.confirmed, {'CCAA': this.ca})
+            let caRecovered = find(this.recovered, {'CCAA': this.ca})
+            let caDeaths = find(this.deaths, {'CCAA': this.ca})
+            let caCritical = find(this.critical, {'CCAA': this.ca})
             
             let series = []
             let confirmed = []
@@ -369,7 +350,7 @@ export default {
 
                 //Confirmed
                 
-                _.forOwn(caConfirmed, function(value, key) { 
+                forOwn(caConfirmed, function(value, key) { 
                     confirmed.push({
                         x: parseInt(key),
                         y: parseInt(value)
@@ -377,7 +358,7 @@ export default {
                 });
                 confirmed.shift()
 
-                confirmed = _.sortBy(confirmed, 'x')
+                confirmed = sortBy(confirmed, 'x')
 
                 let lastValue = 0;
                 for (let i = 0; i < confirmed.length; i++) {
@@ -396,7 +377,7 @@ export default {
             if (this.ca && caRecovered) {
                 //Recovered
                 let recovered = []
-                _.forOwn(caRecovered, function(value, key) { 
+                forOwn(caRecovered, function(value, key) { 
                     recovered.push({
                         x: parseInt(key),
                         y: parseInt(value)
@@ -407,13 +388,13 @@ export default {
                 if (confirmed.length > 0) {
                     let oldValue = 0;
                     for (let i = 0; i < confirmed.length; i++) {
-                        if (!_.find(recovered, {x: confirmed[i].x})) {
+                        if (!find(recovered, {x: confirmed[i].x})) {
                             recovered.push({
                                 x: confirmed[i].x,
                                 y: oldValue
                             })
                         } else {
-                            let found = _.find(recovered, {x: confirmed[i].x})
+                            let found = find(recovered, {x: confirmed[i].x})
                             if (found) {
                                 oldValue = found.y
                             }
@@ -421,7 +402,7 @@ export default {
                     }
                 }
 
-                recovered = _.sortBy(recovered, 'x')
+                recovered = sortBy(recovered, 'x')
 
                 let lastValue = 0;
                 for (let e = 0; e < recovered.length; e++) {
@@ -432,14 +413,14 @@ export default {
 
                 series.push({
                     name: 'Recuperados',
-                    data: _.sortBy(recovered, 'x')
+                    data: sortBy(recovered, 'x')
                 })
             }
 
             if (this.ca && caDeaths) {
                 //Deaths
                 let deaths = []
-                _.forOwn(caDeaths, function(value, key) { 
+                forOwn(caDeaths, function(value, key) { 
                     deaths.push({
                         x: parseInt(key),
                         y: parseInt(value)
@@ -450,13 +431,13 @@ export default {
                 if (confirmed.length > 0) {
                     let oldValue = 0;
                     for (let i = 0; i < confirmed.length; i++) {
-                        if (!_.find(deaths, {x: confirmed[i].x})) {
+                        if (!find(deaths, {x: confirmed[i].x})) {
                             deaths.push({
                                 x: confirmed[i].x,
                                 y: oldValue
                             })
                         } else {
-                            let found = _.find(deaths, {x: confirmed[i].x})
+                            let found = find(deaths, {x: confirmed[i].x})
                             if (found) {
                                 oldValue = found.y
                             }
@@ -464,7 +445,7 @@ export default {
                     }
                 }
 
-                deaths = _.sortBy(deaths, 'x')
+                deaths = sortBy(deaths, 'x')
                 let lastValue = 0;
                 for (let d = 0; d < deaths.length; d++) {
                     deaths[d].y = (deaths[d].y - lastValue)
@@ -482,7 +463,7 @@ export default {
             if (this.ca && caCritical) {
                 //Critical
                 let critical = []
-                _.forOwn(caCritical, function(value, key) { 
+                forOwn(caCritical, function(value, key) { 
                     critical.push({
                         x: parseInt(key),
                         y: parseInt(value)
@@ -493,13 +474,13 @@ export default {
                 if (confirmed.length > 0) {
                     let oldValue = 0;
                     for (let i = 0; i < confirmed.length; i++) {
-                        if (!_.find(critical, {x: confirmed[i].x})) {
+                        if (!find(critical, {x: confirmed[i].x})) {
                             critical.push({
                                 x: confirmed[i].x,
                                 y: oldValue
                             })
                         } else {
-                            let found = _.find(critical, {x: confirmed[i].x})
+                            let found = find(critical, {x: confirmed[i].x})
                             if (found) {
                                 oldValue = found.y
                             }
@@ -508,7 +489,7 @@ export default {
                 }
 
                 //orden
-                critical = _.sortBy(critical, 'x')
+                critical = sortBy(critical, 'x')
 
                 let lastValue = 0;
                 for (let y = 0; y < critical.length; y++) {
@@ -519,7 +500,7 @@ export default {
 
                 series.push({
                     name: 'Críticos',
-                    data: _.sortBy(critical, 'x')
+                    data: sortBy(critical, 'x')
                 })
             }
 
@@ -627,7 +608,7 @@ export default {
 
                 let headers = data.shift()
                 // data.pop()
-                let cases = _.map(data, (ca) => {
+                let cases = map(data, (ca) => {
                     let caInfo = [] 
                     for (var i = 1; i < headers.length; i++) {
                         if (i == 1) {
@@ -643,8 +624,6 @@ export default {
 
                 this.confirmed = cases
 
-            }).catch(error => {
-                console.log(error)
             });
         },
 
@@ -659,7 +638,7 @@ export default {
 
                 let headers = data.shift()
                 // data.pop()
-                let cases = _.map(data, (ca) => {
+                let cases = map(data, (ca) => {
                     let caInfo = [] 
                     for (var i = 1; i < headers.length; i++) {
                         if (i == 1) {
@@ -675,8 +654,6 @@ export default {
 
                 this.deaths = cases
 
-            }).catch(error => {
-                console.log(error)
             });
         },
 
@@ -691,7 +668,7 @@ export default {
 
                 let headers = data.shift()
                 // data.pop()
-                let cases = _.map(data, (ca) => {
+                let cases = map(data, (ca) => {
                     let caInfo = [] 
                     for (var i = 1; i < headers.length; i++) {
                         if (i == 1) {
@@ -707,8 +684,6 @@ export default {
 
                 this.recovered = cases
 
-            }).catch(error => {
-                console.log(error)
             });
         },
 
@@ -723,7 +698,7 @@ export default {
 
                 let headers = data.shift()
                 // data.pop()
-                let cases = _.map(data, (ca) => {
+                let cases = map(data, (ca) => {
                     let caInfo = [] 
                     for (var i = 1; i < headers.length; i++) {
                         if (i == 1) {
@@ -739,8 +714,6 @@ export default {
 
                 this.critical = cases
 
-            }).catch(error => {
-                console.log(error)
             });
         },
 
@@ -754,8 +727,6 @@ export default {
 
             axios.get('https://api.jsonbin.io/b/5e7bcd9a862c46101abe0e59/latest', axiosHeaders).then(response => {
                 this.totalsSpain = response.data.data
-            }).catch(error => {
-                console.log(error)
             });
         },
 
@@ -763,7 +734,7 @@ export default {
 
             if (this.ca == 'Total') {
                 if (this.lastSpain) {
-                    let lastDay = _.find(data, {x: this.now.valueOf()})
+                    let lastDay = find(data, {x: this.now.valueOf()})
                     if (lastDay) {
                         lastDay.y = this.lastSpain[keySpain]
                     } else {
@@ -774,9 +745,9 @@ export default {
                     }
                 } 
             } else if (this.spain) {
-                let ccaa = _.find(this.spain, {ccaa: this.ca})
+                let ccaa = find(this.spain, {ccaa: this.ca})
                 if (ccaa) {
-                    let lastDay = _.find(data, {x: this.now.valueOf()})
+                    let lastDay = find(data, {x: this.now.valueOf()})
 
                     if (lastDay) {
                         lastDay.y = ccaa[key]

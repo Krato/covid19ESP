@@ -1,30 +1,27 @@
+import { forEach, has, toArray, sortBy, transform } from 'lodash';
+import axios from '@/plugins/axios';
+
+import cheerio from 'cheerio'
+import countapi from 'countapi-js';
+import countriesIso from "i18n-iso-countries";
+import Papa from 'papaparse'
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
+
+import { spanishCountries } from '@/plugins/spanishCountries'
+
 
 Vue.use(Vuex)
-
-var countriesIso = require("i18n-iso-countries");
-import _ from 'lodash';
-import cheerio from 'cheerio'
-import { spanishCountries } from '../plugins/spanishCountries'
-// import csvJSON from '../plugins/csvJSON'
-import Papa from 'papaparse'
-//import dayjs from 'dayjs'
-import VueCryptojs from 'vue-cryptojs'
-Vue.use(VueCryptojs)
-
-import countapi from 'countapi-js';
 
 
 export default new Vuex.Store({
     state: {
-        data: null,
-        totals: null,
-        daily: [],
         countries: [],
-        worldometer: [],
+        daily: [],
+        data: null,
         spain: [],
+        totals: null,
+        worldometer: [],
         yesterday: []
     },
     getters: {
@@ -33,7 +30,7 @@ export default new Vuex.Store({
             let deaths = 0
             let recovered = 0
 
-            if (_.has(state.data, 'confirmed')) {
+            if (has(state.data, 'confirmed')) {
                 confirmed = state.data.confirmed.locations.find(info => {
                     return info.country_code.match(iso.toUpperCase())
                 })
@@ -45,9 +42,9 @@ export default new Vuex.Store({
 
                     let histories = {};
                     china.forEach((item) => {
-                        _.forEach(item.history, (history, key) => {
+                        forEach(item.history, (history, key) => {
                             let total = 0;
-                            if (_.has(histories, key)) {
+                            if (has(histories, key)) {
                                 total = histories[key];
                             }
                             Object.assign(histories, {[key]: total + history});
@@ -59,7 +56,7 @@ export default new Vuex.Store({
             }
 
             //Deaths
-            if (_.has(state.data, 'deaths')) {
+            if (has(state.data, 'deaths')) {
                 deaths = state.data.deaths.locations.find(info => {
                     return info.country_code.match(iso.toUpperCase())
                 })
@@ -71,9 +68,9 @@ export default new Vuex.Store({
 
                     let histories = {};
                     china.forEach((item) => {
-                        _.forEach(item.history, (history, key) => {
+                        forEach(item.history, (history, key) => {
                             let total = 0;
-                            if (_.has(histories, key)) {
+                            if (has(histories, key)) {
                                 total = histories[key];
                             }
                             Object.assign(histories, {[key]: total + history});
@@ -83,11 +80,9 @@ export default new Vuex.Store({
                     deaths.history = histories
                 }
             }
-            
-            
 
             //Recovered
-            if (_.has(state.data, 'recovered')) {
+            if (has(state.data, 'recovered')) {
                 recovered = state.data.recovered.locations.find(info => {
                     return info.country_code.match(iso.toUpperCase())
                 })
@@ -99,9 +94,9 @@ export default new Vuex.Store({
 
                     let histories = {};
                     china.forEach((item) => {
-                        _.forEach(item.history, (history, key) => {
+                        forEach(item.history, (history, key) => {
                             let total = 0;
-                            if (_.has(histories, key)) {
+                            if (has(histories, key)) {
                                 total = histories[key];
                             }
                             Object.assign(histories, {[key]: total + history});
@@ -129,26 +124,22 @@ export default new Vuex.Store({
             }
 
             return  {
-                country: country.country,
-                confirmed: country.confirmed,
-                deaths: country.deaths,
-                recovered: country.recovered,
                 active: (country.confirmed - country.deaths - country.recovered),
-                serious: country.critical,
-                newCases: country.todayCases
+                confirmed: country.confirmed,
+                country: country.country,
+                deaths: country.deaths,
+                newCases: country.todayCases,
+                recovered: country.recovered,
+                serious: country.critical
             }
         },
     },
-    mutations: {
-    },
+    mutations: {},
     actions: {
-
         getData() {
             this.state.data = null
-            axios.get('https://coronavirus-tracker-api.herokuapp.com/all').then(response => {
-                this.state.data = response.data;
-            }).catch(error => {
-                console.log(error)
+            axios.get('https://coronavirus-tracker-api.herokuapp.com/all').then(({data}) => {
+                this.state.data = data;
             });
         },
 
@@ -159,20 +150,21 @@ export default new Vuex.Store({
 
             this.state.totals = false
 
-            axios.get('https://corona.lmao.ninja/all').then(response => {
+            axios.get('https://corona.lmao.ninja/all').then(({data}) => {
+
                 this.state.totals = {
-                    confirmed: response.data.cases,
-                    recovered: response.data.recovered,
-                    deaths: response.data.deaths,
-                    lastUpdate: new Date(response.data.updated),
+                    confirmed: data.cases,
+                    recovered: data.recovered,
+                    deaths: data.deaths,
+                    lastUpdate: new Date(data.updated),
                 };
             })
         },
 
         getCountDailyData() {
-            axios.get('https://covid19.mathdro.id/api/daily').then(response => {
+            axios.get('https://covid19.mathdro.id/api/daily').then(({data}) => {
                 let daily = []
-                response.data.map(el => {
+                data.map(el => {
                     let dataCountry = {
                         china: el.mainlandChina,
                         otherLocations: el.otherLocations,
@@ -185,15 +177,15 @@ export default new Vuex.Store({
                     daily.push(dataCountry)
                 })
 
-                let confirmed = _.transform(daily, (item, value) => {
+                let confirmed = transform(daily, (item, value) => {
                     item[value.date] = value.confirmed
                 });
 
-                let recovered = _.transform(daily, (item, value) => {
+                let recovered = transform(daily, (item, value) => {
                     item[value.date] = value.recovered
                 });
 
-                let deaths = _.transform(daily, (item, value) => {
+                let deaths = transform(daily, (item, value) => {
                     item[value.date] = value.deaths
                 });
 
@@ -208,13 +200,12 @@ export default new Vuex.Store({
 
         getCountData() {
             countriesIso.registerLocale(require("i18n-iso-countries/langs/en.json"));
-
             
             // https://corona.lmao.ninja/countries
             // https://coronavirus-19-api.herokuapp.com/countries
-            axios.get('https://corona.lmao.ninja/countries').then(response => {
+            axios.get('https://corona.lmao.ninja/countries').then(({data}) => {
                 let countries = [];
-                response.data.map(el => {
+                data.map(el => {
 
                     let iso3 = countriesIso.getAlpha3Code(el.country, 'en');
                     let iso2 = countriesIso.getAlpha2Code(el.country, 'en');
@@ -327,7 +318,7 @@ export default new Vuex.Store({
             let gotcha = 'U2FsdGVkX19nTPOTksKGw8JGYiMmWrrANkHUgv0ay9Ha0c5xWL123qf9X5MJBzH90rrwCLe14QoBE7yOeBhc9tUYrluWGGIgZ5XTDvaPpNM='
             let secret = Vue.CryptoJS.AES.decrypt(gotcha, "FCJDq6rELyrCas4").toString(Vue.CryptoJS.enc.Utf8)
 
-            let axiosHeaders = {
+            let headers = {
                 headers: { 'secret-key': secret }
             };
 
@@ -341,7 +332,7 @@ export default new Vuex.Store({
                             newline: "\n"
                         }).data;
                         
-                        data = _.toArray(data)
+                        data = toArray(data)
                         data.shift()
                         data.pop()
 
@@ -353,27 +344,21 @@ export default new Vuex.Store({
                         }
 
                         if (result.value % 6 == 0) {
-                            axios.put('https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e', {data: datos}, axiosHeaders).then(() => {
-                            }).catch(error => {
-                                console.log(error)
-                            });
+                            axios.put('https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e', {data: datos}, headers).then(() => {
+                            })
                         }
                         
                         this.state.spain = datos
                     }).catch(() => {
-                        axios.get('https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e/latest', axiosHeaders).then(response => {
+                        axios.get('https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e/latest', headers).then(response => {
                             this.state.spain = response.data.data
-                        }).catch(error => {
-                            console.log(error)
-                        });
+                        })
                     })
 
 
                 } else {
-                    axios.get('https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e/latest', axiosHeaders).then(response => {
+                    axios.get('https://api.jsonbin.io/b/5e77753dd3ffb01648ac593e/latest', headers).then(response => {
                         this.state.spain = response.data.data
-                    }).catch(error => {
-                        console.log(error)
                     });
                 } 
             });  
@@ -384,7 +369,7 @@ export default new Vuex.Store({
             let gotcha = 'U2FsdGVkX19nTPOTksKGw8JGYiMmWrrANkHUgv0ay9Ha0c5xWL123qf9X5MJBzH90rrwCLe14QoBE7yOeBhc9tUYrluWGGIgZ5XTDvaPpNM='
             let secret = Vue.CryptoJS.AES.decrypt(gotcha, "FCJDq6rELyrCas4").toString(Vue.CryptoJS.enc.Utf8)
 
-            let axiosHeaders = {
+            let headers = {
                 headers: { 'secret-key': secret }
             };
 
@@ -396,22 +381,16 @@ export default new Vuex.Store({
                         ccaa.pop()
                         this.state.spain = ccaa
 
-                        axios.put('https://api.jsonbin.io/b/5e79e3ccf14dd14dd2909c5d', {data: ccaa}, axiosHeaders).then(() => {
-                        }).catch(error => {
-                            console.log(error)
-                        });
+                        axios.put('https://api.jsonbin.io/b/5e79e3ccf14dd14dd2909c5d', {data: ccaa}, headers).then(() => {
+                        })
                     }).catch(() => {
-                        axios.get('https://api.jsonbin.io/b/5e79e3ccf14dd14dd2909c5d/latest', axiosHeaders).then(response => {
+                        axios.get('https://api.jsonbin.io/b/5e79e3ccf14dd14dd2909c5d/latest', headers).then(response => {
                             this.state.spain = response.data.data
-                        }).catch(error => {
-                            console.log(error)
-                        });
+                        })
                     });
                 } else {
-                    axios.get('https://api.jsonbin.io/b/5e79e3ccf14dd14dd2909c5d/latest', axiosHeaders).then(response => {
+                    axios.get('https://api.jsonbin.io/b/5e79e3ccf14dd14dd2909c5d/latest', headers).then(response => {
                         this.state.spain = response.data.data
-                    }).catch(error => {
-                        console.log(error)
                     });
                 }
             })
@@ -429,7 +408,7 @@ export default new Vuex.Store({
             //         .groupBy('country')
             //         .map((country, id) => ({
             //             name: id,
-            //             cases: _.groupBy(country.timeline.cases, '') 
+            //             cases: groupBy(country.timeline.cases, '') 
             //         }))
 
 
@@ -437,8 +416,8 @@ export default new Vuex.Store({
             //         .groupBy('country')
             //         .map((country, id) => ({
             //             name: id,
-            //             confirmed : _.sumBy(country, item => {
-            //                 return parseInt(_.get(item.timeline.cases, '3/20/20'))
+            //             confirmed : sumBy(country, item => {
+            //                 return parseInt(get(item.timeline.cases, '3/20/20'))
             //             })
             //         })).value()
             //     // console.log(_(data).groupBy('country').value())
@@ -454,9 +433,9 @@ export default new Vuex.Store({
             //         .groupBy('countryRegion')
             //         .map((country, id) => ({
             //             name: id,
-            //             confirmed: _.sumBy(country, single => parseInt(single.confirmed)),
-            //             recovered: _.sumBy(country, single => parseInt(single.recovered)),
-            //             deaths: _.sumBy(country, single => parseInt(single.deaths)),
+            //             confirmed: sumBy(country, single => parseInt(single.confirmed)),
+            //             recovered: sumBy(country, single => parseInt(single.recovered)),
+            //             deaths: sumBy(country, single => parseInt(single.deaths)),
             //         }))
             //         .value()
 
@@ -564,12 +543,9 @@ export default new Vuex.Store({
 
                 });
 
-                this.state.worldometer = _.sortBy(country, ['confirmed']).reverse();
-            }).catch(error => {
-                console.log(error)
+                this.state.worldometer = sortBy(country, ['confirmed']).reverse();
             });
         }
     },
-    modules: {
-    }
+    modules: {}
 })

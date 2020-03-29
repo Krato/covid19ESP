@@ -71,11 +71,13 @@ import 'vue-popperjs/dist/vue-popper.css';
 export default {
     name: 'Links',
     components: {
-        'popper': Popper
+        Popper
     },
-    data: () => ({
-        shareButton: false
-    }), 
+    data() {
+        return {
+            shareButton: false
+        }
+    }, 
     methods:{
         showShareLinks() {
             this.$refs.share.hide()
