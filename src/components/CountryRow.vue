@@ -155,16 +155,15 @@
     </div>
 </template>
 <script>
-import Vue from 'vue'
 import CountryFlag from 'vue-country-flag'
 import HoverIntent from 'vue2-hover-intent'
-Vue.directive('hover-intent', HoverIntent)
 
 export default {
     name: 'CountryRow',
     components: {
         CountryFlag,
     },
+    directives: { HoverIntent },
     props: {
         country: {
             type: Object,
