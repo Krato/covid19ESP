@@ -163,7 +163,7 @@ export default {
                 //     text: this.chartTitle,
                 //     align: 'left'
                 // },
-                colors: ['#FAF089', '#48BB78', '#F56565'],
+                colors: ['#FAF089', '#F56565', '#48BB78'],
                 grid: {
                     borderColor: "#40475D",
                 },
