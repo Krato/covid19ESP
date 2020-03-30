@@ -11,6 +11,9 @@ Vue.config.productionTip = false
 import Toasted from 'vue-toasted';
 Vue.use(Toasted)
 
+import VTooltip from 'v-tooltip'
+Vue.use(VTooltip)
+
 import VueAnalytics from 'vue-analytics'
 Vue.use(VueAnalytics, {
     id: 'UA-161741906-1',
@@ -19,7 +22,6 @@ Vue.use(VueAnalytics, {
         sendHitTask: process.env.NODE_ENV === 'production'
     }
 })
-
 
 new Vue({
     store,

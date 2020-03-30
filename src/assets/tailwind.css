@@ -183,7 +183,42 @@ body::-webkit-scrollbar, .list-countries::-webkit-scrollbar {
 	display: none;
 }
 
+/* Tooltip */
 
+.tooltip {
+    display: block !important;
+    z-index: 10000;
+}
+
+.tooltip .tooltip-inner {
+    @apply .bg-gray-800 .rounded-lg text-white;
+    padding: 5px 10px 7px;
+}
+
+.tooltip .tooltip-arrow {
+	@apply .border-gray-800;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+    margin: 5px;
+    z-index: 1;
+}
+
+.tooltip[x-placement^="top"] {
+    margin-bottom: 5px;
+}
+
+.tooltip[x-placement^="top"] .tooltip-arrow {
+    border-width: 5px 5px 0 5px;
+    border-left-color: transparent !important;
+    border-right-color: transparent !important;
+    border-bottom-color: transparent !important;
+    bottom: -5px;
+    left: calc(50% - 5px);
+    margin-top: 0;
+    margin-bottom: 0;
+}
 
 /* purgecss end ignore */
 .more-info {

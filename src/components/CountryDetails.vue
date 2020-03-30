@@ -5,9 +5,10 @@
                 <div class="">
                     {{ chartTitle }}
                 </div>
-                <div class="cursor-pointer" v-if="show">
-                    <div class="relative custom-select">
+                <div class="relative flex flex-wrap justify-center items-center" v-if="show">
+                    <div class=" custom-select">
                         <select v-model="countrySelected">
+                            <option value="all">Todos</option>
                             <template v-for="ccaa in countries">
                                 <option :value="ccaa.iso2" :key="ccaa.iso2">
                                     {{ ccaa.country }}
@@ -43,12 +44,16 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import _ from 'lodash'
+import axios from 'axios'
 import VueApexCharts from 'vue-apexcharts'
 var es = require("apexcharts/dist/locales/es.json")
-import 'vue-loaders/dist/vue-loaders.css';
-import VueLoaders from 'vue-loaders';
+import 'vue-loaders/dist/vue-loaders.css'
+import VueLoaders from 'vue-loaders'
+import dayjs from 'dayjs'
+import * as customParseFormat from 'dayjs/plugin/customParseFormat' // import plugin
+dayjs.extend(customParseFormat)
 
 export default {
     name: 'CountryCharts',
@@ -65,16 +70,14 @@ export default {
     data: () => ({
         show: false,
         now: parseInt(Date.now()),
+        url: 'https://corona.lmao.ninja/v2/historical/',
+        countryData: false,
+        today: false
     }),
     computed: {
         ...mapState({
-            info: state => state.data,
-            totals: state => state.totals,
-            daily: state => state.daily,
             countries: state => state.countries,
         }),
-
-        ...mapGetters(['confirmedByCountry', 'nowByCountry']),
 
         countrySelected: {
             get() {
@@ -85,55 +88,36 @@ export default {
             }
         },
 
-        country() {
-            if (this.info) {
-                if (this.iso == 'all') {
-                    return this.daily
-                }
-                
-                return this.confirmedByCountry(this.iso)
-            }
-
-            return false
-        },
-
-        latest() {
-            if (this.info) {
-                if (this.iso != 'all') {
-                    return this.nowByCountry(this.iso)
-                }
-            }
-
-            return false
-        },
-
         series() {
 
-            if (this.country && this.confirmed && this.deaths && this.recovered) {
+            if (this.countryData && this.confirmed && this.deaths && this.recovered) {
                 let confirmed = _.map(this.confirmed, (value, key) => ({
-                    x: parseInt(key),
+                    x: parseInt(new Date(key).getTime()),
                     y: value
                 }))
+                this.overrideLastDay(confirmed, 'cases')
 
                 let deaths = _.map(this.deaths, (value, key) => ({
-                    x: parseInt(key),
+                    x: parseInt(new Date(key).getTime()),
                     y: value
                 }))
+                this.overrideLastDay(deaths, 'deaths')
 
-                // let recovered = _.map(this.recovered, (value, key) => ({
-                //     x: parseInt(key),
-                //     y: value
-                // }))
+                let recovered = _.map(this.recovered, (value, key) => ({
+                    x: parseInt(new Date(key).getTime()),
+                    y: value
+                }))
+                this.overrideLastDay(recovered, 'recovered')
 
                 return [
                     {
                         name: 'Infectados',
                         data: _.sortBy(confirmed, 'x')
                     },
-                    // {
-                    //     name: 'Recuperados',
-                    //     data: _.sortBy(recovered, 'x')
-                    // },
+                    {
+                        name: 'Recuperados',
+                        data: _.sortBy(recovered, 'x')
+                    },
                     {
                         name: 'Muertes',
                         data: _.sortBy(deaths, 'x')
@@ -163,7 +147,7 @@ export default {
                 //     text: this.chartTitle,
                 //     align: 'left'
                 // },
-                colors: ['#FAF089', '#F56565', '#48BB78'],
+                colors: ['#FAF089', '#48BB78', '#F56565'],
                 grid: {
                     borderColor: "#40475D",
                 },
@@ -181,6 +165,9 @@ export default {
                         title: {
                             formatter: (title) => new Date(title).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }),
                         }
+                    },
+                    y: {
+                        formatter: (value) => new Intl.NumberFormat("es-ES").format(value)
                     }
                 },
                 dataLabels: {
@@ -200,81 +187,33 @@ export default {
         },
 
         confirmed() {
-            if (this.country) {
-                let data;
-
+            if (this.countryData) {
                 if (this.iso == 'all') {
-                    data = this.country.confirmed
-                } else {
-                    data = this.country.confirmed.history
+                    return this.countryData.cases
                 }
-
-                let confirmed = _.mapKeys(data, (value, key) => {
-                    return parseInt(new Date(key).getTime())
-                })
-
-                if (this.iso != 'CN' && this.latest != false) {
-                    this.$set(confirmed, this.now, this.latest.confirmed)
-                }
-
-                return confirmed
+                return this.countryData.timeline.cases
             }
 
             return false
         },
 
         deaths() {
-            if (this.country) {
-                let data;
-
+            if (this.countryData) {
                 if (this.iso == 'all') {
-                    data = this.country.deaths
-                } else {
-                    data = this.country.deaths.history
+                    return this.countryData.deaths
                 }
-
-                let deaths = _.mapKeys(data, (value, key) => {
-                    return parseInt(new Date(key).getTime())
-                })
-
-                if (this.iso != 'CN') {
-                    this.$set(deaths, this.now, this.latest.deaths)
-                }
-
-                return deaths
+                return this.countryData.timeline.deaths
             }
 
             return false
         },
 
         recovered() {
-            if (this.country) {
-
-                let data;
-
+            if (this.countryData) {
                 if (this.iso == 'all') {
-                    data = this.country.recovered
-                } else {
-                    if (_.has(this.country.recovered, 'history')) {
-                        data = this.country.recovered.history    
-                    }
+                    return this.countryData.recovered
                 }
-
-                if (data) {
-                    let recovered =  _.mapKeys(data, (value, key) => {
-                        return parseInt(new Date(key).getTime())
-                    });
-
-                    if (this.iso != 'CN') {
-                        this.$set(recovered, this.now, this.latest.recovered)
-                    }
-
-                    return recovered
-                }
-
-                return []
-
-                
+                return this.countryData.timeline.recovered
             }
 
             return false
@@ -286,8 +225,7 @@ export default {
 
         isChartReady() {
 
-            if (this.latest != false &&
-                this.country != false &&
+            if (this.countryData != false &&
                 this.confirmed != false &&
                 this.deaths != false &&
                 this.recovered != false) {
@@ -327,6 +265,7 @@ export default {
             handler (value) {
                 if (value) {
                     this.countrySelected = value
+                    this.historicalData()
                     this.showChartFn()
                 }
             }
@@ -334,15 +273,50 @@ export default {
     },
 
     mounted() {
-        //
+        let now = new Date()
+        let day = now.getDate()
+        let month = now.getMonth()
+        let year = now.getFullYear()
+        this.now = dayjs(new Date(year, month, day))
     },
     methods: {
         showChartFn() {
-            if (this.info != null) {
+            if (this.countryData != null) {
                 this.$nextTick(() => {
                     setTimeout(() => {
                         this.show = true
                     }, 500)
+                })
+            }
+        },
+
+        historicalData() {
+            axios.get(this.url + this.countrySelected).then(response => {
+
+                let urlAll = 'https://corona.lmao.ninja/all'
+                if (this.countrySelected != 'all') {
+                    urlAll = 'https://corona.lmao.ninja/countries/' + this.countrySelected
+                }
+
+                axios.get(urlAll).then(data => {
+                    this.today = data.data
+                })
+
+                this.countryData = response.data;
+            }).catch(error => {
+                console.log(error)
+            });
+        },
+
+        overrideLastDay(data, key) {
+
+            let lastDay = _.find(data, {x: this.now.valueOf()})
+            if (lastDay) {
+                lastDay.y = this.today[key]
+            } else {
+                data.push({
+                    x: this.now.valueOf(),
+                    y: this.today[key]
                 })
             }
         }
