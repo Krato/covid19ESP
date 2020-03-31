@@ -172,7 +172,7 @@ export default {
                 return this.colors.danger
             }
 
-            if (value >= 7000) {
+            if (value >= 5000) {
                 return this.colors.high
             }
 
