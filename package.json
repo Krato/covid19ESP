@@ -27,6 +27,7 @@
     "dayjs": "^1.8.23",
     "express": "^4.17.1",
     "i18n-iso-countries": "^5.1.0",
+    "idle-vue": "^2.0.5",
     "jsonbin-io.js": "^0.8.3",
     "lodash": "^4.17.15",
     "papaparse": "^5.1.1",

@@ -10,7 +10,9 @@ import cheerio from 'cheerio'
 import { spanishCountries } from '../plugins/spanishCountries'
 // import csvJSON from '../plugins/csvJSON'
 import Papa from 'papaparse'
-//import dayjs from 'dayjs'
+import dayjs from 'dayjs'
+import * as customParseFormat from 'dayjs/plugin/customParseFormat' // import plugin
+dayjs.extend(customParseFormat)
 import VueCryptojs from 'vue-cryptojs'
 Vue.use(VueCryptojs)
 
@@ -25,6 +27,7 @@ export default new Vuex.Store({
         countries: [],
         worldometer: [],
         spain: [],
+        spainHistorical: {},
         yesterday: []
     },
     getters: {
@@ -572,7 +575,134 @@ export default new Vuex.Store({
             }).catch(error => {
                 console.log(error)
             });
+        },
+
+        getSpanishHistoricalData() {
+
+            this.state.spainHistorical = {
+                confirmed: [],
+                deaths: [],
+                recovered: [],
+                critical: [],
+            }
+
+            let apiCasos = 'https://raw.githubusercontent.com/datadista/datasets/master/COVID%2019/ccaa_covid19_casos.csv'
+            axios.get(apiCasos).then(response => {
+                let data = Papa.parse(response.data, {
+                    delimiter: ",",
+                    newline: "\n"
+                }).data
+
+                let headers = data.shift()
+                let cases = _.map(data, (ca) => {
+                    let caInfo = [] 
+                    for (var i = 1; i < headers.length; i++) {
+                        if (i == 1) {
+                            caInfo[headers[i]] = ca[i]
+                        } else {
+                            let fecha = dayjs(headers[i], "YYYY-MM-DD")
+                            caInfo[fecha.valueOf()] = parseInt(ca[i])
+                        }
+                    }
+                    return caInfo;
+                })
+
+                this.state.spainHistorical.confirmed = cases
+
+            }).catch(error => {
+                console.log(error)
+            });
+
+            //apiDeaths
+            let apiDeaths = 'https://raw.githubusercontent.com/datadista/datasets/master/COVID%2019/ccaa_covid19_fallecidos.csv'
+            axios.get(apiDeaths).then(response => {
+                let data = Papa.parse(response.data, {
+                    delimiter: ",",
+                    newline: "\n"
+                }).data
+
+                let headers = data.shift()
+                // data.pop()
+                let deaths = _.map(data, (ca) => {
+                    let caInfo = [] 
+                    for (var i = 1; i < headers.length; i++) {
+                        if (i == 1) {
+                            caInfo[headers[i]] = ca[i]
+                        } else {
+                            let fecha = dayjs(headers[i], "YYYY-MM-DD")
+                            caInfo[fecha.valueOf()] = parseInt(ca[i])
+                        }
+                    }
+
+                    return caInfo;
+                })
+
+                this.state.spainHistorical.deaths = deaths
+
+            }).catch(error => {
+                console.log(error)
+            });
+
+            //recovered
+            let apiRecovered = 'https://raw.githubusercontent.com/datadista/datasets/master/COVID%2019/ccaa_covid19_altas.csv'
+            axios.get(apiRecovered).then(response => {
+                let data = Papa.parse(response.data, {
+                    delimiter: ",",
+                    newline: "\n"
+                }).data
+
+                let headers = data.shift()
+                // data.pop()
+                let recovered = _.map(data, (ca) => {
+                    let caInfo = [] 
+                    for (var i = 1; i < headers.length; i++) {
+                        if (i == 1) {
+                            caInfo[headers[i]] = ca[i]
+                        } else {
+                            let fecha = dayjs(headers[i], "YYYY-MM-DD")
+                            caInfo[fecha.valueOf()] = parseInt(ca[i])
+                        }
+                    }
+
+                    return caInfo;
+                })
+
+                this.state.spainHistorical.recovered = recovered
+
+            }).catch(error => {
+                console.log(error)
+            });
+
+            let apiCritical = 'https://raw.githubusercontent.com/datadista/datasets/master/COVID%2019/ccaa_covid19_uci.csv'
+            axios.get(apiCritical).then(response => {
+                let data = Papa.parse(response.data, {
+                    delimiter: ",",
+                    newline: "\n"
+                }).data
+
+                let headers = data.shift()
+                // data.pop()
+                let critical = _.map(data, (ca) => {
+                    let caInfo = [] 
+                    for (var i = 1; i < headers.length; i++) {
+                        if (i == 1) {
+                            caInfo[headers[i]] = ca[i]
+                        } else {
+                            let fecha = dayjs(headers[i], "YYYY-MM-DD")
+                            caInfo[fecha.valueOf()] = parseInt(ca[i])
+                        }
+                    }
+
+                    return caInfo;
+                })
+
+                this.state.spainHistorical.critical = critical
+
+            }).catch(error => {
+                console.log(error)
+            });
         }
+
     },
     modules: {
     }

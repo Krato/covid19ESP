@@ -3,7 +3,15 @@ import './plugins/axios'
 import App from './App.vue'
 import store from './store'
 import router from './router'
+import IdleVue from 'idle-vue'
 import '@/assets/tailwind.css'
+
+const eventsHub = new Vue()
+Vue.use(IdleVue, {
+    eventEmitter: eventsHub,
+    idleTime: 5000,
+    store
+})
 
 Vue.config.productionTip = false
 // Vue.config.performance = true
@@ -23,26 +31,44 @@ Vue.use(VueAnalytics, {
     }
 })
 
+Vue.config.warnHandler = function(msg, vm, trace) {
+    console.log(`Warn: ${msg}\nTrace: ${trace}`);
+}
+
+
+Vue.config.errorHandler = err => {
+    console.log('Exception: ', err)
+}
+
 new Vue({
     store,
     router,
     data: () => ({
         timer: null,
     }),
+    computed: {
+        isOut() {
+            if (this.isAppIdle) {
+                console.log('User was out')
+            }
+            return this.isAppIdle ? true : false
+        }
+    },
     async created() {
         await this.getAllData()
-        this.timer = setInterval(() => {
-            this.getAllData.then
-        }, 60000 * 3)
+        // this.timer = setInterval(() => {
+        //     this.getAllData.then
+        // }, 60000 * 3)
     },
     methods: {
         getAllData() {
             this.$store.dispatch('getTotals')
             this.$store.dispatch('getSpanishData')
-            // this.$store.dispatch('getDataFromWorldometers')
+            this.$store.dispatch('getSpanishHistoricalData')
             this.$store.dispatch('getCountData')
             this.$store.dispatch('getCountDailyData')
             this.$store.dispatch('getData')
+
         }
     },
     beforeDestroy () {

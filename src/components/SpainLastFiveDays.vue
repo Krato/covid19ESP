@@ -1,11 +1,12 @@
 <template>
-    <div class="flex w-full lg:pl-2 lg:mt-8 mb-0">
+    <div class="flex w-full xl:w-1/2 lg:pl-2 mb-8 xl:mb-0">
+
         <div class="flex flex-wrap w-full items-center shadow-lg bg-gray-800 rounded-lg">
 
             <div class="box-header flex-wrap justify-around text-sm">
                 <div class=" flex flex-wrap items-center">
                     <div class="left">
-                        Estadísticas díarias por CCAA
+                        España: Últimos 5 días
                     </div>
 
                     <div class="shadow-lg text-xs md:text-sm bg-gray-900 py-1 px-2 ml-2 md:ml-8 cursor-pointer" v-on:click="changeType">
@@ -20,9 +21,9 @@
                 <div class="flex self-end cursor-pointer float-right">
                     <div class="text-xs md:text-sm cursor-pointer" v-if="show">
                         <div class="custom-select" v-if="size(communities)">
-                            <select v-model="caSelected">
+                            <select v-model="selectedCa">
                                 <template v-for="ccaa in communities">
-                                    <option :value="ccaa.CCAA" :key="ccaa.CCAA">
+                                    <option :value="ccaa.CCAA" :key="'last_'+ccaa.CCAA">
                                         <template v-if="ccaa.CCAA == 'Total'">
                                             Todas las CCAA
                                         </template>
@@ -36,8 +37,8 @@
                     </div>
                 </div>
             </div>
-            <div class="box-body">
-                <div class="w-full h-64">
+            <div class="box-body py-8 flex justify-center items-center">
+                <div class="w-full h-300 m-0 p-0">
                     <div v-if="!show" class="w-full h-full flex justify-center items-center">
                         <vue-loaders
                             name="ball-scale"
@@ -49,10 +50,10 @@
                     <chart
                         v-if="show && type == 'summation'"
                         :key="'chart_'+ca"
-                        ref="ca_chart"
+                        ref="ca_chart_last"
                         width="100%"
                         height="100%"
-                        type="area"
+                        type="bar"
                         :options="options"
                         :series="series"
                     />
@@ -60,10 +61,10 @@
                     <chart
                         v-if="show && type == 'daily'"
                         :key="'chart_daily_'+ca"
-                        ref="ca_chart_daily"
+                        ref="ca_chart_last_daily"
                         width="100%"
                         height="100%"
-                        type="area"
+                        type="bar"
                         :options="options"
                         :series="seriesByDay"
                     />
@@ -89,7 +90,7 @@ import * as customParseFormat from 'dayjs/plugin/customParseFormat' // import pl
 dayjs.extend(customParseFormat)
 
 export default {
-    name: 'SpainDetails',
+    name: 'SpainLastFiveDays',
     components: {
         'chart': VueApexCharts,
         'vue-loaders': VueLoaders.component
@@ -102,7 +103,7 @@ export default {
     },
     data: () => ({
         show: false,
-        type: 'summation',
+        type: 'daily',
         chart: null,
         confirmed: [],
         deaths: [],
@@ -122,15 +123,16 @@ export default {
                 },
                 locales: [es],
                 defaultLocale: 'es',
+                events: {
+                    mounted: (chart) => {
+                        chart.toggleSeries('Infectados')
+                    }
+                }
             },
             title: {
                 text: '',
                 align: 'left',
             },
-            // subtitle: {
-            //     text: 'Última actualización a las: 1511',
-            //     align: 'left'
-            // },
             colors: ['#FAF089', '#48BB78', '#F56565', '#F6AD55'],
             grid: {
                 borderColor: "#40475D",
@@ -144,7 +146,7 @@ export default {
             },
             tooltip: {
                 theme: 'dark',
-                shared: true,
+                shared: false,
                 x: {
                     formatter: (title) => new Date(title).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }),
                     title: {
@@ -170,7 +172,6 @@ export default {
     computed: {
 
         ...mapState({
-            spain: state => state.spain,
             spainHistorical: state => state.spainHistorical,
             countries: state => state.countries
         }),
@@ -185,7 +186,7 @@ export default {
             return false
         },
 
-        caSelected: {
+        selectedCa: {
             get() {
                 return this.ca
             },
@@ -227,9 +228,11 @@ export default {
 
                 this.overrideLastDay(confirmed, 'casos_totales', 'confirmed')
 
+                confirmed = _.sortBy(confirmed, 'x')
+
                 series.push({
                     name: 'Infectados',
-                    data: confirmed
+                    data: _.takeRight(confirmed, 5)
                 })
             }
 
@@ -262,10 +265,11 @@ export default {
                 }
 
                 // this.overrideLastDay(recovered, 'nothing', 'recovered')
+                recovered = _.sortBy(recovered, 'x')
 
                 series.push({
                     name: 'Recuperados',
-                    data: _.sortBy(recovered, 'x')
+                    data: _.takeRight(recovered, 5)
                 })
             }
 
@@ -299,9 +303,11 @@ export default {
 
                 this.overrideLastDay(deaths, 'fallecidos', 'deaths')
 
+                deaths = _.sortBy(deaths, 'x')
+
                 series.push({
                     name: 'Muertes',
-                    data: _.sortBy(deaths, 'x')
+                    data: _.takeRight(deaths, 5)
                 })
             }
 
@@ -335,9 +341,11 @@ export default {
 
                 this.overrideLastDay(critical, 'casos_graves', 'serious')
 
+                critical = _.sortBy(critical, 'x')
+
                 series.push({
                     name: 'Críticos',
-                    data: _.sortBy(critical, 'x')
+                    data: _.takeRight(critical, 5)
                 })
             }
 
@@ -346,10 +354,10 @@ export default {
 
         seriesByDay() {
 
-            let caConfirmed = _.find(this.confirmed, {'CCAA': this.ca})
-            let caRecovered = _.find(this.recovered, {'CCAA': this.ca})
-            let caDeaths = _.find(this.deaths, {'CCAA': this.ca})
-            let caCritical = _.find(this.critical, {'CCAA': this.ca})
+            let caConfirmed = _.find(this.spainHistorical.confirmed, {'CCAA': this.ca})
+            let caDeaths = _.find(this.spainHistorical.deaths, {'CCAA': this.ca})
+            let caRecovered = _.find(this.spainHistorical.recovered, {'CCAA': this.ca})
+            let caCritical = _.find(this.spainHistorical.critical, {'CCAA': this.ca})
             
             let series = []
             let confirmed = []
@@ -377,7 +385,7 @@ export default {
 
                 series.push({
                     name: 'Infectados',
-                    data: confirmed
+                    data: _.takeRight(confirmed, 5)
                 })
             }
 
@@ -418,9 +426,11 @@ export default {
                     lastValue += recovered[e].y
                 }
 
+                recovered = _.sortBy(recovered, 'x')
+
                 series.push({
                     name: 'Recuperados',
-                    data: _.sortBy(recovered, 'x')
+                    data: _.takeRight(recovered, 5)
                 })
             }
 
@@ -463,7 +473,7 @@ export default {
 
                 series.push({
                     name: 'Muertes',
-                    data: deaths
+                    data: _.takeRight(deaths, 5)
                 })
             }
 
@@ -504,10 +514,11 @@ export default {
                     critical[y].y = (value < 0) ? 0 : value
                     lastValue += critical[y].y
                 }
+                critical = _.sortBy(critical, 'x')
 
                 series.push({
                     name: 'Críticos',
-                    data: _.sortBy(critical, 'x')
+                    data: _.takeRight(critical, 5)
                 })
             }
 
@@ -537,20 +548,14 @@ export default {
             }
         },
 
-        ca(value) {
+        caName(value) {
+            console.log(value)
             this.show = false
             if (value) {
+                console.log('dadada')
                 this.createChartsOptions()
             }
         },
-
-        // show(value) {
-        //     if (value) {
-        //         this.$refs['ca_chart'].updateSeries(this.series)
-        //     } else {
-        //         this.$refs['ca_chart'].destroy()
-        //     }
-        // }
     },
 
     mounted() {
@@ -608,7 +613,7 @@ export default {
 
         overrideLastDay(data, key, keySpain) {
 
-            if (this.ca == 'Total') {
+            if (this.selectedCa == 'Total') {
                 if (this.lastSpain) {
                     let lastDay = _.find(data, {x: this.now.valueOf()})
                     if (lastDay) {
@@ -621,7 +626,7 @@ export default {
                     }
                 } 
             } else if (this.spain) {
-                let ccaa = _.find(this.spain, {ccaa: this.ca})
+                let ccaa = _.find(this.spain, {ccaa: this.selectedCa})
                 if (ccaa) {
                     let lastDay = _.find(data, {x: this.now.valueOf()})
 

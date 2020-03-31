@@ -17,6 +17,7 @@ module.exports = {
                 'open': ['Open Sans', 'sans-serif'],
             },
             height: {
+                '300': '400px',
                 '400': '400px',
                 '450': '450px',
                 '500': '500px',
@@ -24,6 +25,12 @@ module.exports = {
             },
             minHeight: {
                 '400': '400px',
+            },
+            maxHeight: {
+                '400': '400px',
+                '450': '450px',
+                '500': '500px',
+                '600': '500px'
             },
             gridTemplateRows: {
                 '12': 'repeat(12, minmax(0, 1fr))',

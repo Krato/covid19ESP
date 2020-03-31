@@ -35,6 +35,14 @@ body::-webkit-scrollbar, .list-countries::-webkit-scrollbar {
 	@apply .flex .content-center  .w-full .p-4
 }
 
+.box-header-help {
+	@apply .flex .self-start .items-center .justify-between .w-full .bg-gray-700 .rounded-lg .rounded-b-none .p-3
+}
+
+.box-body-help {
+	@apply .flex .content-center  .w-full .p-3
+}
+
 .list-countries::-webkit-scrollbar-track {
   background-color: transparent;
 }

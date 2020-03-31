@@ -1,6 +1,5 @@
 <template>
     <div class="p-4">
-        
         <div class="flex flex-wrap -mx-4 h-screen">
             <div class="flex flex-wrap w-full lg:w-2/3 px-4 content-start">
                 <div class="w-full flex flex-wrap justify-center">
@@ -11,9 +10,12 @@
                 </div>
                 <div class="w-full flex flex-wrap mt-8 ">
                     <spain v-on:change-ca="changeCa" class="order-1" />
-                    <country-details class="order-3 xl:order-2" :key="'country_'+selectedCountry" :iso="selectedCountry" v-if="showChart" @country="changeCountry" />
 
-                    <spain-details  class="order-2 xl:order-3" :ca="selectedCA" @community="changeCAByName" />
+                    <spain-last-five-days  class="order-2 xl:order-2" :ca="selectedCA" @community="changeCAByName" />
+
+                    <country-details class="hidden order-3 xl:order-3" :key="'country_'+selectedCountry" :iso="selectedCountry" v-if="showChart" @country="changeCountry" />
+
+                    <spain-details class="order-4 xl:order-4" :ca="selectedCA" @community="changeCAByName" />
                 </div>
                 <world-map :iso="selectedCountry" />
             </div>
@@ -38,6 +40,7 @@ import CountryDetails from '@/components/CountryDetails.vue'
 import Mapa from '@/components/Map.vue'
 import Spain from '@/components/Spain.vue'
 import SpainDetails from '@/components/SpainDetails.vue'
+import SpainLastFiveDays from '@/components/SpainLastFiveDays.vue'
 import Links from '@/components/Links.vue'
 import Help from '@/components/Help.vue'
 
@@ -54,6 +57,7 @@ export default {
         'country-details': CountryDetails,
         'spain': Spain,
         'spain-details': SpainDetails,
+        'spain-last-five-days': SpainLastFiveDays,
         'world-map': Mapa,
         'logo': Logo,
         'links': Links,
@@ -62,7 +66,9 @@ export default {
     data: () => ({
         showChart: true,
         selectedCountry: 'ES',
-        selectedCA: 'Total'
+        selectedCA: 'Total',
+        selectedCALastDays: 'Total',
+        hide: true
     }),
     methods: {
         changeCountry(iso) {
@@ -77,6 +83,9 @@ export default {
         },
         changeCAByName(name) {
             this.selectedCA = name
+        },
+        changeCAByNameLast(name) {
+            this.selectedCALastDays = name
         }
     }, 
     mounted() {
