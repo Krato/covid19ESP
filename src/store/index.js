@@ -123,6 +123,7 @@ export default new Vuex.Store({
         },
 
         nowByCountry: (state) => (iso) => {
+
             let country = state.countries.find(info => {
                 return info.iso2.match(iso.toUpperCase())
             })
@@ -223,6 +224,11 @@ export default new Vuex.Store({
                     let iso2 = countriesIso.getAlpha2Code(el.country, 'en');
                     
                     let countryName = el.country;
+
+                    if (countryName == 'World') {
+                        iso3 = 'WORLD'
+                        iso2 = 'WO'
+                    }
 
                     if (countryName == 'USA') {
                         iso3 = 'USA'

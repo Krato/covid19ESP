@@ -2,11 +2,11 @@
   <div class="h-screen relative">
     <div class="list-countries flex flex-wrap justify-center overflow-y-auto rounded-lg bg-gray-800 shadow-lg">
         <div class="w-full flex flex-wrap items-center text-center border-b border-gray-700 p-2">
-            <div class="w-full self-start py-2">
-              <div class="xl:hidden flex justify-center font-bold" v-if="totals">
+            <div class="w-full self-start py-2"  v-if="totales">
+              <div class="xl:hidden flex justify-center font-bold">
                 Totales por países
               </div>
-              <div class="py-2 w-full flex flex-wrap" v-if="totals">
+              <div class="py-2 w-full flex flex-wrap">
                   <div class="hidden w-1/4 md:w-1/5 xl:flex flex-wrap items-center">
                     <div class="w-full text-center">
                       Totales
@@ -14,7 +14,7 @@
                   </div>
                   <div class="w-1/4 xl:w-1/5 flex flex-wrap justify-center items-center">
                       <div class="w-full text-yellow-300 font-bold">
-                        {{ fixNumber(totals.confirmed) }}
+                        {{ fixNumber(totales.confirmed) }}
                       </div>
                       <div class="w-full text-xxs md:text-sm">
                         Infectados
@@ -22,7 +22,7 @@
                   </div>
                   <div class="w-1/4 xl:w-1/5 flex flex-wrap justify-center items-center">
                     <div class="w-full text-green-500 font-bold">
-                      {{ fixNumber(totals.recovered) }}
+                      {{ fixNumber(totales.recovered) }}
                     </div>
                     <div class="w-full text-xxs md:text-sm">
                       Curados
@@ -30,7 +30,7 @@
                   </div>
                   <div class="w-1/4 xl:w-1/5 flex flex-wrap justify-center items-center">
                     <div class="w-full text-red-500 font-bold">
-                      {{ fixNumber(totals.deaths) }}
+                      {{ fixNumber(totales.deaths) }}
                     </div>
                     <div class="w-full text-xxs md:text-sm">
                       Muertes
@@ -39,11 +39,11 @@
                   <div class="w-1/4 xl:w-1/5 flex flex-wrap justify-center text-left items-center">
 
                         <div class="w-full text-xxs  md:text-xs text-yellow-300 font-bold whitespace-no-wrap">
-                            + {{ fixNumber(todayCasesTotal) }} casos
+                            + {{ fixNumber(totales.todayCases) }} casos
                         </div>
 
                         <div class="w-full text-xxs  md:text-xs  text-red-500 font-bold whitespace-no-wrap">
-                            + {{ fixNumber(todayDeathsTotal) }} muertes
+                            + {{ fixNumber(totales.todayDeaths) }} muertes
                         </div>
 
 
@@ -95,7 +95,9 @@
             </div>
             <vuescroll :ops="scrollOptions">
                 <template v-for="(country, index) in countryList">
-                    <country-row :key="'country_'+index" :country="country" :index="index" v-on:change="changeCountry" />
+                    <template v-if="country.country != 'World'">
+                        <country-row :key="'country_'+index" :country="country" :index="index" v-on:change="changeCountry" />
+                    </template>
                 </template>
             </vuescroll>
           </div>
@@ -186,7 +188,7 @@ export default {
     computed: {
         ...mapState({
             countries: state => state.countries,
-            totals: state => state.totals,
+            // totals: state => state.totals,
         }),
 
         countryList() {
@@ -226,6 +228,14 @@ export default {
             }
 
             return 0
+        },
+
+        totales() {
+            if (this.countryList) {
+                return _.find(this.countryList, {'country': 'World'});
+            }
+
+            return null
         },
 
         selectedCountryName() {
