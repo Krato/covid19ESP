@@ -2,7 +2,7 @@
   <div class="h-screen relative">
     <div class="list-countries flex flex-wrap justify-center overflow-y-auto rounded-lg bg-gray-800 shadow-lg">
         <div class="w-full flex flex-wrap items-center text-center border-b border-gray-700 p-2">
-            <div class="w-full self-start py-2"  v-if="totales">
+            <div class="w-full self-start py-2"  v-if="totals">
               <div class="xl:hidden flex justify-center font-bold">
                 Totales por países
               </div>
@@ -14,7 +14,7 @@
                   </div>
                   <div class="w-1/4 xl:w-1/5 flex flex-wrap justify-center items-center">
                       <div class="w-full text-yellow-300 font-bold">
-                        {{ fixNumber(totales.confirmed) }}
+                        {{ fixNumber(totals.confirmed) }}
                       </div>
                       <div class="w-full text-xxs md:text-sm">
                         Infectados
@@ -22,7 +22,7 @@
                   </div>
                   <div class="w-1/4 xl:w-1/5 flex flex-wrap justify-center items-center">
                     <div class="w-full text-green-500 font-bold">
-                      {{ fixNumber(totales.recovered) }}
+                      {{ fixNumber(totals.recovered) }}
                     </div>
                     <div class="w-full text-xxs md:text-sm">
                       Curados
@@ -30,7 +30,7 @@
                   </div>
                   <div class="w-1/4 xl:w-1/5 flex flex-wrap justify-center items-center">
                     <div class="w-full text-red-500 font-bold">
-                      {{ fixNumber(totales.deaths) }}
+                      {{ fixNumber(totals.deaths) }}
                     </div>
                     <div class="w-full text-xxs md:text-sm">
                       Muertes
@@ -39,11 +39,11 @@
                   <div class="w-1/4 xl:w-1/5 flex flex-wrap justify-center text-left items-center">
 
                         <div class="w-full text-xxs  md:text-xs text-yellow-300 font-bold whitespace-no-wrap">
-                            + {{ fixNumber(totales.todayCases) }} casos
+                            + {{ fixNumber(todayCasesTotal) }} casos
                         </div>
 
                         <div class="w-full text-xxs  md:text-xs  text-red-500 font-bold whitespace-no-wrap">
-                            + {{ fixNumber(totales.todayDeaths) }} muertes
+                            + {{ fixNumber(todayDeathsTotal) }} muertes
                         </div>
 
 
@@ -188,7 +188,7 @@ export default {
     computed: {
         ...mapState({
             countries: state => state.countries,
-            // totals: state => state.totals,
+            totals: state => state.totals,
         }),
 
         countryList() {
@@ -246,7 +246,7 @@ export default {
         }
     },
     mounted() {
-        this.$refs.order.i18n.advanced_default = "Ordenar por";
+        // this.$refs.order.i18n.advanced_default = "Ordenar por";
     },
     methods: {
         fixNumber(value) {
