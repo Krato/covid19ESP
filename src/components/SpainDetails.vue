@@ -346,10 +346,15 @@ export default {
 
         seriesByDay() {
 
-            let caConfirmed = _.find(this.confirmed, {'CCAA': this.ca})
-            let caRecovered = _.find(this.recovered, {'CCAA': this.ca})
-            let caDeaths = _.find(this.deaths, {'CCAA': this.ca})
-            let caCritical = _.find(this.critical, {'CCAA': this.ca})
+            // let caConfirmed = _.find(this.confirmed, {'CCAA': this.ca})
+            // let caRecovered = _.find(this.recovered, {'CCAA': this.ca})
+            // let caDeaths = _.find(this.deaths, {'CCAA': this.ca})
+            // let caCritical = _.find(this.critical, {'CCAA': this.ca})
+
+            let caConfirmed = _.find(this.spainHistorical.confirmed, {'CCAA': this.ca})
+            let caDeaths = _.find(this.spainHistorical.deaths, {'CCAA': this.ca})
+            let caRecovered = _.find(this.spainHistorical.recovered, {'CCAA': this.ca})
+            let caCritical = _.find(this.spainHistorical.critical, {'CCAA': this.ca})
             
             let series = []
             let confirmed = []
