@@ -7,6 +7,9 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
+  "engines": {
+    "node": "12.13.x"
+  },
   "dependencies": {
     "@amcharts/amcharts4": "^4.9.12",
     "@amcharts/amcharts4-geodata": "^4.1.14",
