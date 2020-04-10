@@ -10,14 +10,25 @@
                     <router-link :to="{ name: 'spain' }" v-slot="{ href, route, navigate, isActive, isExactActive }">
                         <a :class="{'bg-blue-700': isExactActive, 'bg-blue-900': !isExactActive}" :href="href" @click="navigate" class="bg-blue-700 text-gray-200 rounded-lg btext-center shadow hover:-translate-y-px hover:shadow-md mr-4">
                             <div class="m-3">
-                                Viendo datos de España
+                                <template v-if="isExactActive">
+                                    Viendo datos de España
+                                </template>
+                                <template v-else>
+                                    Ver datos de España
+                                </template>
                             </div>
                         </a>
                     </router-link>
                     <router-link :to="{ name: 'world' }" v-slot="{ href, route, navigate, isActive, isExactActive }">
                         <a :class="{'bg-blue-700': isExactActive, 'bg-blue-900': !isExactActive}" :href="href" @click="navigate" class="bg-blue-700 text-gray-200 rounded-lg btext-center shadow hover:-translate-y-px hover:shadow-md mr-4">
                             <div class="m-3">
-                                Ver datos del Mundo
+                                <template v-if="isExactActive">
+                                    Viendo datos Mundiales
+                                </template>
+                                <template v-else>
+                                    Ver datos Mundiales
+                                </template>
+                                
                             </div>
                         </a>
                     </router-link>
