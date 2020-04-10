@@ -30,6 +30,7 @@
     "v-selectmenu": "^2.0.2",
     "v-tooltip": "^2.0.3",
     "vue": "^2.6.11",
+    "vue-analytics": "^5.22.1",
     "vue-apexcharts": "^1.5.2",
     "vue-cryptojs": "^2.1.4",
     "vue-good-table": "^2.19.1",

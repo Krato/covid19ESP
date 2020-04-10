@@ -10,6 +10,15 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 
 Vue.config.productionTip = false;
 
+import VueAnalytics from 'vue-analytics'
+Vue.use(VueAnalytics, {
+    id: 'UA-161741906-1',
+    router,
+    debug: {
+        sendHitTask: process.env.NODE_ENV === 'production'
+    }
+})
+
 new Vue({
     router,
     store,
