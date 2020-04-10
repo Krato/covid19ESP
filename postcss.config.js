@@ -3,8 +3,8 @@ module.exports = {
         tailwindcss: {},
         'vue-cli-plugin-tailwind/purgecss': {
         	whitelistPatterns: [
-        		/vgt$/,
-        		/tooltip$/
+        		/^vgt-/,
+        		/^tooltip$/
         	],
         },
     },
