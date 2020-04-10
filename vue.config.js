@@ -1,14 +1,5 @@
 module.exports = {
-    pluginOptions: {
-        svgLoader: {
-            svgo: {
-                plugins: [
-                ]
-            },
-            removeTags: false
-        }
-    },
-    chainWebpack: config => {
+    chainWebpack: (config) => {
         config
             .plugin('prefetch')
             .tap(args => {
@@ -23,5 +14,9 @@ module.exports = {
                     ]
                 }]
             })
+    },
+
+    pwa: {
+      name: 'Covid19 en España'
     }
-}
+};

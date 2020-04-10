@@ -1,19 +1,26 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Spain from '@/views/Spain.vue';
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
     {
         path: '/',
-        name: 'Home',
-        component: Home
+        name: 'spain',
+        component: Spain,
     },
-]
+    {
+        path: '/mundo',
+        name: 'world',
+        component: () => import(/* webpackChunkName: "world" */ '@/views/World.vue'),
+    },
+];
 
 const router = new VueRouter({
-    routes
-})
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes,
+});
 
-export default router
+export default router;

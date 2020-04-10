@@ -1,0 +1,261 @@
+@import "tailwindcss/base";
+
+@import "tailwindcss/components";
+
+@import "tailwindcss/utilities";
+
+body {
+	@apply .bg-blue-800
+}
+.vgt-table.nocturnal {
+	@apply .bg-gray-900 .border-0
+}
+
+.vgt-table.nocturnal th {
+    @apply .text-xs;
+
+    @screen md {
+        @apply .text-sm;
+    }
+    
+}
+
+.vgt-table.nocturnal {
+    td {
+	   @apply .border-b .border-gray-700 .text-xs;
+
+        @screen lg {
+            @apply .text-base;
+        }
+    } 
+}
+
+.vgt-wrap.nocturnal .vgt-wrap__footer {
+	@apply .border-0;
+	background: #1a202c;
+}
+
+
+//Country list
+
+.list-countries::-webkit-scrollbar-track, .list-countries::-webkit-scrollbar, .list-countries::-webkit-scrollbar-thumb{
+    background-color: transparent;
+}
+
+.list-countries {
+    -ms-overflow-style: none;
+}
+
+.__bar-is-vertical {
+    left: -2px !important;
+}
+
+.__rail-is-horizontal {
+    display: none !important;
+}
+
+.list-height {
+    height: calc(100vh - 180px)
+}
+
+.search {
+    @apply .bg-gray-900 .rounded-md .flex-auto;
+    /*background: 0 0;*/
+    border: none;
+    color: #7f8197;
+    font-size: 15px;
+    height: 45px;
+}
+
+.help-list li{
+    @apply .my-2;
+}
+
+.country-list > div:not(.country-flag){
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+.v--modal-box {
+    @apply .rounded
+}
+
+/* purgecss start ignore */
+.v-dropdown-container, .sm-caller-container, .sm-default-btn, .sm-opened {
+    @apply .bg-gray-900 #{!important};
+    @apply .text-gray-500 .border-0;
+}
+
+.sm-default-btn:hover, .sm-default-btn.sm-opened {
+    @apply .text-gray-500 .border-0;
+    box-shadow: none;
+}
+
+.sm-removeall-button {
+    display: none;
+}
+
+.more-info {
+    transition: width 0.3s ease-in-out;
+}
+
+.country-list.show-extra .more-info {
+    @apply .w-full;
+
+    .block-info:nth-child(1){
+        transition: all .5s ease; 
+        animation-delay: 0.2s;
+    }
+
+    .block-info:nth-child(2){
+        transition: all 1s ease;  
+        animation-delay: 0.3s;
+    }
+
+    .block-info:nth-child(3){
+        transition: all 1s ease;  
+        animation-delay: 0.4s;
+    }
+
+    .block-info:nth-child(4){
+        transition: all 1s ease;  
+        animation-delay: 0.5s;
+    }
+}
+
+
+/* Tooltip */
+
+.tooltip {
+    display: block !important;
+    z-index: 10000;
+    .tooltip-inner {
+        @apply .bg-gray-900 .rounded .py-2 .px-3 .text-gray-200 .text-xs;
+    }
+    .tooltip-arrow {
+        width: 0;
+        height: 0;
+        border-style: solid;
+        position: absolute;
+        margin: 5px;
+        border-color: black;
+        z-index: 1;
+    }
+    &[x-placement^="top"] {
+        margin-bottom: 5px;
+        .tooltip-arrow {
+            border-width: 5px 5px 0 5px;
+            border-left-color: transparent !important;
+            border-right-color: transparent !important;
+            border-bottom-color: transparent !important;
+            bottom: -5px;
+            left: calc(50% - 5px);
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    }
+    &[x-placement^="bottom"] {
+        margin-top: 5px;
+        .tooltip-arrow {
+            border-width: 0 5px 5px 5px;
+            border-left-color: transparent !important;
+            border-right-color: transparent !important;
+            border-top-color: transparent !important;
+            top: -5px;
+            left: calc(50% - 5px);
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+    }
+    &[x-placement^="right"] {
+        margin-left: 5px;
+        .tooltip-arrow {
+            border-width: 5px 5px 5px 0;
+            border-left-color: transparent !important;
+            border-top-color: transparent !important;
+            border-bottom-color: transparent !important;
+            left: -5px;
+            top: calc(50% - 5px);
+            margin-left: 0;
+            margin-right: 0;
+        }
+    }
+    &[x-placement^="left"] {
+        margin-right: 5px;
+        .tooltip-arrow {
+            border-width: 5px 0 5px 5px;
+            border-top-color: transparent !important;
+            border-right-color: transparent !important;
+            border-bottom-color: transparent !important;
+            right: -5px;
+            top: calc(50% - 5px);
+            margin-left: 0;
+            margin-right: 0;
+        }
+    }
+    &.popover {
+        $color: #f9f9f9;
+        .popover-inner {
+            background: $color;
+            color: black;
+            padding: 24px;
+            border-radius: 5px;
+            box-shadow: 0 5px 30px rgba(black, .1);
+        }
+        .popover-arrow {
+            border-color: $color;
+        }
+    }
+    &[aria-hidden='true'] {
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity .15s, visibility .15s;
+    }
+    &[aria-hidden='false'] {
+        visibility: visible;
+        opacity: 1;
+        transition: opacity .15s;
+    }
+}
+
+
+/* purgecss end ignore */
+
+
+
+//Transitions
+
+.fade-enter-active, .fade-leave-active {
+	transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+	opacity: 0;
+}
+
+@keyframes fadeInUp {
+  from {
+    transform: translate3d(0, 40px, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1
+  }
+}
+
+.fade-in-up-leave-to {
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+.fade-in-up-enter {
+  opacity: 0;
+  transform: translate3d(0, 40px, 0);
+}
+
+.fade-in-up-enter-to {
+  opacity: 0;
+  animation-duration: .7s;
+  animation-fill-mode: both;
+  animation-name: fadeInUp;
+}
