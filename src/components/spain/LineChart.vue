@@ -142,7 +142,7 @@ export default {
             //     text: 'Última actualización a las: 1511',
             //     align: 'left'
             // },
-            colors: ['#d6bcfa', '#FAF089', '#48BB78', '#F56565', '#F6AD55'],
+            colors: ['#d6bcfa', '#FAF089', '#48BB78', '#F6AD55', '#F56565'],
             grid: {
                 borderColor: "#40475D",
             },

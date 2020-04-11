@@ -19,7 +19,9 @@ export const getters = {
     getCountry:  (state) => (iso) => {
 
         let country = state.list.find(info => {
-            return info.iso2.match(iso.toUpperCase())
+            if (typeof info.iso2 !== 'undefined') {
+                return info.iso2.match(iso.toUpperCase())    
+            } 
         })
 
         if (!country) {
