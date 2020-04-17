@@ -104,7 +104,7 @@ export const actions = {
         commit
     }) {
         try {
-            await axios.get('https://corona.lmao.ninja/countries').then(response => {
+            await axios.get('https://corona.lmao.ninja/v2/countries').then(response => {
                 let countries = [];
                 response.data.map(el => {
 
