@@ -16,7 +16,14 @@ module.exports = {
             })
     },
 
+    publicPath: '',
+
     pwa: {
-      name: 'Covid19 en España'
+        name: 'Covid19 en España',
+        workboxPluginMode: 'GenerateSW',
+        workboxOptions: {
+            skipWaiting: true,
+            clientsClaim: true
+        }
     }
 };
