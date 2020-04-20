@@ -24,7 +24,7 @@
                 />
                 <percent-by-region :ready="showChart" :spain="spain" :regions="regions"></percent-by-region>
 
-                <spain-regions class="mt-4" :regions="regions"></spain-regions>
+                <spain-regions class="mt-4 hidden" :regions="regions"></spain-regions>
             </div>
         </div>
     </div>
