@@ -65,7 +65,6 @@ export default {
             required: true
         },
         yesterday: {
-            type: Object,
             required: true
         },
     },
@@ -75,8 +74,12 @@ export default {
         dayBeforeYesterday: null
     }),
 
+    mounted() {
+        //
+    },
+
     created() {
-        // 
+        //
     },
 
     methods: {

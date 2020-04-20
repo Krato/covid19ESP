@@ -80,7 +80,7 @@ export const actions = {
         commit
     }) {
         try {
-            const { data } = await axios.get('https://corona.lmao.ninja/all')
+            const { data } = await axios.get('https://corona.lmao.ninja/v2/all')
             commit(types.FETCH_WORLD_SUCCESS, { world: data })
 
         } catch (e) {
@@ -92,7 +92,7 @@ export const actions = {
         commit
     }) {
         try {
-            const { data } = await axios.get('https://corona.lmao.ninja/yesterday/world')
+            const { data } = await axios.get('https://corona.lmao.ninja/v2/all?yesterday=true')
             commit(types.FETCH_WORLD_YESTERDAY_SUCCESS, { yesterday: data })
 
         } catch (e) {
