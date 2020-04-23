@@ -51,8 +51,8 @@
                         <span v-else-if="props.column.field == 'curados'" class="text-green-500">
                             {{ formatValue(props.row.curados) }}
                         </span>
-                        <span v-else-if="props.column.field == 'casos_graves'" class="text-orange-500">
-                            {{ formatValue(props.row.casos_graves) }}
+                        <span v-else-if="props.column.field == 'hospitalizados'" class="text-orange-500">
+                            {{ formatValue(props.row.hospitalizados) }}
                         </span>
                         <span v-else-if="props.column.field == 'fallecidos'" class="text-red-500">
                             {{ formatValue(props.row.fallecidos) }}
@@ -99,11 +99,13 @@ export default {
             label: 'Recuperados',
             field: 'curados',
             type: 'number',
-        }, {
-            label: 'Críticos',
-            field: 'casos_graves',
-            type: 'number',
-        }, {
+        },
+        // {
+        //     label: 'Hospitalizados',
+        //     field: 'hospitalizados',
+        //     type: 'number',
+        // }, 
+        {
             label: 'Muertes',
             field: 'fallecidos',
             type: 'number',
