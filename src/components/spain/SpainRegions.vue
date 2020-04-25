@@ -42,20 +42,23 @@
                                 Todas
                             </template>
                         </span>
-                        <span v-else-if="props.column.field == 'casos_totales'" class="text-purple-300">
-                            {{ formatValue(props.row.casos_totales) }}
+                        <span v-else-if="props.column.field == 'confirmed'" class="text-purple-300">
+                            {{ formatValue(props.row.confirmed) }}
                         </span>
-                        <span v-else-if="props.column.field == 'activos'" class="text-yellow-300">
-                            {{ formatValue(props.row.activos) }}
+                        <span v-else-if="props.column.field == 'active'" class="text-yellow-300">
+                            {{ formatValue(props.row.active) }}
                         </span>
-                        <span v-else-if="props.column.field == 'curados'" class="text-green-500">
-                            {{ formatValue(props.row.curados) }}
+                        <span v-else-if="props.column.field == 'recovered'" class="text-green-500">
+                            {{ formatValue(props.row.recovered) }}
                         </span>
-                        <span v-else-if="props.column.field == 'hospitalizados'" class="text-orange-500">
-                            {{ formatValue(props.row.hospitalizados) }}
+                        <span v-else-if="props.column.field == 'critical'" class="text-orange-500">
+                            {{ formatValue(props.row.critical) }}
                         </span>
-                        <span v-else-if="props.column.field == 'fallecidos'" class="text-red-500">
-                            {{ formatValue(props.row.fallecidos) }}
+                        <span v-else-if="props.column.field == 'hospitalized'" class="text-orange-500">
+                            {{ formatValue(props.row.hospitalized) }}
+                        </span>
+                        <span v-else-if="props.column.field == 'deaths'" class="text-red-500">
+                            {{ formatValue(props.row.deaths) }}
                         </span>
                         <span v-else class="">
                             {{ formatValue(props.formattedRow[props.column.field]) }}
@@ -89,25 +92,30 @@ export default {
             field: 'ccaa',
         }, {
             label: 'Infectados',
-            field: 'casos_totales',
+            field: 'confirmed',
             type: 'number',
         }, {
             label: 'Activos',
-            field: 'activos',
+            field: 'active',
             type: 'number',
         }, {
             label: 'Recuperados',
-            field: 'curados',
+            field: 'recovered',
             type: 'number',
         },
-        // {
-        //     label: 'Hospitalizados',
-        //     field: 'hospitalizados',
-        //     type: 'number',
-        // }, 
+        {
+            label: 'Críticos',
+            field: 'critical',
+            type: 'number',
+        }, 
+        {
+            label: 'Hospitalizados',
+            field: 'hospitalized',
+            type: 'number',
+        }, 
         {
             label: 'Muertes',
-            field: 'fallecidos',
+            field: 'deaths',
             type: 'number',
         }],
         paginationOptions: {
@@ -121,7 +129,7 @@ export default {
         sortOptions:{
             enabled: true,
             initialSortBy: {
-                field: 'casos_totales',
+                field: 'confirmed',
                 type: 'desc'
             }
         }
@@ -133,10 +141,6 @@ export default {
             return new Intl.NumberFormat("es-ES").format(value);
         },
 
-        getActive(region) {
-            return region.casos_totales - region.curados - region.fallecidos;
-        },
-
         noEmpty(value) {
             return (_.size(value) > 0)
         },
@@ -146,15 +150,9 @@ export default {
     computed : {
         regionsOrdered() {
 
-            let ordered = _.map(this.regions, (element) => {
-                return _.extend({}, element, {
-                    activos: this.getActive(element)
-                });
-            });
+            let ordered = _.reject(this.regions, ({ccaa}) => !ccaa);
 
-            ordered = _.reject(ordered, ({ccaa}) => !ccaa);
-
-            return _.sortBy(ordered, 'casos_totales').reverse()
+            return _.sortBy(ordered, 'confirmed').reverse()
         },
         textColor(){
             return 'text-'+this.color

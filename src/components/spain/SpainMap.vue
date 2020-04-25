@@ -60,8 +60,8 @@ export default {
                                     title: comunity.code,
                                     lat: comunity.lat,
                                     long: comunity.long,
-                                    value: provincia.casos_totales,
-                                    color: this.getHeatColor(provincia.casos_totales)
+                                    value: provincia.confirmed,
+                                    color: this.getHeatColor(provincia.confirmed)
                                 })
                                 break;
                             }

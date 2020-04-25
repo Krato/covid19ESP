@@ -9,16 +9,16 @@
                         </h6>
                         <div class="flex flex-wrap">
                             <transition name="fade" mode="out-in">
-                                <h2 class="text-white text-xl font-semibold" :key="'casos_totales'" v-if="type == 'casos_totales'">
+                                <h2 class="text-white text-xl font-semibold" :key="'confirmed'" v-if="type == 'confirmed'">
                                     Porcentaje de casos confirmados
                                 </h2>
-                                <h2 class="text-white text-xl font-semibold"  :key="'curados'" v-if="type == 'curados'">
+                                <h2 class="text-white text-xl font-semibold"  :key="'recovered'" v-if="type == 'recovered'">
                                     Porcentaje de casos recuperados
                                 </h2>
-                                <h2 class="text-white text-xl font-semibold"  :key="'hospitalizados'" v-if="type == 'hospitalizados'">
+                                <h2 class="text-white text-xl font-semibold"  :key="'critical'" v-if="type == 'critical'">
                                     Porcentaje de casos críticos
                                 </h2>
-                                <h2 class="text-white text-xl font-semibold"  :key="'fallecidos'" v-if="type == 'fallecidos'">
+                                <h2 class="text-white text-xl font-semibold"  :key="'deaths'" v-if="type == 'deaths'">
                                     Porcentaje de muertes
                                 </h2>
                             </transition>
@@ -26,18 +26,18 @@
                     </div>
                     <div class="flex flex-wrap mt-2 md:mt-0">
                         <div class="py-1 px-2 mr-1 md:ml-2 text-xs md:text-sm cursor-pointer  text-gray-200 rounded-lg"
-                        :class="{'bg-blue-900': type == 'casos_totales', 'bg-blue-800': type != 'casos_totales'}"
-                        v-on:click="changeType('casos_totales')">
+                        :class="{'bg-blue-900': type == 'confirmed', 'bg-blue-800': type != 'confirmed'}"
+                        v-on:click="changeType('confirmed')">
                             Confirmados
                         </div>
                         <div class="py-1 px-2 mr-1 md:ml-2 text-xs md:text-sm cursor-pointer bg-blue-800 text-gray-200 
-                        rounded-lg" :class="{'bg-blue-900': type == 'curados', 'bg-blue-800': type != 'curados'}" v-on:click="changeType('curados')">
+                        rounded-lg" :class="{'bg-blue-900': type == 'recovered', 'bg-blue-800': type != 'recovered'}" v-on:click="changeType('recovered')">
                             Recuperados
                         </div>
-                        <div class="py-1 px-2 mr-1 md:ml-2 text-xs md:text-sm cursor-pointer bg-blue-800 text-gray-200 rounded-lg" :class="{'bg-blue-900': type == 'hospitalizados', 'bg-blue-800': type != 'hospitalizados'}" v-on:click="changeType('hospitalizados')">
+                        <div class="py-1 px-2 mr-1 md:ml-2 text-xs md:text-sm cursor-pointer bg-blue-800 text-gray-200 rounded-lg" :class="{'bg-blue-900': type == 'critical', 'bg-blue-800': type != 'critical'}" v-on:click="changeType('critical')">
                             Críticos
                         </div>
-                        <div class="py-1 px-2 mr-1 md:ml-2 text-xs md:text-sm cursor-pointer bg-blue-800 text-gray-200 rounded-lg" :class="{'bg-blue-900': type == 'fallecidos', 'bg-blue-800': type != 'fallecidos'}" v-on:click="changeType('fallecidos')">
+                        <div class="py-1 px-2 mr-1 md:ml-2 text-xs md:text-sm cursor-pointer bg-blue-800 text-gray-200 rounded-lg" :class="{'bg-blue-900': type == 'deaths', 'bg-blue-800': type != 'deaths'}" v-on:click="changeType('deaths')">
                             Muertes
                         </div>
                         
@@ -96,7 +96,7 @@ export default {
     },
     data: () => ({
         show: false,
-        type: 'casos_totales',
+        type: 'confirmed',
         chart: null,
         now: null,
         pieSeries: null
@@ -110,10 +110,6 @@ export default {
         series() {
             let data = []
             let key = 'confirmed'
-            if (this.type == 'activos') {
-                key = 'active'
-            }
-
             
             _.map(this.goodRegions, (region) => {
                 let percent = (region[this.type] * 100) / this.spain[key]

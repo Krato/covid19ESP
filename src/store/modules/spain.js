@@ -30,6 +30,18 @@ export const mutations = {
         regions
     }) {
         state.data = regions
+
+        let gotcha = 'U2FsdGVkX19nTPOTksKGw8JGYiMmWrrANkHUgv0ay9Ha0c5xWL123qf9X5MJBzH90rrwCLe14QoBE7yOeBhc9tUYrluWGGIgZ5XTDvaPpNM='
+        let secret = Vue.CryptoJS.AES.decrypt(gotcha, "FCJDq6rELyrCas4").toString(Vue.CryptoJS.enc.Utf8)
+
+        let axiosHeaders = {
+            headers: { 'secret-key': secret }
+        };
+
+        axios.put('https://api.jsonbin.io/b/5e79e3ccf14dd14dd2909c5d', {data: regions}, axiosHeaders).then(() => {
+        }).catch(error => {
+            console.log(error)
+        });
     },
 
     [types.FETCH_SPAIN_FAILURE](state) {
@@ -85,19 +97,49 @@ export const actions = {
                 headers: { 'secret-key': secret }
             };
 
+            let today = new Date();
+            let todayFormatted = today.getDate() + '/' + (today.getMonth() + 1) + '/'+ today.getFullYear()
+
             await countapi.hit('api-spain').then((result) => {
 
-                if (result.value % 10 == 0) {
-                    axios.get('https://cors-anywhere.herokuapp.com/https://api.chollx.es/coronavirus/ca', {}, { timeout: 2000 }).then(response => {
-                        let ccaa = response.data
-                        ccaa.pop()
+                if (result.value % 20 == 0) {
+                    //https://api.chollx.es/coronavirus/ca
+                
+                    axios.get('https://spanish-api-covid19.pedelriomarron.now.sh/api/regions').then(response => {
                         
-                        commit(types.FETCH_SPAIN_SUCCESS, {regions: ccaa})
+                        let re = response.data;
+                        let ccaa = []
+                        let itemsProcessed = 0;
 
-                        axios.put('https://api.jsonbin.io/b/5e79e3ccf14dd14dd2909c5d', {data: ccaa}, axiosHeaders).then(() => {
-                        }).catch(error => {
-                            console.log(error)
+                        re.regions.forEach((region) => { 
+                            axios.get('https://spanish-api-covid19.pedelriomarron.now.sh/api/regions/' +region.code).then(answer => {
+                                let data = answer.data;
+
+                                let confirmed = parseInt(data.confirmed.value)
+                                let recovered = parseInt(data.recovered.value)
+                                let deaths = parseInt(data.deaths.value)
+                                let uci = parseInt(data.uci.value)
+                                let hospitalized = parseInt(data.hospitalized.value)
+
+                                ccaa.push({
+                                    ccaa: region.name,
+                                    confirmed: confirmed,
+                                    active: confirmed - recovered - deaths,
+                                    recovered: recovered,
+                                    deaths: deaths,
+                                    critical: uci,
+                                    hospitalized: hospitalized
+                                })
+
+                                itemsProcessed++
+
+                                if(itemsProcessed === re.regions.length) {
+                                    commit(types.FETCH_SPAIN_SUCCESS, {regions: ccaa})
+                                }
+
+                            });
                         });
+
                     }).catch(() => {
                         axios.get('https://api.jsonbin.io/b/5e79e3ccf14dd14dd2909c5d/latest', axiosHeaders).then(response => {
                             commit(types.FETCH_SPAIN_SUCCESS, {regions: response.data.data})
