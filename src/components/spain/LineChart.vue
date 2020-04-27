@@ -325,9 +325,12 @@ export default {
 
             if (this.ca && caConfirmed && caRecovered && caDeaths) {
                 for (let i = 0; i < confirmed.length; i++) {
+
+                    let tempActive = confirmed[i].y - recovered[i].y - deaths[i].y
+
                     active.push({
                         x: confirmed[i].x,
-                        y: confirmed[i].y - recovered[i].y - deaths[i].y
+                        y: (Math.sign(tempActive) == -1) ? 0 : tempActive
                     })
                 }
             }
@@ -490,9 +493,12 @@ export default {
 
             if (this.ca && caConfirmed && caRecovered && caDeaths) {
                 for (let i = 0; i < confirmed.length; i++) {
+
+                    let tempActive = confirmed[i].y - recovered[i].y - deaths[i].y
+
                     active.push({
                         x: confirmed[i].x,
-                        y: confirmed[i].y - recovered[i].y - deaths[i].y
+                        y: (Math.sign(tempActive) == -1) ? 0 : tempActive
                     })
                 }
             }
