@@ -172,19 +172,37 @@ export const actions = {
                 }).data
 
                 let headers = data.shift()
+                let totales = []
                 let cases = _.map(data, (ca) => {
                     let caInfo = []
                     for (var i = 1; i < headers.length; i++) {
                         if (i == 1) {
                             caInfo[headers[i]] = ca[i]
+                            totales[headers[i]] = 'Total';
                         }
                         else {
                             let fecha = dayjs(headers[i], "YYYY-MM-DD")
                             caInfo[fecha.valueOf()] = parseInt(ca[i])
+
+                            if (totales.hasOwnProperty(fecha.valueOf())) {
+                                if (!isNaN(ca[i])) {
+                                    let value = totales[fecha.valueOf()];
+                                    totales[fecha.valueOf()] = value + parseInt(ca[i])    
+                                }
+                            } else {
+                                if (!isNaN(ca[i])) {
+                                    totales[fecha.valueOf()] = parseInt(ca[i])
+                                }
+                            }
                         }
+
+                        
                     }
                     return caInfo;
                 })
+
+                cases.push(totales);
+
 
                 commit(types.FETCH_SPAIN_HISTORICAL_CONFIRMED, {confirmed: cases})
 
@@ -201,21 +219,35 @@ export const actions = {
                 }).data
 
                 let headers = data.shift()
-                // data.pop()
+                let totales = []
                 let recovered = _.map(data, (ca) => {
                     let caInfo = []
                     for (var i = 1; i < headers.length; i++) {
                         if (i == 1) {
                             caInfo[headers[i]] = ca[i]
+                            totales[headers[i]] = 'Total'
                         }
                         else {
                             let fecha = dayjs(headers[i], "YYYY-MM-DD")
                             caInfo[fecha.valueOf()] = parseInt(ca[i])
+
+                            if (totales.hasOwnProperty(fecha.valueOf())) {
+                                if (!isNaN(ca[i])) {
+                                    let value = totales[fecha.valueOf()]
+                                    totales[fecha.valueOf()] = value + parseInt(ca[i])    
+                                }
+                            } else {
+                                if (!isNaN(ca[i])) {
+                                    totales[fecha.valueOf()] = parseInt(ca[i])
+                                }
+                            }
                         }
                     }
 
                     return caInfo;
                 })
+
+                recovered.push(totales)
 
                 commit(types.FETCH_SPAIN_HISTORICAL_RECOVERED, {recovered: recovered})
 
@@ -232,21 +264,35 @@ export const actions = {
                 }).data
 
                 let headers = data.shift()
-                // data.pop()
+                let totales = []
                 let critical = _.map(data, (ca) => {
                     let caInfo = []
                     for (var i = 1; i < headers.length; i++) {
                         if (i == 1) {
                             caInfo[headers[i]] = ca[i]
+                            totales[headers[i]] = 'Total'
                         }
                         else {
                             let fecha = dayjs(headers[i], "YYYY-MM-DD")
                             caInfo[fecha.valueOf()] = parseInt(ca[i])
+
+                            if (totales.hasOwnProperty(fecha.valueOf())) {
+                                if (!isNaN(ca[i])) {
+                                    let value = totales[fecha.valueOf()]
+                                    totales[fecha.valueOf()] = value + parseInt(ca[i])    
+                                }
+                            } else {
+                                if (!isNaN(ca[i])) {
+                                    totales[fecha.valueOf()] = parseInt(ca[i])
+                                }
+                            }
                         }
                     }
 
                     return caInfo;
                 })
+
+                critical.push(totales)
 
                 commit(types.FETCH_SPAIN_HISTORICAL_CRITICAL, {critical: critical})
 
@@ -263,21 +309,35 @@ export const actions = {
                 }).data
 
                 let headers = data.shift()
-                // data.pop()
+                let totales = []
                 let deaths = _.map(data, (ca) => {
                     let caInfo = []
                     for (var i = 1; i < headers.length; i++) {
                         if (i == 1) {
                             caInfo[headers[i]] = ca[i]
+                            totales[headers[i]] = 'Total'
                         }
                         else {
                             let fecha = dayjs(headers[i], "YYYY-MM-DD")
                             caInfo[fecha.valueOf()] = parseInt(ca[i])
+
+                            if (totales.hasOwnProperty(fecha.valueOf())) {
+                                if (!isNaN(ca[i])) {
+                                    let value = totales[fecha.valueOf()]
+                                    totales[fecha.valueOf()] = value + parseInt(ca[i])    
+                                }
+                            } else {
+                                if (!isNaN(ca[i])) {
+                                    totales[fecha.valueOf()] = parseInt(ca[i])
+                                }
+                            }
                         }
                     }
 
                     return caInfo;
                 })
+
+                deaths.push(totales)
                 
                 commit(types.FETCH_SPAIN_HISTORICAL_DEATHS, {deaths: deaths})
 
