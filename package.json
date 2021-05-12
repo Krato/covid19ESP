@@ -18,7 +18,7 @@
     "ammap3": "^3.21.15",
     "apexcharts": "^3.17.1",
     "axios": "^0.19.2",
-    "chart.js": "2.9.3",
+    "chart.js": "2.9.4",
     "connect-history-api-fallback": "^1.6.0",
     "core-js": "^3.6.4",
     "countapi-js": "^1.0.1",
