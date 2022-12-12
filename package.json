@@ -23,7 +23,7 @@
     "core-js": "^3.6.4",
     "countapi-js": "^1.0.1",
     "dayjs": "^1.8.23",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "i18n-iso-countries": "^5.1.0",
     "papaparse": "^5.2.0",
     "popper.js": "1.16.0",
